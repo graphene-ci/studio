@@ -1,7 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
   "files": {
-    "includes": ["**", "!!dist", "!!node_modules", "!!src/proto", "!!bin/yarn.cjs"]
+    "includes": [
+      "**",
+      "!!dist",
+      "!!dist_electron",
+      "!!dist_packaged",
+      "!!node_modules",
+      "!!src/proto",
+      "!!bin/yarn.cjs"
+    ]
   },
   "formatter": {
     "enabled": true,

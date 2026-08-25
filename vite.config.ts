@@ -5,6 +5,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -12,6 +13,9 @@ export default defineConfig({
     },
   },
   server: {
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: true,
     proxy: {
       // Connect RPCs go same-origin in dev; graphene-server listens on :7233.
       '/graphene.management.v1.': {

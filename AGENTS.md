@@ -7,7 +7,10 @@ Tailwind v4 + shadcn/ui (Radix), yarn.
 ## Repository boundary
 
 - This repository owns the complete Graphene Studio application and its
-  delivery artifacts. It must build without a sibling checkout.
+  browser and Electron delivery artifacts. It must build without a sibling
+  checkout.
+- `electron/` contains only the domain-free desktop runtime. Product behavior
+  stays in the renderer and must not be duplicated in Electron IPC handlers.
 - Graphene Server owns the Management API wire contract. Generated TypeScript
   bindings are committed under `src/proto/` and are never edited manually.
 - A Management API change is coordinated with `graphene-ci/graphene`: update

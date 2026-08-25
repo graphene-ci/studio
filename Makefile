@@ -52,6 +52,10 @@ $(BIN)/easyp:
 dev: $(YARN_JS) ## Запустить dev-сервер с hot reload
 	$(YARN) dev
 
+.PHONY: dev-desktop
+dev-desktop: $(YARN_JS) ## Запустить Vite и Electron для локальной разработки
+	$(YARN) dev:exe
+
 .PHONY: test
 test: $(YARN_JS) ## Проверить типы TypeScript
 	$(YARN) test
@@ -74,13 +78,22 @@ generate: $(BIN)/easyp $(YARN_JS) ## Перегенерировать TypeScript
 build: $(YARN_JS) ## Собрать production bundle
 	$(YARN) build
 
+.PHONY: build-desktop
+build-desktop: $(YARN_JS) ## Собрать renderer, Electron main и preload
+	$(YARN) build:desktop
+	$(YARN) build:electron
+
+.PHONY: package-desktop
+package-desktop: $(YARN_JS) ## Собрать desktop-пакеты для текущей платформы
+	$(YARN) package
+
 .PHONY: preview
 preview: $(YARN_JS) ## Локально показать production bundle
 	$(YARN) preview
 
 .PHONY: clean
 clean: ## Удалить результаты сборки
-	rm -rf dist
+	rm -rf dist dist_electron dist_packaged
 
 .PHONY: help
 help: ## Показать цели Makefile

@@ -39,6 +39,25 @@ Dev-сервер доступен на `http://localhost:5173`. ConnectRPC-за�
 VITE_PROXY_TARGET=http://graphene.example.com:7233 make dev
 ```
 
+### Desktop
+
+Для локальной разработки в нативном окне Electron:
+
+```bash
+make dev-desktop
+```
+
+Быстрая unpacked-сборка для проверки без установщика и полная упаковка:
+
+```bash
+node bin/yarn.cjs package:dir
+make package-desktop
+```
+
+Платформенные команды: `package:linux`, `package:win`, `package:mac`.
+Desktop runtime находится в `electron/`; продуктовые IPC и нативные расширения
+в него не входят.
+
 ## Проверка
 
 ```bash

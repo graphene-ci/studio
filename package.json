@@ -3,18 +3,29 @@
   "private": true,
   "version": "0.1.0",
   "description": "Operator workspace for Graphene CI",
+  "author": "Graphene CI",
   "type": "module",
+  "main": "dist_electron/main.cjs",
   "packageManager": "yarn@1.22.22",
   "engines": {
     "node": "26.7.x"
   },
   "scripts": {
     "dev": "vite",
+    "dev:browser": "vite --open",
+    "dev:exe": "node scripts/dev-electron.js",
     "build": "tsc -b && vite build",
+    "build:desktop": "tsc -b && vite build --mode electron",
+    "build:electron": "node scripts/build-electron.js",
     "test": "tsc -b --pretty false",
     "lint": "./bin/biome lint . --error-on-warnings",
     "format": "./bin/biome format --write .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "package": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --config electron-builder.yml",
+    "package:dir": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --dir --config electron-builder.yml",
+    "package:linux": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --linux --config electron-builder.yml",
+    "package:win": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --win --config electron-builder.yml",
+    "package:mac": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --mac --config electron-builder.yml"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.14.0",
@@ -54,6 +65,8 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "electron": "41.1.0",
+    "electron-builder": "26.8.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.2"
   }
