@@ -12,6 +12,8 @@ Tailwind v4 + shadcn/ui (Radix), yarn.
   bindings are committed under `src/proto/` and are never edited manually.
 - A Management API change is coordinated with `graphene-ci/graphene`: update
   the server contract, regenerate the bindings, then update Studio consumers.
+- `make generate` fetches the pinned `github.com/graphene-ci/graphene` revision
+  through the Git input in `easyp.yaml`; it never reads a sibling checkout.
 - Product behavior or repository boundaries that contradict `../GRAPHENE.MD`
   update that document first.
 
