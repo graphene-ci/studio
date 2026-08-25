@@ -1,0 +1,251 @@
+{
+  "graphene": {
+    "app": {
+      "title": "Graphene Studio",
+      "theme": "Theme",
+      "themesLight": "Light themes",
+      "themesDark": "Dark themes",
+      "language": "Language",
+      "logout": "Sign out",
+      "comingSoon": "coming soon",
+      "copy": "Copy {{what}}"
+    },
+    "runs": {
+      "statusFilter": "Status",
+      "pipelineFilter": "pipeline…",
+      "startedAll": "All time",
+      "startedLast": "Last {{window}}",
+      "favorites": "Favorites",
+      "toggleFavorite": "Toggle favorite",
+      "auto": "auto {{s}}s",
+      "pollOff": "Off",
+      "refresh": "Refresh",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "colRun": "Run",
+      "colPipeline": "Pipeline",
+      "colTrigger": "Trigger",
+      "colOwns": "Owns",
+      "group": {
+        "run": "Run",
+        "execution": "Execution",
+        "ownership": "Ownership"
+      },
+      "colStatus": "Status",
+      "colLabels": "Labels",
+      "colStarted": "Started",
+      "colDuration": "Duration",
+      "ago": "{{time}} ago",
+      "cancel": "Cancel run {{id}}",
+      "empty": "No runs matching filters",
+      "emptyNoFilters": "No runs yet",
+      "loading": "Loading runs…",
+      "clearFilters": "Clear filters",
+      "shown": "{{count}} shown",
+      "updating": "updating",
+      "rows": "Rows",
+      "page": "Page {{page}}",
+      "filterAll": "All",
+      "filterColumn": "Filter {{label}}"
+    },
+    "pipelines": {
+      "colPipeline": "Pipeline",
+      "colImage": "Image",
+      "colConcurrency": "Concurrency",
+      "colRuns": "Runs",
+      "idFilter": "id prefix…",
+      "loading": "Loading pipelines…",
+      "empty": "No pipelines yet — push one to register it",
+      "digest": "Digest",
+      "kinds": "Kinds",
+      "activities": "Activities",
+      "triggers": "Triggers",
+      "manifest": "Manifest",
+      "noImage": "no worker image published yet",
+      "policy": {
+        "queue": "queue",
+        "cancel-previous": "cancel previous",
+        "parallel": "parallel"
+      }
+    },
+    "selector": {
+      "label": "Selector query"
+    },
+    "run": {
+      "cancel": "Cancel",
+      "notFound": "No run {{id}} in this namespace",
+      "tab": {
+        "overview": "Overview",
+        "events": "Events",
+        "logs": "Logs",
+        "result": "Result",
+        "trace": "Trace",
+        "metrics": "Metrics"
+      },
+      "events": {
+        "time": "Time",
+        "kind": "Kind",
+        "subject": "Subject",
+        "agent": "Agent",
+        "attempt": "Att.",
+        "detail": "Detail",
+        "input": "Input",
+        "result": "Result",
+        "raw": "Raw event",
+        "waiting": "Waiting for events…",
+        "following": "following the run's history",
+        "empty": "No events"
+      },
+      "logs": {
+        "filter": "filter lines…",
+        "lines": "{{count}} lines",
+        "follow": "follow",
+        "waiting": "Waiting for logs…",
+        "empty": "No logs delivered for this ref"
+      }
+    },
+    "statusbar": {
+      "server": "server v{{version}}",
+      "escHint": "esc — close panel"
+    },
+    "inspector": {
+      "close": "Close panel",
+      "ownsLive": "Owns — live records",
+      "tab": {
+        "overview": "Overview",
+        "result": "Result",
+        "owns": "Owns",
+        "events": "Events",
+        "logs": "Logs",
+        "metrics": "Metrics",
+        "trace": "Trace"
+      }
+    },
+    "resources": {
+      "colRef": "Ref",
+      "colKind": "Kind",
+      "colPhase": "Phase",
+      "colOwner": "Owner",
+      "kindFilter": "kind…",
+      "phaseFilter": "phase…",
+      "ownerFilter": "owner ref…",
+      "loading": "Loading resources…",
+      "empty": "No live resources",
+      "spec": "Spec",
+      "state": "State",
+      "detailFailed": "Could not describe the record",
+      "toggleChildren": "Toggle children of {{ref}}",
+      "view": {
+        "table": "Table",
+        "tree": "Tree"
+      }
+    },
+    "namespace": {
+      "varsSubtitle": "Environment values pipelines read as ${var:name} — values are visible",
+      "secretsSubtitle": "Values go in and never come back — workers resolve them at the point of use",
+      "nameLabel": "Name",
+      "valueLabel": "Value",
+      "set": "Set",
+      "valueHidden": "value never leaves the server",
+      "varsEmpty": "No variables yet",
+      "secretsEmpty": "No secrets yet",
+      "deleteEntry": "Delete {{name}}",
+      "errors": {
+        "nameRequired": "Name it — e.g. region or registry-token",
+        "nameFormat": "Letters, digits, dot, dash, underscore — e.g. cloud-folder",
+        "valueRequired": "Value cannot be empty"
+      }
+    },
+    "nav": {
+      "pipelines": "Pipelines",
+      "runs": "Runs",
+      "resources": "Resources",
+      "namespaceGroup": "Namespace",
+      "variables": "Variables",
+      "secrets": "Secrets",
+      "namespaces": "Namespaces",
+      "namespacesFailed": "Could not load the namespace list"
+    },
+    "theme": {
+      "light": "Light",
+      "snow": "Snow",
+      "paper": "Paper",
+      "dark": "Dark",
+      "midnight": "Midnight",
+      "graphite": "Graphite"
+    },
+    "lang": {
+      "en": "English",
+      "ru": "Русский"
+    },
+    "auth": {
+      "title": "Sign in to Graphene Studio",
+      "subtitle": "Pick a context or add a new server connection",
+      "contextLabel": "Context",
+      "noContexts": "No contexts yet — add one to connect to a server",
+      "addContext": "Add context",
+      "removeContext": "Remove context {{name}}",
+      "serverLabel": "Server",
+      "serverHint": "host:port or https://host — leave empty for this UI's own server",
+      "tokenLabel": "Access token",
+      "tokenNeeded": "token needed",
+      "tokenAskedWhy": "Asked only because this context has no saved token",
+      "submit": "Sign in",
+      "sameOrigin": "same origin",
+      "errors": {
+        "contextRequired": "Pick a context to sign into",
+        "invalidServer": "Not a server address — use host:port or https://host, without a path",
+        "tokenRequired": "Paste the access token from the server config",
+        "invalidToken": "The server rejected this token",
+        "unreachable": "Server is unreachable — check the address and that the server is up"
+      }
+    },
+    "contexts": {
+      "addTitle": "Add context",
+      "addSubtitle": "A context is a server + token pair, like graphenectl contexts",
+      "tabForm": "Fill in",
+      "tabPaste": "Paste config",
+      "tabFile": "From file",
+      "nameLabel": "Name",
+      "namespaceLabel": "Namespace",
+      "namespacePlaceholder": "from token",
+      "insecureLabel": "Allow insecure connection",
+      "insecureHint": "Plain HTTP — only for local or trusted networks",
+      "cancel": "Cancel",
+      "verifyAdd": "Verify & add",
+      "pasteLabel": "graphenectl config — YAML or JSON",
+      "pasteHint": "Paste a full config or a single context object",
+      "parsedLabel": "Parsed contexts",
+      "parsedSummary_one": "{{count}} context parsed — {{format}}",
+      "parsedSummary_other": "{{count}} contexts parsed — {{format}}",
+      "newContext": "new",
+      "replacesExisting": "replaces existing",
+      "fileLabel": "Config file",
+      "dropHint": "Drop a config file or click to browse",
+      "fileStaysLocal": "The file never leaves the browser — contexts are stored locally",
+      "fileParsed": "{{file}}: {{count}} context(s) found",
+      "importCount_one": "Import {{count}} context",
+      "importCount_other": "Import {{count}} contexts",
+      "menuLabel": "Contexts",
+      "manage": "Manage contexts…",
+      "manageTitle": "Contexts",
+      "manageSubtitle": "Check availability, add or remove server connections",
+      "currentBadge": "current",
+      "check": "Check {{name}}",
+      "checkAll": "Check all",
+      "health": {
+        "ok": "ok · {{role}}",
+        "reachable": "reachable",
+        "invalid_token": "token rejected",
+        "unreachable": "unreachable"
+      },
+      "signOut": "Sign out of {{name}}",
+      "errors": {
+        "nameRequired": "Name the context — e.g. prod or staging",
+        "nameFormat": "Letters, digits, dot, dash, underscore — e.g. prod-eu",
+        "unparsable": "Neither YAML nor JSON with contexts — check the content"
+      }
+    }
+  },
+  "common": {}
+}

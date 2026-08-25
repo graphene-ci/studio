@@ -1,0 +1,255 @@
+{
+  "graphene": {
+    "app": {
+      "title": "Graphene Studio",
+      "theme": "Тема",
+      "themesLight": "Светлые темы",
+      "themesDark": "Тёмные темы",
+      "language": "Язык",
+      "logout": "Выйти",
+      "comingSoon": "скоро будет",
+      "copy": "Скопировать {{what}}"
+    },
+    "runs": {
+      "statusFilter": "Статус",
+      "pipelineFilter": "пайплайн…",
+      "startedAll": "За всё время",
+      "startedLast": "За {{window}}",
+      "favorites": "Избранное",
+      "toggleFavorite": "В избранное",
+      "auto": "авто {{s}}s",
+      "pollOff": "Выкл",
+      "refresh": "Обновить",
+      "prevPage": "Предыдущая страница",
+      "nextPage": "Следующая страница",
+      "colRun": "Запуск",
+      "colPipeline": "Пайплайн",
+      "colTrigger": "Триггер",
+      "colOwns": "Владеет",
+      "group": {
+        "run": "Запуск",
+        "execution": "Исполнение",
+        "ownership": "Владение"
+      },
+      "colStatus": "Статус",
+      "colLabels": "Метки",
+      "colStarted": "Запущен",
+      "colDuration": "Длительность",
+      "ago": "{{time}} назад",
+      "cancel": "Отменить запуск {{id}}",
+      "empty": "Нет запусков под фильтры",
+      "emptyNoFilters": "Запусков пока нет",
+      "loading": "Загрузка запусков…",
+      "clearFilters": "Сбросить фильтры",
+      "shown": "показано: {{count}}",
+      "updating": "обновление",
+      "rows": "Строк",
+      "page": "Стр. {{page}}",
+      "filterAll": "Все",
+      "filterColumn": "Фильтр {{label}}"
+    },
+    "pipelines": {
+      "colPipeline": "Пайплайн",
+      "colImage": "Образ",
+      "colConcurrency": "Конкурентность",
+      "colRuns": "Запуски",
+      "idFilter": "префикс id…",
+      "loading": "Загрузка пайплайнов…",
+      "empty": "Пайплайнов пока нет — запушьте, чтобы зарегистрировать",
+      "digest": "Дайджест",
+      "kinds": "Kinds",
+      "activities": "Активности",
+      "triggers": "Триггеры",
+      "manifest": "Манифест",
+      "noImage": "образ воркера ещё не опубликован",
+      "policy": {
+        "queue": "очередь",
+        "cancel-previous": "отменять предыдущий",
+        "parallel": "параллельно"
+      }
+    },
+    "selector": {
+      "label": "Запрос-селектор"
+    },
+    "run": {
+      "cancel": "Отменить",
+      "notFound": "Запуска {{id}} нет в этом namespace",
+      "tab": {
+        "overview": "Обзор",
+        "events": "События",
+        "logs": "Логи",
+        "result": "Результат",
+        "trace": "Трейс",
+        "metrics": "Метрики"
+      },
+      "events": {
+        "time": "Время",
+        "kind": "Тип",
+        "subject": "Субъект",
+        "agent": "Агент",
+        "attempt": "Поп.",
+        "detail": "Детали",
+        "input": "Вход",
+        "result": "Результат",
+        "raw": "Сырое событие",
+        "waiting": "Ждём события…",
+        "following": "следим за историей запуска",
+        "empty": "Событий нет"
+      },
+      "logs": {
+        "filter": "фильтр строк…",
+        "lines": "строк: {{count}}",
+        "follow": "хвост",
+        "waiting": "Ждём логи…",
+        "empty": "Логи для этого ref не доставлялись"
+      }
+    },
+    "statusbar": {
+      "server": "server v{{version}}",
+      "escHint": "esc — закрыть панель"
+    },
+    "inspector": {
+      "close": "Закрыть панель",
+      "ownsLive": "Владеет — живые записи",
+      "tab": {
+        "overview": "Обзор",
+        "result": "Результат",
+        "owns": "Владеет",
+        "events": "События",
+        "logs": "Логи",
+        "metrics": "Метрики",
+        "trace": "Трейс"
+      }
+    },
+    "resources": {
+      "colRef": "Ref",
+      "colKind": "Kind",
+      "colPhase": "Фаза",
+      "colOwner": "Владелец",
+      "kindFilter": "kind…",
+      "phaseFilter": "фаза…",
+      "ownerFilter": "ref владельца…",
+      "loading": "Загрузка ресурсов…",
+      "empty": "Живых ресурсов нет",
+      "spec": "Spec",
+      "state": "State",
+      "detailFailed": "Не удалось получить запись",
+      "toggleChildren": "Свернуть/развернуть детей {{ref}}",
+      "view": {
+        "table": "Таблица",
+        "tree": "Дерево"
+      }
+    },
+    "namespace": {
+      "varsSubtitle": "Значения окружения, которые пайплайны читают как ${var:name} — значения видимы",
+      "secretsSubtitle": "Значения уходят и не возвращаются — воркеры получают их в точке использования",
+      "nameLabel": "Имя",
+      "valueLabel": "Значение",
+      "set": "Сохранить",
+      "valueHidden": "значение не покидает сервер",
+      "varsEmpty": "Переменных пока нет",
+      "secretsEmpty": "Секретов пока нет",
+      "deleteEntry": "Удалить {{name}}",
+      "errors": {
+        "nameRequired": "Назовите — например region или registry-token",
+        "nameFormat": "Буквы, цифры, точка, дефис, подчёркивание — например cloud-folder",
+        "valueRequired": "Значение не может быть пустым"
+      }
+    },
+    "nav": {
+      "pipelines": "Пайплайны",
+      "runs": "Запуски",
+      "resources": "Ресурсы",
+      "namespaceGroup": "Namespace",
+      "variables": "Переменные",
+      "secrets": "Секреты",
+      "namespaces": "Namespaces",
+      "namespacesFailed": "Не удалось загрузить список namespace"
+    },
+    "theme": {
+      "light": "Светлая",
+      "snow": "Снег",
+      "paper": "Бумага",
+      "dark": "Тёмная",
+      "midnight": "Полночь",
+      "graphite": "Графит"
+    },
+    "lang": {
+      "en": "English",
+      "ru": "Русский"
+    },
+    "auth": {
+      "title": "Вход в Graphene Studio",
+      "subtitle": "Выберите контекст или добавьте подключение к серверу",
+      "contextLabel": "Контекст",
+      "noContexts": "Контекстов пока нет — добавьте, чтобы подключиться к серверу",
+      "addContext": "Добавить контекст",
+      "removeContext": "Удалить контекст {{name}}",
+      "serverLabel": "Сервер",
+      "serverHint": "host:port или https://host — пусто для сервера, с которого открыт этот UI",
+      "tokenLabel": "Токен доступа",
+      "tokenNeeded": "нужен токен",
+      "tokenAskedWhy": "Запрошен, потому что у контекста нет сохранённого токена",
+      "submit": "Войти",
+      "sameOrigin": "тот же сервер",
+      "errors": {
+        "contextRequired": "Выберите контекст для входа",
+        "invalidServer": "Это не адрес сервера — укажите host:port или https://host, без пути",
+        "tokenRequired": "Вставьте токен доступа из конфигурации сервера",
+        "invalidToken": "Сервер отклонил этот токен",
+        "unreachable": "Сервер недоступен — проверьте адрес и что сервер запущен"
+      }
+    },
+    "contexts": {
+      "addTitle": "Добавить контекст",
+      "addSubtitle": "Контекст — это пара сервер + токен, как контексты graphenectl",
+      "tabForm": "Заполнить",
+      "tabPaste": "Вставить конфиг",
+      "tabFile": "Из файла",
+      "nameLabel": "Имя",
+      "namespaceLabel": "Namespace",
+      "namespacePlaceholder": "из токена",
+      "insecureLabel": "Разрешить небезопасное подключение",
+      "insecureHint": "Обычный HTTP — только для локальных и доверенных сетей",
+      "cancel": "Отмена",
+      "verifyAdd": "Проверить и добавить",
+      "pasteLabel": "Конфиг graphenectl — YAML или JSON",
+      "pasteHint": "Вставьте полный конфиг или один объект контекста",
+      "parsedLabel": "Распознанные контексты",
+      "parsedSummary_one": "Распознан {{count}} контекст — {{format}}",
+      "parsedSummary_few": "Распознано {{count}} контекста — {{format}}",
+      "parsedSummary_many": "Распознано {{count}} контекстов — {{format}}",
+      "parsedSummary_other": "Распознано {{count}} контекста — {{format}}",
+      "newContext": "новый",
+      "replacesExisting": "заменит существующий",
+      "fileLabel": "Файл конфига",
+      "dropHint": "Перетащите файл конфига или нажмите, чтобы выбрать",
+      "fileStaysLocal": "Файл не покидает браузер — контексты хранятся локально",
+      "fileParsed": "{{file}}: найдено контекстов — {{count}}",
+      "importCount_one": "Импортировать {{count}} контекст",
+      "importCount_few": "Импортировать {{count}} контекста",
+      "importCount_many": "Импортировать {{count}} контекстов",
+      "importCount_other": "Импортировать {{count}} контекста",
+      "menuLabel": "Контексты",
+      "manage": "Управление контекстами…",
+      "manageTitle": "Контексты",
+      "manageSubtitle": "Проверка доступности, добавление и удаление подключений",
+      "currentBadge": "текущий",
+      "check": "Проверить {{name}}",
+      "checkAll": "Проверить все",
+      "health": {
+        "ok": "ок · {{role}}",
+        "reachable": "доступен",
+        "invalid_token": "токен отклонён",
+        "unreachable": "недоступен"
+      },
+      "signOut": "Выйти из {{name}}",
+      "errors": {
+        "nameRequired": "Назовите контекст — например prod или staging",
+        "nameFormat": "Буквы, цифры, точка, дефис, подчёркивание — например prod-eu",
+        "unparsable": "Не похоже ни на YAML, ни на JSON с контекстами — проверьте содержимое"
+      }
+    }
+  },
+  "common": {}
+}
