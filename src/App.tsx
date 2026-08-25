@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router'
 
 import { AppLayout } from '@/pages/AppLayout'
 import { PipelineDetailPage } from '@/pages/PipelineDetailPage'
@@ -20,8 +20,9 @@ function RootRedirect() {
 }
 
 function App() {
+  const Router = window.location.protocol === 'file:' ? HashRouter : BrowserRouter
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/n/:ns" element={<AppLayout />}>
@@ -37,7 +38,7 @@ function App() {
         </Route>
         <Route path="*" element={<RootRedirect />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   )
 }
 
