@@ -47,9 +47,10 @@ make lint
 make build
 ```
 
-`make test` проверяет TypeScript, `make lint` запускает Biome, а
-`make build` собирает production bundle в `dist/`. Форматирование выполняет
-`make format`; версия Biome зафиксирована в `package.json` и `yarn.lock`.
+`make test` проверяет TypeScript, `make lint` валидирует `easyp.yaml` и запускает
+Biome, а `make build` собирает production bundle в `dist/`. Форматирование
+выполняет `make format`; версия Biome зафиксирована в `package.json` и
+`yarn.lock`.
 
 ## Контракты сервера
 
@@ -58,3 +59,14 @@ make build
 поэтому обычные `configure`, `test` и `build` не зависят от соседнего
 репозитория. Изменение wire-контракта проводится согласованными изменениями
 server и Studio; сгенерированные файлы вручную не редактируются.
+
+Bindings перегенерируются из каталога `proto` зафиксированной ревизии
+`graphene-ci/graphene` напрямую с GitHub:
+
+```bash
+make generate
+```
+
+Источник и параметры `protoc-gen-es` описаны в `easyp.yaml`. EasyP и плагин
+устанавливаются локально командами репозитория и имеют зафиксированные версии;
+соседний checkout `graphene` для генерации не используется.
