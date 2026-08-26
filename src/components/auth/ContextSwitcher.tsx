@@ -51,11 +51,11 @@ export function ContextSwitcher() {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="flex h-6 items-center gap-1.5 rounded-sm bg-muted px-2 font-mono text-2xs hover:text-foreground"
+            className="flex h-8 items-center gap-2 rounded-sm bg-muted px-2.5 font-mono text-xs transition-colors hover:bg-surface-hover hover:text-foreground"
           >
-            <span className="size-1.5 rounded-full bg-status-success" aria-hidden />
+            <span className="size-2 rounded-full bg-status-success" aria-hidden />
             {current}
-            <ChevronDownIcon className="size-3 text-muted-foreground" />
+            <ChevronDownIcon className="size-3.5 text-muted-foreground" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-72">

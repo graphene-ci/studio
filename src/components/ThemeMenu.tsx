@@ -79,9 +79,9 @@ export function ThemeMenu() {
         <button
           type="button"
           aria-label={`${t('graphene.app.theme')}: ${t(`graphene.theme.${theme}`)}`}
-          className="flex size-6 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+          className="flex size-8 items-center justify-center rounded-sm bg-muted text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
         >
-          <PaletteIcon className="size-3.5" />
+          <PaletteIcon className="size-4" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-max max-w-none p-2">

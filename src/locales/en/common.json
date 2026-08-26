@@ -8,7 +8,12 @@
       "language": "Language",
       "logout": "Sign out",
       "comingSoon": "coming soon",
-      "copy": "Copy {{what}}"
+      "copy": "Copy {{what}}",
+      "windowControls": "Window controls",
+      "minimize": "Minimize window",
+      "maximize": "Maximize window",
+      "restore": "Restore window",
+      "close": "Close application"
     },
     "runs": {
       "statusFilter": "Status",
