@@ -6,7 +6,7 @@ YARN := node $(YARN_JS)
 
 export PATH := $(BIN):$(PATH)
 
-NODE_VERSION := v26.7.0
+NODE_VERSION := v22.23.1
 YARN_VERSION := 1.22.22
 YARN_SHA256 := 1ba910c84256998c4bf4b925857c2693adebdc962a2e3075f4f8b67045f45105
 YARN_URL := https://github.com/yarnpkg/yarn/releases/download/v$(YARN_VERSION)/yarn-$(YARN_VERSION).js

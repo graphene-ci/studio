@@ -8,7 +8,12 @@
       "language": "Язык",
       "logout": "Выйти",
       "comingSoon": "скоро будет",
-      "copy": "Скопировать {{what}}"
+      "copy": "Скопировать {{what}}",
+      "windowControls": "Управление окном",
+      "minimize": "Свернуть окно",
+      "maximize": "Развернуть окно",
+      "restore": "Восстановить окно",
+      "close": "Закрыть приложение"
     },
     "runs": {
       "statusFilter": "Статус",
