@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/namespaces.proto.
  */
 export const file_proto_management_v1_namespaces: GenFile = /*@__PURE__*/
-  fileDesc("CiRwcm90by9tYW5hZ2VtZW50L3YxL25hbWVzcGFjZXMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiEwoRU2VydmVySW5mb1JlcXVlc3QipgEKElNlcnZlckluZm9SZXNwb25zZRIPCgd2ZXJzaW9uGAEgASgJEkgKCmNvbXBvbmVudHMYAiADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXNwb25zZS5Db21wb25lbnQaNQoJQ29tcG9uZW50EgwKBG5hbWUYASABKAkSCgoCb2sYAiABKAgSDgoGZGV0YWlsGAMgASgJIg8KDVdob2FtaVJlcXVlc3QiMQoOV2hvYW1pUmVzcG9uc2USDAoEcm9sZRgBIAEoCRIRCgluYW1lc3BhY2UYAiABKAkyzQEKDU5hbWVzcGFjZXNBUEkSVwoGV2hvYW1pEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9hbWlSZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9hbWlSZXNwb25zZRJjCgpTZXJ2ZXJJbmZvEikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5TZXJ2ZXJJbmZvUmVxdWVzdBoqLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU2VydmVySW5mb1Jlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
+  fileDesc("CiRwcm90by9tYW5hZ2VtZW50L3YxL25hbWVzcGFjZXMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiEwoRU2VydmVySW5mb1JlcXVlc3QipgEKElNlcnZlckluZm9SZXNwb25zZRIPCgd2ZXJzaW9uGAEgASgJEkgKCmNvbXBvbmVudHMYAiADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXNwb25zZS5Db21wb25lbnQaNQoJQ29tcG9uZW50EgwKBG5hbWUYASABKAkSCgoCb2sYAiABKAgSDgoGZGV0YWlsGAMgASgJMnQKDU5hbWVzcGFjZXNBUEkSYwoKU2VydmVySW5mbxIpLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU2VydmVySW5mb1JlcXVlc3QaKi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXNwb25zZUJGWkRnaXRodWIuY29tL2dyYXBoZW5lLWNpL2dyYXBoZW5lL3BrZy9wcm90by9tYW5hZ2VtZW50L3YxO21hbmFnZW1lbnR2MWIGcHJvdG8z");
 
 /**
  * @generated from message graphene.management.v1.ServerInfoRequest
@@ -77,45 +77,6 @@ export const ServerInfoResponse_ComponentSchema: GenMessage<ServerInfoResponse_C
   messageDesc(file_proto_management_v1_namespaces, 1, 0);
 
 /**
- * @generated from message graphene.management.v1.WhoamiRequest
- */
-export type WhoamiRequest = Message<"graphene.management.v1.WhoamiRequest"> & {
-};
-
-/**
- * Describes the message graphene.management.v1.WhoamiRequest.
- * Use `create(WhoamiRequestSchema)` to create a new message.
- */
-export const WhoamiRequestSchema: GenMessage<WhoamiRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 2);
-
-/**
- * @generated from message graphene.management.v1.WhoamiResponse
- */
-export type WhoamiResponse = Message<"graphene.management.v1.WhoamiResponse"> & {
-  /**
-   * Role: admin | run | agent.
-   *
-   * @generated from field: string role = 1;
-   */
-  role: string;
-
-  /**
-   * Namespace the token is scoped to; "*" — every namespace.
-   *
-   * @generated from field: string namespace = 2;
-   */
-  namespace: string;
-};
-
-/**
- * Describes the message graphene.management.v1.WhoamiResponse.
- * Use `create(WhoamiResponseSchema)` to create a new message.
- */
-export const WhoamiResponseSchema: GenMessage<WhoamiResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 3);
-
-/**
  * NamespacesAPI manages the isolation units of an installation. A
  * graphene namespace is SYMMETRIC to a Temporal namespace: records,
  * queues, visibility, the ownership tree — all isolated by the durable
@@ -123,23 +84,13 @@ export const WhoamiResponseSchema: GenMessage<WhoamiResponse> = /*@__PURE__*/
  * namespace becomes an organization's home.
  * A namespace is DECLARED like everything else: `apply namespace <name>`
  * in the default namespace, listed by `get namespace`. What remains
- * here is what is not a record — who the caller is, and what the
- * installation is.
+ * here is what is not a record — what the installation is. Who the
+ * caller is lives in ONE place: RbacAPI.WhoAmI, the login handshake
+ * for every kind of principal.
  *
  * @generated from service graphene.management.v1.NamespacesAPI
  */
 export const NamespacesAPI: GenService<{
-  /**
-   * Whoami answers who the caller's token is: role and namespace scope.
-   * Any authenticated principal may ask — this is login's handshake.
-   *
-   * @generated from rpc graphene.management.v1.NamespacesAPI.Whoami
-   */
-  whoami: {
-    methodKind: "unary";
-    input: typeof WhoamiRequestSchema;
-    output: typeof WhoamiResponseSchema;
-  },
   /**
    * ServerInfo reports the installation: version and component health —
    * the console's status line. Any authenticated principal may ask.
