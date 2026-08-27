@@ -7,8 +7,18 @@
 import { computed, onMount, type ReadableAtom } from 'nanostores'
 
 import type { Resource, TreeNode } from '@/proto/management/v1/resources_pb'
+import type { ServerInfoResponse } from '@/proto/management/v1/namespaces_pb'
+import type { ListFilesResponse } from '@/proto/management/v1/source_pb'
 
-import { listKey, normalizeQuery, recordKey, treeKey } from './keys'
+import {
+  filesKey,
+  listKey,
+  namespacesKey,
+  normalizeQuery,
+  recordKey,
+  serverKey,
+  treeKey,
+} from './keys'
 import type { ConnectionPhase, InternalStores, Snapshot } from './store/internal'
 import type { TargetFactory, WatchHub } from './watch/hub'
 
@@ -28,6 +38,9 @@ interface ExternalDeps {
     listing(key: string, query: string): TargetFactory
     record(key: string, ref: string): TargetFactory
     tree(key: string): TargetFactory
+    namespaces(key: string): TargetFactory
+    files(key: string, sourceRef: string): TargetFactory
+    server(key: string): TargetFactory
   }
 }
 
@@ -52,6 +65,9 @@ export class ExternalStores {
   private readonly listings = new Map<string, ReadableAtom<View<Resource[]>>>()
   private readonly records = new Map<string, ReadableAtom<View<Resource | null>>>()
   private treeStore: ReadableAtom<View<TreeNode[]>> | null = null
+  private namespacesStore: ReadableAtom<View<Resource[]>> | null = null
+  private readonly filesStores = new Map<string, ReadableAtom<View<ListFilesResponse | null>>>()
+  private serverStore: ReadableAtom<View<ServerInfoResponse | null>> | null = null
 
   private readonly deps: ExternalDeps
 
@@ -106,6 +122,56 @@ export class ExternalStores {
       )
     }
     return this.treeStore
+  }
+
+  /** Live namespace dictionary: `namespace/<name>` records from
+   * graphene-system. Raw records — the name is the record id. */
+  namespaces(): ReadableAtom<View<Resource[]>> {
+    if (this.namespacesStore === null) {
+      const key = namespacesKey()
+      const source = this.deps.internal.data.listing(key)
+      this.namespacesStore = watched(
+        computed(source, (snap) => project(snap, [] as Resource[], (rows) => rows)),
+        this.deps.hub,
+        key,
+        this.deps.targets.namespaces(key),
+      )
+    }
+    return this.namespacesStore
+  }
+
+  /** Live file listing of a source record (gitsource/managedsource):
+   * paths + sizes + treeDigest, raw from the server. */
+  files(sourceRef: string): ReadableAtom<View<ListFilesResponse | null>> {
+    const key = filesKey(sourceRef)
+    let store = this.filesStores.get(key)
+    if (store === undefined) {
+      const source = this.deps.internal.data.files(key)
+      store = watched(
+        computed(source, (snap) => project(snap, null as ListFilesResponse | null, (r) => r)),
+        this.deps.hub,
+        key,
+        this.deps.targets.files(key, sourceRef),
+      )
+      this.filesStores.set(key, store)
+    }
+    return store
+  }
+
+  /** Door heartbeat: ServerInfo (version + component health), polled
+   * while anything shows it. error !== null → the door is down. */
+  server(): ReadableAtom<View<ServerInfoResponse | null>> {
+    if (this.serverStore === null) {
+      const key = serverKey()
+      const source = this.deps.internal.data.server
+      this.serverStore = watched(
+        computed(source, (snap) => project(snap, null as ServerInfoResponse | null, (r) => r)),
+        this.deps.hub,
+        key,
+        this.deps.targets.server(key),
+      )
+    }
+    return this.serverStore
   }
 
   /** Watch-plane health for the status bar. */

@@ -10,8 +10,17 @@ import type { Api } from '@/lib/api'
 
 import { ExternalStores } from './external'
 import { InternalStores } from './store/internal'
+import { NamespaceVerbs } from './verbs/namespaces'
 import { WatchHub } from './watch/hub'
-import { listingTarget, recordTarget, treeTarget, type TargetDeps } from './watch/targets'
+import {
+  filesTarget,
+  serverTarget,
+  listingTarget,
+  namespacesTarget,
+  recordTarget,
+  treeTarget,
+  type TargetDeps,
+} from './watch/targets'
 
 export interface ClientOptions {
   /** Current context's client set; read per call, so token/namespace
@@ -24,6 +33,7 @@ export interface ClientOptions {
 
 export class GrapheneClient {
   readonly stores: ExternalStores
+  readonly namespaces: NamespaceVerbs
 
   private readonly internal = new InternalStores()
   private readonly hub = new WatchHub()
@@ -39,8 +49,13 @@ export class GrapheneClient {
         listing: (key, query) => () => listingTarget(targetDeps, key, query),
         record: (key, ref) => () => recordTarget(targetDeps, key, ref),
         tree: (key) => () => treeTarget(targetDeps, key),
+        namespaces: (key) => () => namespacesTarget(targetDeps, key),
+        files: (key, sourceRef) => () => filesTarget(targetDeps, key, sourceRef),
+        server: (key) => () => serverTarget(targetDeps, key),
       },
     })
+
+    this.namespaces = new NamespaceVerbs({ api: options.api, hub: this.hub })
 
     // Context/namespace switch: wipe the world first, then restart
     // the runners still under subscription — they refill the clean

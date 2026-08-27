@@ -7,6 +7,7 @@
 import { equals } from '@bufbuild/protobuf'
 
 import type { Api } from '@/lib/api'
+import { ServerInfoResponseSchema } from '@/proto/management/v1/namespaces_pb'
 import {
   ResourceSchema,
   TreeNodeSchema,
@@ -14,6 +15,7 @@ import {
   type TreeNode,
 } from '@/proto/management/v1/resources_pb'
 
+import { SYSTEM_NAMESPACE } from '../keys'
 import type { InternalStores, Snapshot } from '../store/internal'
 import { pollTarget, type TargetHandle } from './hub'
 
@@ -81,6 +83,72 @@ export function recordTarget(deps: TargetDeps, key: string, ref: string): Target
       deps.internal.meta.reportTarget(key, null)
     } catch (err) {
       apply(store, null, messageFor(err), () => true)
+      deps.internal.meta.reportTarget(key, messageFor(err))
+    }
+  })
+}
+
+/** Source file listing. The reply carries treeDigest — same digest,
+ * same tree: the write is skipped without comparing entries. */
+export function filesTarget(deps: TargetDeps, key: string, sourceRef: string): TargetHandle {
+  const store = deps.internal.data.files(key)
+  return pollTarget(async () => {
+    try {
+      const reply = await deps.api().source.listFiles({ source: sourceRef })
+      const prev = store.get()
+      if (prev.data === undefined || prev.data.treeDigest !== reply.treeDigest) {
+        store.set({ data: reply, error: null })
+      } else if (prev.error !== null) {
+        store.set({ ...prev, error: null })
+      }
+      deps.internal.meta.reportTarget(key, null)
+    } catch (err) {
+      const prev = store.get()
+      if (prev.error !== messageFor(err)) store.set({ ...prev, error: messageFor(err) })
+      deps.internal.meta.reportTarget(key, messageFor(err))
+    }
+  })
+}
+
+/** Door heartbeat: ServerInfo on a slower cadence. Failure means the
+ * DOOR is unreachable — the strongest signal the status bar shows. */
+export function serverTarget(deps: TargetDeps, key: string): TargetHandle {
+  const store = deps.internal.data.server
+  return pollTarget(async () => {
+    try {
+      const reply = await deps.api().namespaces.serverInfo({})
+      const prev = store.get()
+      if (prev.data === undefined || !equals(ServerInfoResponseSchema, prev.data, reply)) {
+        store.set({ data: reply, error: null })
+      } else if (prev.error !== null) {
+        store.set({ ...prev, error: null })
+      }
+      deps.internal.meta.reportTarget(key, null)
+    } catch (err) {
+      const prev = store.get()
+      if (prev.error !== messageFor(err)) store.set({ ...prev, error: messageFor(err) })
+      deps.internal.meta.reportTarget(key, messageFor(err))
+    }
+  }, 5_000)
+}
+
+/** Namespace dictionary: `kind=namespace` records living in
+ * graphene-system — scoped per call, whatever the current context's
+ * namespace is. */
+export function namespacesTarget(deps: TargetDeps, key: string): TargetHandle {
+  const store = deps.internal.data.listing(key)
+  return pollTarget(async () => {
+    try {
+      const reply = await deps
+        .api()
+        .resources.list(
+          { query: 'kind=namespace' },
+          { headers: { 'x-graphene-namespace': SYSTEM_NAMESPACE } },
+        )
+      apply(store, reply.resources, null, sameResources)
+      deps.internal.meta.reportTarget(key, null)
+    } catch (err) {
+      apply(store, null, messageFor(err), sameResources)
       deps.internal.meta.reportTarget(key, messageFor(err))
     }
   })

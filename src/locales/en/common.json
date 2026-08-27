@@ -32,7 +32,8 @@
         "resizeResources": "Resize the resources panel",
         "resizeInspector": "Resize the inspector panel",
         "resizeBottom": "Resize the bottom panels",
-        "resizeBottomSplit": "Resize terminal and notifications"
+        "resizeBottomSplit": "Resize terminal and notifications",
+        "files": "Files"
       }
     },
     "runs": {
@@ -131,7 +132,12 @@
     },
     "statusbar": {
       "server": "server v{{version}}",
-      "escHint": "esc — close panel"
+      "escHint": "esc — close panel",
+      "serverDown": "server unreachable",
+      "degraded": "some data is not refreshing",
+      "serverLost": "Server {{context}} stopped responding",
+      "serverBack": "Server {{context}} is back",
+      "notOk": "not ok"
     },
     "inspector": {
       "close": "Close panel",
@@ -163,7 +169,10 @@
       "view": {
         "table": "Table",
         "tree": "Tree"
-      }
+      },
+      "treeFilter": "filter: kind/name… (/)",
+      "treeError": "Could not load the tree",
+      "treeNoMatch": "Nothing matches the filter"
     },
     "namespace": {
       "varsSubtitle": "Environment values pipelines read as ${var:name} — values are visible",
@@ -270,6 +279,43 @@
         "nameFormat": "Letters, digits, dot, dash, underscore — e.g. prod-eu",
         "unparsable": "Neither YAML nor JSON with contexts — check the content"
       }
+    },
+    "ns": {
+      "manage": "Manage namespaces…",
+      "manageTitle": "Namespaces",
+      "manageSubtitle": "Isolation units of the installation: records, queues and visibility",
+      "system": "system — undeletable",
+      "create": "Create namespace",
+      "createSubmit": "Create",
+      "nameLabel": "Name",
+      "descriptionLabel": "Description",
+      "retentionLabel": "Retention, days",
+      "retentionHint": "0 — installation default",
+      "retention": "retention {{days}} d",
+      "retentionShort": "{{days}}d",
+      "retentionDefault": "default retention",
+      "delete": "Delete namespace {{name}}",
+      "deleteConfirm": "Delete?",
+      "deleteHint": "Deletion stops the service — content lives out its own retention and never resurrects",
+      "deleteFailed": "Could not delete {{name}}",
+      "errors": {
+        "nameRequired": "Name it — for example team-a or staging",
+        "nameFormat": "Lowercase letters, digits, dot, dash, underscore — for example team-a",
+        "retentionFormat": "A whole number of days, 0 or more",
+        "createFailed": "The server refused the creation — check the name and permissions"
+      }
+    },
+    "files": {
+      "filter": "filter: path… (/)",
+      "empty": "No pipelines with sources yet",
+      "noMatch": "Nothing matches the filter",
+      "loading": "loading files…",
+      "error": "Could not load files",
+      "readOnly": "read-only — git source"
+    },
+    "notifications": {
+      "empty": "No notifications yet",
+      "clear": "Clear"
     }
   },
   "common": {}

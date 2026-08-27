@@ -21,7 +21,11 @@ export function makeApi(baseUrl: string, auth: () => ApiAuth) {
   const withAuth: Interceptor = (next) => (req) => {
     const { token, namespace } = auth()
     if (token !== '') req.header.set('Authorization', `Bearer ${token}`)
-    if (namespace !== '') req.header.set('x-graphene-namespace', namespace)
+    // A per-call header wins: system-namespace reads (the namespace
+    // dictionary lives in graphene-system) pass their own scope.
+    if (namespace !== '' && !req.header.has('x-graphene-namespace')) {
+      req.header.set('x-graphene-namespace', namespace)
+    }
     return next(req)
   }
   const transport = createConnectTransport({ baseUrl, interceptors: [withAuth] })
