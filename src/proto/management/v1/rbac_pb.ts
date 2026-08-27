@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/rbac.proto.
  */
 export const file_proto_management_v1_rbac: GenFile = /*@__PURE__*/
-  fileDesc("Ch5wcm90by9tYW5hZ2VtZW50L3YxL3JiYWMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiRgoSSXNzdWVUb2tlblJlc3BvbnNlEhAKCHRva2VuX2lkGAEgASgJEg0KBXRva2VuGAIgASgJEg8KB2V4cGlyZXMYAyABKAkiSgoRSXNzdWVUb2tlblJlcXVlc3QSDwoHYWNjb3VudBgBIAEoCRITCgt0dGxfc2Vjb25kcxgCIAEoAxIPCgdjb21tZW50GAMgASgJIg8KDVdob0FtSVJlcXVlc3QiZAoOV2hvQW1JUmVzcG9uc2USDwoHc3ViamVjdBgBIAEoCRIOCgZncm91cHMYAiADKAkSEQoJbmFtZXNwYWNlGAMgASgJEg0KBXJvbGVzGAQgAygJEg8KB2FsbG93ZWQYBSADKAkyxwEKB1JiYWNBUEkSYwoKSXNzdWVUb2tlbhIpLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuSXNzdWVUb2tlblJlcXVlc3QaKi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLklzc3VlVG9rZW5SZXNwb25zZRJXCgZXaG9BbUkSJS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldob0FtSVJlcXVlc3QaJi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldob0FtSVJlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
+  fileDesc("Ch5wcm90by9tYW5hZ2VtZW50L3YxL3JiYWMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiRgoSSXNzdWVUb2tlblJlc3BvbnNlEhAKCHRva2VuX2lkGAEgASgJEg0KBXRva2VuGAIgASgJEg8KB2V4cGlyZXMYAyABKAkiSgoRSXNzdWVUb2tlblJlcXVlc3QSDwoHYWNjb3VudBgBIAEoCRITCgt0dGxfc2Vjb25kcxgCIAEoAxIPCgdjb21tZW50GAMgASgJIg8KDVdob0FtSVJlcXVlc3QiegoOV2hvQW1JUmVzcG9uc2USDwoHc3ViamVjdBgBIAEoCRIOCgZncm91cHMYAiADKAkSEQoJbmFtZXNwYWNlGAMgASgJEg0KBXJvbGVzGAQgAygJEg8KB2FsbG93ZWQYBSADKAkSFAoMY2x1c3Rlcl93aWRlGAYgASgIMscBCgdSYmFjQVBJEmMKCklzc3VlVG9rZW4SKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLklzc3VlVG9rZW5SZXF1ZXN0GiouZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Jc3N1ZVRva2VuUmVzcG9uc2USVwoGV2hvQW1JEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9BbUlSZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9BbUlSZXNwb25zZUJGWkRnaXRodWIuY29tL2dyYXBoZW5lLWNpL2dyYXBoZW5lL3BrZy9wcm90by9tYW5hZ2VtZW50L3YxO21hbmFnZW1lbnR2MWIGcHJvdG8z");
 
 /**
  * @generated from message graphene.management.v1.IssueTokenResponse
@@ -116,6 +116,15 @@ export type WhoAmIResponse = Message<"graphene.management.v1.WhoAmIResponse"> & 
    * @generated from field: repeated string allowed = 5;
    */
   allowed: string[];
+
+  /**
+   * ClusterWide says this caller's rights span every namespace — the
+   * signal a client needs to offer namespace switching (the
+   * x-graphene-namespace header on any call).
+   *
+   * @generated from field: bool cluster_wide = 6;
+   */
+  clusterWide: boolean;
 };
 
 /**
