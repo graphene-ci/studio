@@ -15,6 +15,25 @@
       "restore": "Restore window",
       "close": "Close application"
     },
+    "workspace": {
+      "surface": "Workspace",
+      "empty": {
+        "selectResource": "Select a resource on the left to open it here"
+      },
+      "toolbars": {
+        "left": "Left toolbar",
+        "right": "Right toolbar"
+      },
+      "panels": {
+        "resources": "Resources",
+        "inspector": "Inspector",
+        "terminal": "Terminal",
+        "notifications": "Notifications",
+        "resizeResources": "Resize the resources panel",
+        "resizeInspector": "Resize the inspector panel",
+        "resizeBottom": "Resize the bottom panels"
+      }
+    },
     "runs": {
       "statusFilter": "Status",
       "pipelineFilter": "pipeline…",

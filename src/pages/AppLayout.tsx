@@ -4,16 +4,16 @@ import { useEffect } from 'react'
 import { ContextSwitcher } from '@/components/auth/ContextSwitcher'
 import { SignInCard } from '@/components/auth/SignInCard'
 import { Logo } from '@/components/Logo'
+import { WorkspaceLayout } from '@/components/WorkspaceLayout'
 import { WindowControls } from '@/components/WindowControls'
 import { AppearanceMenus } from '@/components/nav/AppearanceMenus'
-import { Breadcrumbs } from '@/components/nav/Breadcrumbs'
 import { Spinner } from '@/components/ui/spinner'
 import { Navigate, useParams } from '@/router'
 import { $contexts, $currentContext, upsertContext } from '@/stores/contextsStore'
 import { $session, $sessionRestoring } from '@/stores/sessionStore'
 
 // AppLayout keeps connection/session handling and the global header around
-// an intentionally empty workspace. Product surfaces are built from here.
+// the custom panel workspace shared by every product surface.
 export function AppLayout() {
   const session = useStore($session)
   const restoring = useStore($sessionRestoring)
@@ -59,17 +59,19 @@ export function AppLayout() {
   }
 
   return (
-    <div className="flex h-svh flex-col bg-background">
-      <header className="window-titlebar flex shrink-0 items-center gap-3 bg-sidebar">
+    <div className="workspace-shell flex h-svh flex-col">
+      <header className="window-titlebar flex shrink-0 items-center gap-3">
         <Logo className="size-7" />
         <span className="text-sm font-semibold tracking-tight">Graphene Studio</span>
-        <Breadcrumbs />
         <span className="grow" />
         <ContextSwitcher />
         <AppearanceMenus />
         <WindowControls />
       </header>
-      <main className="min-h-0 min-w-0 flex-1" />
+      <main className="relative min-h-0 min-w-0 flex-1">
+        <WorkspaceLayout />
+      </main>
+      <footer className="workspace-statusbar shrink-0" />
     </div>
   )
 }
