@@ -4,10 +4,12 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import { YAMLParseError } from 'yaml'
+
 import { ImportPreview } from '@/components/auth/add/ImportPreview'
+import { CodeEditor, type CodeDiagnostic } from '@/components/CodeEditor'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field'
-import { Textarea } from '@/components/ui/textarea'
 import { parseCliConfig, type ParseOutcome } from '@/helpers/cliConfig'
 import { $currentContext, upsertContext } from '@/stores/contextsStore'
 
@@ -20,6 +22,22 @@ function tryParse(text: string): ParseOutcome | null {
     return parseCliConfig(text)
   } catch {
     return null
+  }
+}
+
+// Underlines the exact spot a YAML syntax error points at; structural
+// problems (parses, but no contexts) stay with the field error below.
+function diagnose(text: string): CodeDiagnostic[] {
+  if (text.trim() === '') return []
+  try {
+    parseCliConfig(text)
+    return []
+  } catch (err) {
+    if (err instanceof YAMLParseError && err.pos !== undefined) {
+      const [from, to] = err.pos
+      return [{ from, to: Math.max(to, from + 1), message: err.message }]
+    }
+    return []
   }
 }
 
@@ -62,13 +80,13 @@ export function PasteTab({ onDone }: PasteTabProps) {
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="paste-config">{t('graphene.contexts.pasteLabel')}</FieldLabel>
-            <Textarea
-              {...field}
+            <CodeEditor
               id="paste-config"
-              aria-invalid={fieldState.invalid}
-              rows={9}
-              spellCheck={false}
-              className="font-mono text-xs"
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              invalid={fieldState.invalid}
+              diagnose={diagnose}
               placeholder={
                 'contexts:\n  prod:\n    server: graphene.example.com:7233\n    token: grn_…\n    namespace: ci'
               }
