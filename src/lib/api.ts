@@ -3,10 +3,12 @@ import { createConnectTransport } from '@connectrpc/connect-web'
 
 import { NamespacesAPI } from '@/proto/management/v1/namespaces_pb'
 import { ObserveAPI } from '@/proto/management/v1/observe_pb'
+import { RbacAPI } from '@/proto/management/v1/rbac_pb'
 import { ResourcesAPI } from '@/proto/management/v1/resources_pb'
+import { RevisionsAPI } from '@/proto/management/v1/revisions_pb'
 import { RunsAPI } from '@/proto/management/v1/runs_pb'
 import { SecretsAPI } from '@/proto/management/v1/secrets_pb'
-import { VarsAPI } from '@/proto/management/v1/vars_pb'
+import { SourceAPI } from '@/proto/management/v1/source_pb'
 
 export interface ApiAuth {
   token: string
@@ -26,10 +28,12 @@ export function makeApi(baseUrl: string, auth: () => ApiAuth) {
   return {
     namespaces: createClient(NamespacesAPI, transport),
     observe: createClient(ObserveAPI, transport),
+    rbac: createClient(RbacAPI, transport),
     resources: createClient(ResourcesAPI, transport),
+    revisions: createClient(RevisionsAPI, transport),
     runs: createClient(RunsAPI, transport),
     secrets: createClient(SecretsAPI, transport),
-    vars: createClient(VarsAPI, transport),
+    source: createClient(SourceAPI, transport),
   }
 }
 

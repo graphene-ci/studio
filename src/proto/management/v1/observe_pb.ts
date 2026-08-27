@@ -20,7 +20,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/observe.proto.
  */
 export const file_proto_management_v1_observe: GenFile = /*@__PURE__*/
-  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL29ic2VydmUucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiIgoTT2JzZXJ2ZVN0YXRlUmVxdWVzdBILCgNyZWYYASABKAkiWgoUT2JzZXJ2ZVN0YXRlUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJEjIKCHJlc291cmNlGAIgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSJZCg1FdmVudHNSZXF1ZXN0EgsKA3JlZhgBIAEoCRIWCg5hZnRlcl9ldmVudF9pZBgCIAEoAxIOCgZmb2xsb3cYAyABKAgSEwoLYWN0aXZpdHlfaWQYBCABKAkiuwEKBUV2ZW50EhAKCGV2ZW50X2lkGAEgASgDEhYKDnRpbWVfdW5peF9uYW5vGAIgASgDEgwKBGtpbmQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRINCgVhZ2VudBgFIAEoCRIOCgZzdGF0dXMYBiABKAkSDQoFZXJyb3IYByABKAkSDwoHYXR0ZW1wdBgIIAEoBRINCgVpbnB1dBgJIAEoDBIOCgZyZXN1bHQYCiABKAwSCwoDcmF3GAsgASgMIkMKC0xvZ3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIOCgZmb2xsb3cYAiABKAgSFwoPc2luY2VfdW5peF9uYW5vGAMgASgDIr0BCglMb2dSZWNvcmQSFgoOdGltZV91bml4X25hbm8YASABKAMSEAoIc2V2ZXJpdHkYAiABKAkSDAoEYm9keRgDIAEoCRJFCgphdHRyaWJ1dGVzGAQgAygLMjEuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dSZWNvcmQuQXR0cmlidXRlc0VudHJ5GjEKD0F0dHJpYnV0ZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIk0KDk1ldHJpY3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIXCg9zdGFydF91bml4X25hbm8YAiABKAMSFQoNZW5kX3VuaXhfbmFubxgDIAEoAyIhCg9NZXRyaWNzUmVzcG9uc2USDgoGc2VyaWVzGAEgASgMIhsKDFRyYWNlUmVxdWVzdBILCgNyZWYYASABKAkiHgoNVHJhY2VSZXNwb25zZRINCgV0cmFjZRgBIAEoDDLGAwoKT2JzZXJ2ZUFQSRJiCgVTdGF0ZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVzcG9uc2USUAoGRXZlbnRzEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudHNSZXF1ZXN0Gh0uZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudDABElAKBExvZ3MSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ3NSZXF1ZXN0GiEuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dSZWNvcmQwARJaCgdNZXRyaWNzEiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5NZXRyaWNzUmVxdWVzdBonLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTWV0cmljc1Jlc3BvbnNlElQKBVRyYWNlEiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFjZVJlcXVlc3QaJS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyYWNlUmVzcG9uc2VCRlpEZ2l0aHViLmNvbS9ncmFwaGVuZS1jaS9ncmFwaGVuZS9wa2cvcHJvdG8vbWFuYWdlbWVudC92MTttYW5hZ2VtZW50djFiBnByb3RvMw", [file_proto_management_v1_resources]);
+  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL29ic2VydmUucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiIgoTT2JzZXJ2ZVN0YXRlUmVxdWVzdBILCgNyZWYYASABKAkiWgoUT2JzZXJ2ZVN0YXRlUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJEjIKCHJlc291cmNlGAIgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSJZCg1FdmVudHNSZXF1ZXN0EgsKA3JlZhgBIAEoCRIWCg5hZnRlcl9ldmVudF9pZBgCIAEoAxIOCgZmb2xsb3cYAyABKAgSEwoLYWN0aXZpdHlfaWQYBCABKAkiuwEKBUV2ZW50EhAKCGV2ZW50X2lkGAEgASgDEhYKDnRpbWVfdW5peF9uYW5vGAIgASgDEgwKBGtpbmQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRINCgVhZ2VudBgFIAEoCRIOCgZzdGF0dXMYBiABKAkSDQoFZXJyb3IYByABKAkSDwoHYXR0ZW1wdBgIIAEoBRINCgVpbnB1dBgJIAEoDBIOCgZyZXN1bHQYCiABKAwSCwoDcmF3GAsgASgMIlIKC0xvZ3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIOCgZmb2xsb3cYAiABKAgSFwoPc2luY2VfdW5peF9uYW5vGAMgASgDEg0KBXF1ZXJ5GAQgASgJIr0BCglMb2dSZWNvcmQSFgoOdGltZV91bml4X25hbm8YASABKAMSEAoIc2V2ZXJpdHkYAiABKAkSDAoEYm9keRgDIAEoCRJFCgphdHRyaWJ1dGVzGAQgAygLMjEuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dSZWNvcmQuQXR0cmlidXRlc0VudHJ5GjEKD0F0dHJpYnV0ZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIlsKCExvZ0NodW5rEjMKBnJlY29yZBgBIAEoCzIhLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nUmVjb3JkSAASEQoHZHJvcHBlZBgCIAEoA0gAQgcKBWNodW5rImwKDk1ldHJpY3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIXCg9zdGFydF91bml4X25hbm8YAiABKAMSFQoNZW5kX3VuaXhfbmFubxgDIAEoAxIOCgZmb2xsb3cYBCABKAgSDQoFcXVlcnkYBSABKAkiTgoMTWV0cmljc0NodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuayI6CgxUcmFjZVJlcXVlc3QSCwoDcmVmGAEgASgJEg4KBmZvbGxvdxgCIAEoCBINCgVxdWVyeRgDIAEoCSJMCgpUcmFjZUNodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuazLDAwoKT2JzZXJ2ZUFQSRJiCgVTdGF0ZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVzcG9uc2USUAoGRXZlbnRzEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudHNSZXF1ZXN0Gh0uZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudDABEk8KBExvZ3MSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ3NSZXF1ZXN0GiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dDaHVuazABElkKB01ldHJpY3MSJi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLk1ldHJpY3NSZXF1ZXN0GiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5NZXRyaWNzQ2h1bmswARJTCgVUcmFjZRIkLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJhY2VSZXF1ZXN0GiIuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFjZUNodW5rMAFCRlpEZ2l0aHViLmNvbS9ncmFwaGVuZS1jaS9ncmFwaGVuZS9wa2cvcHJvdG8vbWFuYWdlbWVudC92MTttYW5hZ2VtZW50djFiBnByb3RvMw", [file_proto_management_v1_resources]);
 
 /**
  * @generated from message graphene.management.v1.ObserveStateRequest
@@ -206,6 +206,15 @@ export type LogsRequest = Message<"graphene.management.v1.LogsRequest"> & {
    * @generated from field: int64 since_unix_nano = 3;
    */
   sinceUnixNano: bigint;
+
+  /**
+   * Query is the RAW view: a LogsQL query in the backend's own
+   * language, over the whole store (admin only; ref and follow are
+   * ignored). A resource's logs are the same store filtered.
+   *
+   * @generated from field: string query = 4;
+   */
+  query: string;
 };
 
 /**
@@ -248,6 +257,41 @@ export const LogRecordSchema: GenMessage<LogRecord> = /*@__PURE__*/
   messageDesc(file_proto_management_v1_observe, 5);
 
 /**
+ * @generated from message graphene.management.v1.LogChunk
+ */
+export type LogChunk = Message<"graphene.management.v1.LogChunk"> & {
+  /**
+   * @generated from oneof graphene.management.v1.LogChunk.chunk
+   */
+  chunk: {
+    /**
+     * Record is one log line — history and live alike (a log record
+     * converts from OTLP without loss).
+     *
+     * @generated from field: graphene.management.v1.LogRecord record = 1;
+     */
+    value: LogRecord;
+    case: "record";
+  } | {
+    /**
+     * Dropped reports lines a slow consumer lost — telemetry sheds
+     * rather than blocks, and says so instead of leaving silent holes.
+     *
+     * @generated from field: int64 dropped = 2;
+     */
+    value: bigint;
+    case: "dropped";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message graphene.management.v1.LogChunk.
+ * Use `create(LogChunkSchema)` to create a new message.
+ */
+export const LogChunkSchema: GenMessage<LogChunk> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 6);
+
+/**
  * @generated from message graphene.management.v1.MetricsRequest
  */
 export type MetricsRequest = Message<"graphene.management.v1.MetricsRequest"> & {
@@ -265,6 +309,21 @@ export type MetricsRequest = Message<"graphene.management.v1.MetricsRequest"> & 
    * @generated from field: int64 end_unix_nano = 3;
    */
   endUnixNano: bigint;
+
+  /**
+   * Follow keeps the stream open: live points arrive as standard OTLP.
+   *
+   * @generated from field: bool follow = 4;
+   */
+  follow: boolean;
+
+  /**
+   * Query is the RAW view: a PromQL range query over the whole store
+   * (admin only; ref and follow are ignored).
+   *
+   * @generated from field: string query = 5;
+   */
+  query: string;
 };
 
 /**
@@ -272,27 +331,48 @@ export type MetricsRequest = Message<"graphene.management.v1.MetricsRequest"> & 
  * Use `create(MetricsRequestSchema)` to create a new message.
  */
 export const MetricsRequestSchema: GenMessage<MetricsRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 6);
+  messageDesc(file_proto_management_v1_observe, 7);
 
 /**
- * @generated from message graphene.management.v1.MetricsResponse
+ * @generated from message graphene.management.v1.MetricsChunk
  */
-export type MetricsResponse = Message<"graphene.management.v1.MetricsResponse"> & {
+export type MetricsChunk = Message<"graphene.management.v1.MetricsChunk"> & {
   /**
-   * Series is backend-shaped JSON; the contract firms up with the
-   * chosen backend.
-   *
-   * @generated from field: bytes series = 1;
+   * @generated from oneof graphene.management.v1.MetricsChunk.chunk
    */
-  series: Uint8Array;
+  chunk: {
+    /**
+     * Snapshot is the HISTORY: the backend's own PromQL range JSON.
+     *
+     * @generated from field: bytes snapshot = 1;
+     */
+    value: Uint8Array;
+    case: "snapshot";
+  } | {
+    /**
+     * Otlp is one LIVE batch: a serialized
+     * opentelemetry ExportMetricsServiceRequest, records of this
+     * subject only — decode it with any standard OTel library.
+     *
+     * @generated from field: bytes otlp = 2;
+     */
+    value: Uint8Array;
+    case: "otlp";
+  } | {
+    /**
+     * @generated from field: int64 dropped = 3;
+     */
+    value: bigint;
+    case: "dropped";
+  } | { case: undefined; value?: undefined };
 };
 
 /**
- * Describes the message graphene.management.v1.MetricsResponse.
- * Use `create(MetricsResponseSchema)` to create a new message.
+ * Describes the message graphene.management.v1.MetricsChunk.
+ * Use `create(MetricsChunkSchema)` to create a new message.
  */
-export const MetricsResponseSchema: GenMessage<MetricsResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 7);
+export const MetricsChunkSchema: GenMessage<MetricsChunk> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 8);
 
 /**
  * @generated from message graphene.management.v1.TraceRequest
@@ -302,6 +382,21 @@ export type TraceRequest = Message<"graphene.management.v1.TraceRequest"> & {
    * @generated from field: string ref = 1;
    */
   ref: string;
+
+  /**
+   * Follow keeps the stream open: live spans arrive as standard OTLP.
+   *
+   * @generated from field: bool follow = 2;
+   */
+  follow: boolean;
+
+  /**
+   * Query is the RAW view: Jaeger search parameters as a query string
+   * ("service=x&tags=..."), over the whole store (admin only).
+   *
+   * @generated from field: string query = 3;
+   */
+  query: string;
 };
 
 /**
@@ -309,26 +404,47 @@ export type TraceRequest = Message<"graphene.management.v1.TraceRequest"> & {
  * Use `create(TraceRequestSchema)` to create a new message.
  */
 export const TraceRequestSchema: GenMessage<TraceRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 8);
+  messageDesc(file_proto_management_v1_observe, 9);
 
 /**
- * @generated from message graphene.management.v1.TraceResponse
+ * @generated from message graphene.management.v1.TraceChunk
  */
-export type TraceResponse = Message<"graphene.management.v1.TraceResponse"> & {
+export type TraceChunk = Message<"graphene.management.v1.TraceChunk"> & {
   /**
-   * Trace is the span tree as JSON.
-   *
-   * @generated from field: bytes trace = 1;
+   * @generated from oneof graphene.management.v1.TraceChunk.chunk
    */
-  trace: Uint8Array;
+  chunk: {
+    /**
+     * Snapshot is the HISTORY: Jaeger JSON of the subject's traces.
+     *
+     * @generated from field: bytes snapshot = 1;
+     */
+    value: Uint8Array;
+    case: "snapshot";
+  } | {
+    /**
+     * Otlp is one LIVE batch: a serialized
+     * opentelemetry ExportTraceServiceRequest of this subject.
+     *
+     * @generated from field: bytes otlp = 2;
+     */
+    value: Uint8Array;
+    case: "otlp";
+  } | {
+    /**
+     * @generated from field: int64 dropped = 3;
+     */
+    value: bigint;
+    case: "dropped";
+  } | { case: undefined; value?: undefined };
 };
 
 /**
- * Describes the message graphene.management.v1.TraceResponse.
- * Use `create(TraceResponseSchema)` to create a new message.
+ * Describes the message graphene.management.v1.TraceChunk.
+ * Use `create(TraceChunkSchema)` to create a new message.
  */
-export const TraceResponseSchema: GenMessage<TraceResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 9);
+export const TraceChunkSchema: GenMessage<TraceChunk> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 10);
 
 /**
  * @generated from service graphene.management.v1.ObserveAPI
@@ -356,34 +472,37 @@ export const ObserveAPI: GenService<{
     output: typeof EventSchema;
   },
   /**
-   * Logs is dimension 3 (telemetry plane).
+   * Logs is dimension 3 (telemetry plane). History first, then — with
+   * follow — the live push from the collector: no polling anywhere.
    *
    * @generated from rpc graphene.management.v1.ObserveAPI.Logs
    */
   logs: {
     methodKind: "server_streaming";
     input: typeof LogsRequestSchema;
-    output: typeof LogRecordSchema;
+    output: typeof LogChunkSchema;
   },
   /**
-   * Metrics is dimension 4 (telemetry plane).
+   * Metrics is dimension 4: one snapshot chunk (the backend's PromQL
+   * range JSON), then — with follow — live OTLP metric chunks.
    *
    * @generated from rpc graphene.management.v1.ObserveAPI.Metrics
    */
   metrics: {
-    methodKind: "unary";
+    methodKind: "server_streaming";
     input: typeof MetricsRequestSchema;
-    output: typeof MetricsResponseSchema;
+    output: typeof MetricsChunkSchema;
   },
   /**
-   * Trace is dimension 5 (telemetry plane).
+   * Trace is dimension 5: one snapshot chunk (Jaeger JSON), then —
+   * with follow — live OTLP span chunks.
    *
    * @generated from rpc graphene.management.v1.ObserveAPI.Trace
    */
   trace: {
-    methodKind: "unary";
+    methodKind: "server_streaming";
     input: typeof TraceRequestSchema;
-    output: typeof TraceResponseSchema;
+    output: typeof TraceChunkSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_proto_management_v1_observe, 0);

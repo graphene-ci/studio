@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/secrets.proto.
  */
 export const file_proto_management_v1_secrets: GenFile = /*@__PURE__*/
-  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL3NlY3JldHMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiLwoQU2V0U2VjcmV0UmVxdWVzdBIMCgRuYW1lGAEgASgJEg0KBXZhbHVlGAIgASgJIhMKEVNldFNlY3JldFJlc3BvbnNlIiMKE0RlbGV0ZVNlY3JldFJlcXVlc3QSDAoEbmFtZRgBIAEoCSIWChREZWxldGVTZWNyZXRSZXNwb25zZSIUChJMaXN0U2VjcmV0c1JlcXVlc3QiJAoTTGlzdFNlY3JldHNSZXNwb25zZRINCgVuYW1lcxgBIAMoCTLBAgoKU2VjcmV0c0FQSRJgCglTZXRTZWNyZXQSKC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNldFNlY3JldFJlcXVlc3QaKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNldFNlY3JldFJlc3BvbnNlEmkKDERlbGV0ZVNlY3JldBIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRGVsZXRlU2VjcmV0UmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRGVsZXRlU2VjcmV0UmVzcG9uc2USZgoLTGlzdFNlY3JldHMSKi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3RTZWNyZXRzUmVxdWVzdBorLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFNlY3JldHNSZXNwb25zZUJGWkRnaXRodWIuY29tL2dyYXBoZW5lLWNpL2dyYXBoZW5lL3BrZy9wcm90by9tYW5hZ2VtZW50L3YxO21hbmFnZW1lbnR2MWIGcHJvdG8z");
+  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL3NlY3JldHMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiLwoQU2V0U2VjcmV0UmVxdWVzdBIMCgRuYW1lGAEgASgJEg0KBXZhbHVlGAIgASgJIiQKEVNldFNlY3JldFJlc3BvbnNlEg8KB3ZlcnNpb24YASABKAUybgoKU2VjcmV0c0FQSRJgCglTZXRTZWNyZXQSKC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNldFNlY3JldFJlcXVlc3QaKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNldFNlY3JldFJlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
 
 /**
  * @generated from message graphene.management.v1.SetSecretRequest
@@ -38,6 +38,13 @@ export const SetSecretRequestSchema: GenMessage<SetSecretRequest> = /*@__PURE__*
  * @generated from message graphene.management.v1.SetSecretResponse
  */
 export type SetSecretResponse = Message<"graphene.management.v1.SetSecretResponse"> & {
+  /**
+   * Version is what the record now counts: how many times this name
+   * has been written.
+   *
+   * @generated from field: int32 version = 1;
+   */
+  version: number;
 };
 
 /**
@@ -48,71 +55,12 @@ export const SetSecretResponseSchema: GenMessage<SetSecretResponse> = /*@__PURE_
   messageDesc(file_proto_management_v1_secrets, 1);
 
 /**
- * @generated from message graphene.management.v1.DeleteSecretRequest
- */
-export type DeleteSecretRequest = Message<"graphene.management.v1.DeleteSecretRequest"> & {
-  /**
-   * @generated from field: string name = 1;
-   */
-  name: string;
-};
-
-/**
- * Describes the message graphene.management.v1.DeleteSecretRequest.
- * Use `create(DeleteSecretRequestSchema)` to create a new message.
- */
-export const DeleteSecretRequestSchema: GenMessage<DeleteSecretRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_secrets, 2);
-
-/**
- * @generated from message graphene.management.v1.DeleteSecretResponse
- */
-export type DeleteSecretResponse = Message<"graphene.management.v1.DeleteSecretResponse"> & {
-};
-
-/**
- * Describes the message graphene.management.v1.DeleteSecretResponse.
- * Use `create(DeleteSecretResponseSchema)` to create a new message.
- */
-export const DeleteSecretResponseSchema: GenMessage<DeleteSecretResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_secrets, 3);
-
-/**
- * @generated from message graphene.management.v1.ListSecretsRequest
- */
-export type ListSecretsRequest = Message<"graphene.management.v1.ListSecretsRequest"> & {
-};
-
-/**
- * Describes the message graphene.management.v1.ListSecretsRequest.
- * Use `create(ListSecretsRequestSchema)` to create a new message.
- */
-export const ListSecretsRequestSchema: GenMessage<ListSecretsRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_secrets, 4);
-
-/**
- * @generated from message graphene.management.v1.ListSecretsResponse
- */
-export type ListSecretsResponse = Message<"graphene.management.v1.ListSecretsResponse"> & {
-  /**
-   * Names only — a value never travels back.
-   *
-   * @generated from field: repeated string names = 1;
-   */
-  names: string[];
-};
-
-/**
- * Describes the message graphene.management.v1.ListSecretsResponse.
- * Use `create(ListSecretsResponseSchema)` to create a new message.
- */
-export const ListSecretsResponseSchema: GenMessage<ListSecretsResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_secrets, 5);
-
-/**
- * SecretsAPI administers the namespace's secret set. VALUES go in and
- * never come out through this plane: workers resolve them at the point
- * of use through the worker plane; the management plane sees names.
+ * SecretsAPI is the one channel a secret VALUE travels: in, once, and
+ * never back. Everything else about a secret — that the name exists,
+ * who owns it, when it was last rotated, deleting it — is the ordinary
+ * record of kind "secret", read and written through ResourcesAPI. The
+ * value cannot ride a record's command: a command payload becomes a
+ * history event, and a history is forever.
  *
  * @generated from service graphene.management.v1.SecretsAPI
  */
@@ -124,22 +72,6 @@ export const SecretsAPI: GenService<{
     methodKind: "unary";
     input: typeof SetSecretRequestSchema;
     output: typeof SetSecretResponseSchema;
-  },
-  /**
-   * @generated from rpc graphene.management.v1.SecretsAPI.DeleteSecret
-   */
-  deleteSecret: {
-    methodKind: "unary";
-    input: typeof DeleteSecretRequestSchema;
-    output: typeof DeleteSecretResponseSchema;
-  },
-  /**
-   * @generated from rpc graphene.management.v1.SecretsAPI.ListSecrets
-   */
-  listSecrets: {
-    methodKind: "unary";
-    input: typeof ListSecretsRequestSchema;
-    output: typeof ListSecretsResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_proto_management_v1_secrets, 0);
