@@ -72,6 +72,8 @@ format: $(YARN_JS) ## Отформатировать исходники чере
 .PHONY: generate
 generate: $(BIN)/easyp $(YARN_JS) ## Перегенерировать TypeScript-контракты из graphene-ci/graphene
 	$(YARN) install --frozen-lockfile --non-interactive
+	$(BIN)/easyp mod update
+	$(RM) -r src/proto
 	$(BIN)/easyp generate
 
 .PHONY: build

@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/namespaces.proto.
  */
 export const file_proto_management_v1_namespaces: GenFile = /*@__PURE__*/
-  fileDesc("CiRwcm90by9tYW5hZ2VtZW50L3YxL25hbWVzcGFjZXMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiEwoRU2VydmVySW5mb1JlcXVlc3QipgEKElNlcnZlckluZm9SZXNwb25zZRIPCgd2ZXJzaW9uGAEgASgJEkgKCmNvbXBvbmVudHMYAiADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXNwb25zZS5Db21wb25lbnQaNQoJQ29tcG9uZW50EgwKBG5hbWUYASABKAkSCgoCb2sYAiABKAgSDgoGZGV0YWlsGAMgASgJIg8KDVdob2FtaVJlcXVlc3QiMQoOV2hvYW1pUmVzcG9uc2USDAoEcm9sZRgBIAEoCRIRCgluYW1lc3BhY2UYAiABKAkiPgoWQ3JlYXRlTmFtZXNwYWNlUmVxdWVzdBIMCgRuYW1lGAEgASgJEhYKDnJldGVudGlvbl9kYXlzGAIgASgFIhkKF0NyZWF0ZU5hbWVzcGFjZVJlc3BvbnNlIhcKFUxpc3ROYW1lc3BhY2VzUmVxdWVzdCInChZMaXN0TmFtZXNwYWNlc1Jlc3BvbnNlEg0KBW5hbWVzGAEgAygJMrIDCg1OYW1lc3BhY2VzQVBJEnIKD0NyZWF0ZU5hbWVzcGFjZRIuLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ3JlYXRlTmFtZXNwYWNlUmVxdWVzdBovLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ3JlYXRlTmFtZXNwYWNlUmVzcG9uc2USbwoOTGlzdE5hbWVzcGFjZXMSLS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3ROYW1lc3BhY2VzUmVxdWVzdBouLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdE5hbWVzcGFjZXNSZXNwb25zZRJXCgZXaG9hbWkSJS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldob2FtaVJlcXVlc3QaJi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldob2FtaVJlc3BvbnNlEmMKClNlcnZlckluZm8SKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXF1ZXN0GiouZ3JhcGhlbmUubWFuYWdlbWVudC52MS5TZXJ2ZXJJbmZvUmVzcG9uc2VCRlpEZ2l0aHViLmNvbS9ncmFwaGVuZS1jaS9ncmFwaGVuZS9wa2cvcHJvdG8vbWFuYWdlbWVudC92MTttYW5hZ2VtZW50djFiBnByb3RvMw");
+  fileDesc("CiRwcm90by9tYW5hZ2VtZW50L3YxL25hbWVzcGFjZXMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiEwoRU2VydmVySW5mb1JlcXVlc3QipgEKElNlcnZlckluZm9SZXNwb25zZRIPCgd2ZXJzaW9uGAEgASgJEkgKCmNvbXBvbmVudHMYAiADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlcnZlckluZm9SZXNwb25zZS5Db21wb25lbnQaNQoJQ29tcG9uZW50EgwKBG5hbWUYASABKAkSCgoCb2sYAiABKAgSDgoGZGV0YWlsGAMgASgJIg8KDVdob2FtaVJlcXVlc3QiMQoOV2hvYW1pUmVzcG9uc2USDAoEcm9sZRgBIAEoCRIRCgluYW1lc3BhY2UYAiABKAkyzQEKDU5hbWVzcGFjZXNBUEkSVwoGV2hvYW1pEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9hbWlSZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XaG9hbWlSZXNwb25zZRJjCgpTZXJ2ZXJJbmZvEikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5TZXJ2ZXJJbmZvUmVxdWVzdBoqLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU2VydmVySW5mb1Jlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
 
 /**
  * @generated from message graphene.management.v1.ServerInfoRequest
@@ -116,101 +116,19 @@ export const WhoamiResponseSchema: GenMessage<WhoamiResponse> = /*@__PURE__*/
   messageDesc(file_proto_management_v1_namespaces, 3);
 
 /**
- * @generated from message graphene.management.v1.CreateNamespaceRequest
- */
-export type CreateNamespaceRequest = Message<"graphene.management.v1.CreateNamespaceRequest"> & {
-  /**
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * RetentionDays for closed workflows (default 30).
-   *
-   * @generated from field: int32 retention_days = 2;
-   */
-  retentionDays: number;
-};
-
-/**
- * Describes the message graphene.management.v1.CreateNamespaceRequest.
- * Use `create(CreateNamespaceRequestSchema)` to create a new message.
- */
-export const CreateNamespaceRequestSchema: GenMessage<CreateNamespaceRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 4);
-
-/**
- * @generated from message graphene.management.v1.CreateNamespaceResponse
- */
-export type CreateNamespaceResponse = Message<"graphene.management.v1.CreateNamespaceResponse"> & {
-};
-
-/**
- * Describes the message graphene.management.v1.CreateNamespaceResponse.
- * Use `create(CreateNamespaceResponseSchema)` to create a new message.
- */
-export const CreateNamespaceResponseSchema: GenMessage<CreateNamespaceResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 5);
-
-/**
- * @generated from message graphene.management.v1.ListNamespacesRequest
- */
-export type ListNamespacesRequest = Message<"graphene.management.v1.ListNamespacesRequest"> & {
-};
-
-/**
- * Describes the message graphene.management.v1.ListNamespacesRequest.
- * Use `create(ListNamespacesRequestSchema)` to create a new message.
- */
-export const ListNamespacesRequestSchema: GenMessage<ListNamespacesRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 6);
-
-/**
- * @generated from message graphene.management.v1.ListNamespacesResponse
- */
-export type ListNamespacesResponse = Message<"graphene.management.v1.ListNamespacesResponse"> & {
-  /**
-   * @generated from field: repeated string names = 1;
-   */
-  names: string[];
-};
-
-/**
- * Describes the message graphene.management.v1.ListNamespacesResponse.
- * Use `create(ListNamespacesResponseSchema)` to create a new message.
- */
-export const ListNamespacesResponseSchema: GenMessage<ListNamespacesResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_namespaces, 7);
-
-/**
  * NamespacesAPI manages the isolation units of an installation. A
  * graphene namespace is SYMMETRIC to a Temporal namespace: records,
  * queues, visibility, the ownership tree — all isolated by the durable
  * core itself. Tokens are scoped to one namespace; in the cloud a
  * namespace becomes an organization's home.
+ * A namespace is DECLARED like everything else: `apply namespace <name>`
+ * in the default namespace, listed by `get namespace`. What remains
+ * here is what is not a record — who the caller is, and what the
+ * installation is.
  *
  * @generated from service graphene.management.v1.NamespacesAPI
  */
 export const NamespacesAPI: GenService<{
-  /**
-   * Create registers the namespace in Temporal (with the graphene
-   * search attributes) and makes it schedulable. Idempotent.
-   *
-   * @generated from rpc graphene.management.v1.NamespacesAPI.CreateNamespace
-   */
-  createNamespace: {
-    methodKind: "unary";
-    input: typeof CreateNamespaceRequestSchema;
-    output: typeof CreateNamespaceResponseSchema;
-  },
-  /**
-   * @generated from rpc graphene.management.v1.NamespacesAPI.ListNamespaces
-   */
-  listNamespaces: {
-    methodKind: "unary";
-    input: typeof ListNamespacesRequestSchema;
-    output: typeof ListNamespacesResponseSchema;
-  },
   /**
    * Whoami answers who the caller's token is: role and namespace scope.
    * Any authenticated principal may ask — this is login's handshake.
