@@ -14,7 +14,10 @@ export function ImportPreview({ parsed }: ImportPreviewProps) {
   const existing = useStore($contexts)
 
   return (
-    <ul className="flex flex-col gap-1" aria-label={t('graphene.contexts.parsedLabel')}>
+    <ul
+      className="flex max-h-48 flex-col gap-1 overflow-y-auto"
+      aria-label={t('graphene.contexts.parsedLabel')}
+    >
       {parsed.map(({ name, ctx }) => (
         <li key={name} className="flex items-center gap-2.5 rounded-md bg-muted p-2">
           <span className="grow text-sm font-medium">{name}</span>
