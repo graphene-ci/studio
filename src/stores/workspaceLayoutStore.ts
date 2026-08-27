@@ -16,8 +16,10 @@ export interface WorkspaceLayoutState {
   inspector: WorkspacePanelLayout
   terminal: WorkspacePanelVisibility
   notifications: WorkspacePanelVisibility
-  bottom: { size: number }
+  bottom: { size: number; split: number }
 }
+
+export const WORKSPACE_BOTTOM_SPLIT_LIMITS = { min: 20, max: 80 }
 
 export const WORKSPACE_PANEL_LIMITS: Record<
   WorkspaceResizablePanelId,
@@ -33,7 +35,7 @@ const DEFAULT_WORKSPACE_LAYOUT: WorkspaceLayoutState = {
   inspector: { isOpen: false, size: 320 },
   terminal: { isOpen: false },
   notifications: { isOpen: false },
-  bottom: { size: 288 },
+  bottom: { size: 288, split: 50 },
 }
 
 function clampPanelSize(panel: WorkspaceResizablePanelId, size: number): number {
@@ -68,7 +70,14 @@ function decodeBottom(value: unknown): WorkspaceLayoutState['bottom'] {
     'size' in value && typeof value.size === 'number'
       ? value.size
       : DEFAULT_WORKSPACE_LAYOUT.bottom.size
-  return { size: clampPanelSize('bottom', size) }
+  const split =
+    'split' in value && typeof value.split === 'number'
+      ? Math.min(
+          WORKSPACE_BOTTOM_SPLIT_LIMITS.max,
+          Math.max(WORKSPACE_BOTTOM_SPLIT_LIMITS.min, value.split),
+        )
+      : DEFAULT_WORKSPACE_LAYOUT.bottom.split
+  return { size: clampPanelSize('bottom', size), split }
 }
 
 function decodeWorkspaceLayout(raw: string): WorkspaceLayoutState {
@@ -122,5 +131,18 @@ export function setWorkspacePanelSize(panel: WorkspaceResizablePanelId, size: nu
   $workspaceLayout.set({
     ...current,
     [panel]: { ...current[panel], size: nextSize },
+  })
+}
+
+export function setWorkspaceBottomSplit(split: number): void {
+  const current = $workspaceLayout.get()
+  const nextSplit = Math.min(
+    WORKSPACE_BOTTOM_SPLIT_LIMITS.max,
+    Math.max(WORKSPACE_BOTTOM_SPLIT_LIMITS.min, split),
+  )
+  if (current.bottom.split === nextSplit) return
+  $workspaceLayout.set({
+    ...current,
+    bottom: { ...current.bottom, split: nextSplit },
   })
 }

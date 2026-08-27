@@ -120,6 +120,8 @@
   --workspace-chrome-accent-soft: rgb(155 135 255 / 0.1);
   --workspace-chrome-highlight: rgb(255 255 255 / 0.44);
   --workspace-chrome-shade: rgb(77 71 111 / 0.1);
+  --workspace-resize-accent: #7f68ff;
+  --workspace-resize-accent-active: #9b87ff;
 
   /* Scrim over media — the only sanctioned translucent surface. */
   --scrim: rgb(0 0 0 / 0.3);
@@ -457,6 +459,8 @@
   --workspace-resources-width: 17.5rem;
   --workspace-inspector-width: 20rem;
   --workspace-bottom-height: 18rem;
+  --workspace-bottom-terminal-track: 1fr;
+  --workspace-bottom-notifications-track: 1fr;
   display: grid;
   grid-template-columns:
     var(--workspace-toolbar-width) var(--workspace-resources-track)
@@ -539,7 +543,25 @@
 }
 
 .workspace-bottom-panels-split {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns:
+    minmax(0, var(--workspace-bottom-terminal-track)) var(--workspace-panel-gap)
+    minmax(0, var(--workspace-bottom-notifications-track));
+  gap: 0;
+}
+
+.workspace-bottom-panels-split .workspace-bottom-terminal-panel {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.workspace-bottom-split-handle {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.workspace-bottom-panels-split .workspace-bottom-notifications-panel {
+  grid-row: 1;
+  grid-column: 3;
 }
 
 .workspace-panel-slot {
@@ -569,7 +591,6 @@
   background: transparent;
   touch-action: none;
   user-select: none;
-  transition: background-color 140ms ease;
 }
 
 .workspace-resize-handle::after {
@@ -588,8 +609,8 @@
 
 .workspace-resize-handle-vertical::after {
   inset-block: 0.5rem;
-  inset-inline-start: calc(50% - 0.0625rem);
-  width: 0.125rem;
+  inset-inline-start: calc(50% - 0.03125rem);
+  width: 0.0625rem;
 }
 
 .workspace-resize-handle-horizontal {
@@ -600,8 +621,8 @@
 
 .workspace-resize-handle-horizontal::after {
   inset-inline: 0.5rem;
-  inset-block-start: calc(50% - 0.0625rem);
-  height: 0.125rem;
+  inset-block-start: calc(50% - 0.03125rem);
+  height: 0.0625rem;
 }
 
 .workspace-resize-handle-vertical.workspace-resize-handle-start {
@@ -629,7 +650,7 @@
 }
 
 .workspace-resize-handle:focus-visible::after {
-  background-color: var(--primary);
+  background-color: var(--workspace-resize-accent);
 }
 
 .workspace-toolbar {
@@ -697,20 +718,12 @@
   }
 
   .workspace-resize-handle:hover::after {
-    background-color: var(--primary);
+    background-color: var(--workspace-resize-accent);
   }
-
-  .workspace-resize-handle:hover {
-    background-color: var(--accent);
-  }
-}
-
-.workspace-resize-handle:active {
-  background-color: var(--surface-hover);
 }
 
 .workspace-resize-handle:active::after {
-  background-color: var(--primary);
+  background-color: var(--workspace-resize-accent-active);
 }
 
 /* Scroll containers reserve their gutter for the same reason. */
