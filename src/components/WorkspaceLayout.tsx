@@ -1,11 +1,28 @@
 import { useStore } from '@nanostores/react'
-import { BellIcon, FolderTreeIcon, PanelRightOpenIcon, SquareTerminalIcon } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import filesIcon from '@/assets/icons/toolwindow/files.svg'
+import filesIconDark from '@/assets/icons/toolwindow/files_dark.svg'
+import inspectorIcon from '@/assets/icons/toolwindow/inspector.svg'
+import inspectorIconDark from '@/assets/icons/toolwindow/inspector_dark.svg'
+import notificationsIcon from '@/assets/icons/toolwindow/notifications.svg'
+import notificationsIconDark from '@/assets/icons/toolwindow/notifications_dark.svg'
+import resourcesIcon from '@/assets/icons/toolwindow/resources.svg'
+import terminalIcon from '@/assets/icons/toolwindow/terminal.svg'
+import terminalIconDark from '@/assets/icons/toolwindow/terminal_dark.svg'
+import { ThemedIcon } from '@/components/ThemedIcon'
+
+import { FileTreePanel } from '@/components/files/FileTreePanel'
+import {
+  NotificationsPanel,
+  NotificationsPanelActions,
+} from '@/components/notifications/NotificationsPanel'
+import { ResourceTreePanel } from '@/components/resources/tree/ResourceTreePanel'
 import { WorkspacePanel, WorkspacePanelTitle } from '@/components/WorkspacePanel'
 import { WorkspaceResizeHandle } from '@/components/WorkspaceResizeHandle'
 import { cn } from '@/lib/utils'
+import { $notifications } from '@/stores/notificationsStore'
 import {
   $workspaceLayout,
   setWorkspaceBottomSplit,
@@ -56,9 +73,12 @@ function ToolBar({ side, label, top, bottom }: ToolBarProps) {
 export function WorkspaceLayout() {
   const { t } = useTranslation()
   const layout = useStore($workspaceLayout)
+  const unreadCount = useStore($notifications).filter((n) => !n.read).length
   const isBottomOpen = layout.terminal.isOpen || layout.notifications.isOpen
+  // The left slot holds one panel at a time: resources or files.
+  const leftPanel = layout.resources.isOpen ? 'resources' : layout.files.isOpen ? 'files' : null
   const layoutStyle = {
-    '--workspace-resources-width': `${layout.resources.size}px`,
+    '--workspace-resources-width': `${leftPanel === null ? layout.resources.size : layout[leftPanel].size}px`,
     '--workspace-inspector-width': `${layout.inspector.size}px`,
     '--workspace-bottom-height': `${layout.bottom.size}px`,
     '--workspace-bottom-terminal-track': `${layout.bottom.split}fr`,
@@ -69,7 +89,7 @@ export function WorkspaceLayout() {
     <div
       className={cn(
         'workspace-layout absolute inset-0 overflow-hidden',
-        layout.resources.isOpen && 'workspace-layout-resources-open',
+        leftPanel !== null && 'workspace-layout-resources-open',
         layout.inspector.isOpen && 'workspace-layout-inspector-open',
         isBottomOpen && 'workspace-layout-bottom-open',
       )}
@@ -79,45 +99,57 @@ export function WorkspaceLayout() {
         side="left"
         label={t('graphene.workspace.toolbars.left')}
         top={
-          <ToolBarAction
-            buttonLabel={t('graphene.workspace.panels.resources')}
-            isActive={layout.resources.isOpen}
-            icon={<FolderTreeIcon aria-hidden="true" />}
-            onToggle={() => toggleWorkspacePanel('resources')}
-          />
+          <>
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.resources')}
+              isActive={layout.resources.isOpen}
+              icon={<ThemedIcon light={resourcesIcon} />}
+              onToggle={() => toggleWorkspacePanel('resources')}
+            />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.files')}
+              isActive={layout.files.isOpen}
+              icon={<ThemedIcon light={filesIcon} dark={filesIconDark} />}
+              onToggle={() => toggleWorkspacePanel('files')}
+            />
+          </>
         }
         bottom={
           <ToolBarAction
             buttonLabel={t('graphene.workspace.panels.terminal')}
             isActive={layout.terminal.isOpen}
-            icon={<SquareTerminalIcon aria-hidden="true" />}
+            icon={<ThemedIcon light={terminalIcon} dark={terminalIconDark} />}
             onToggle={() => toggleWorkspacePanel('terminal')}
           />
         }
       />
 
-      {layout.resources.isOpen && (
+      {leftPanel !== null && (
         <aside className="workspace-panel-slot workspace-resources-panel min-h-0 min-w-0">
           <WorkspacePanel
             className="size-full"
             header={
-              <WorkspacePanelTitle>{t('graphene.workspace.panels.resources')}</WorkspacePanelTitle>
+              <WorkspacePanelTitle>
+                {t(`graphene.workspace.panels.${leftPanel}`)}
+              </WorkspacePanelTitle>
             }
-            aria-label={t('graphene.workspace.panels.resources')}
-          />
+            aria-label={t(`graphene.workspace.panels.${leftPanel}`)}
+          >
+            {leftPanel === 'resources' ? <ResourceTreePanel /> : <FileTreePanel />}
+          </WorkspacePanel>
         </aside>
       )}
 
-      {layout.resources.isOpen && (
+      {leftPanel !== null && (
         <WorkspaceResizeHandle
           orientation="vertical"
           direction={1}
           label={t('graphene.workspace.panels.resizeResources')}
-          size={layout.resources.size}
-          min={WORKSPACE_PANEL_LIMITS.resources.min}
-          max={WORKSPACE_PANEL_LIMITS.resources.max}
+          size={layout[leftPanel].size}
+          min={WORKSPACE_PANEL_LIMITS[leftPanel].min}
+          max={WORKSPACE_PANEL_LIMITS[leftPanel].max}
           className="workspace-resize-handle-grid workspace-resources-resize-handle"
-          onResize={(size) => setWorkspacePanelSize('resources', size)}
+          onResize={(size) => setWorkspacePanelSize(leftPanel, size)}
         />
       )}
 
@@ -163,7 +195,7 @@ export function WorkspaceLayout() {
           <ToolBarAction
             buttonLabel={t('graphene.workspace.panels.inspector')}
             isActive={layout.inspector.isOpen}
-            icon={<PanelRightOpenIcon aria-hidden="true" />}
+            icon={<ThemedIcon light={inspectorIcon} dark={inspectorIconDark} />}
             onToggle={() => toggleWorkspacePanel('inspector')}
           />
         }
@@ -171,7 +203,16 @@ export function WorkspaceLayout() {
           <ToolBarAction
             buttonLabel={t('graphene.workspace.panels.notifications')}
             isActive={layout.notifications.isOpen}
-            icon={<BellIcon aria-hidden="true" />}
+            icon={
+              <span className="relative inline-flex">
+                <ThemedIcon light={notificationsIcon} dark={notificationsIconDark} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-destructive px-0.5 font-mono text-4xs font-semibold text-primary-foreground">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </span>
+            }
             onToggle={() => toggleWorkspacePanel('notifications')}
           />
         }
@@ -225,12 +266,17 @@ export function WorkspaceLayout() {
             <WorkspacePanel
               className="workspace-bottom-notifications-panel size-full"
               header={
-                <WorkspacePanelTitle>
-                  {t('graphene.workspace.panels.notifications')}
-                </WorkspacePanelTitle>
+                <>
+                  <WorkspacePanelTitle>
+                    {t('graphene.workspace.panels.notifications')}
+                  </WorkspacePanelTitle>
+                  <NotificationsPanelActions />
+                </>
               }
               aria-label={t('graphene.workspace.panels.notifications')}
-            />
+            >
+              <NotificationsPanel />
+            </WorkspacePanel>
           )}
         </div>
       )}

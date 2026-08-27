@@ -1,7 +1,7 @@
 import { atom } from 'nanostores'
 
 import { $contexts } from '@/stores/contextsStore'
-import { LoginError, verifyContext } from '@/stores/sessionStore'
+import { LoginError, sessionRole, verifyContext } from '@/stores/sessionStore'
 
 // Ephemeral per-context health, filled by checks — never persisted:
 // a stand's availability is a fact about NOW.
@@ -41,7 +41,7 @@ export async function checkContext(name: string): Promise<void> {
   patchHealth(name, { checking: true })
   try {
     const session = await verifyContext(ctx, ctx.token)
-    patchHealth(name, { state: 'ok', role: session.role, checking: false })
+    patchHealth(name, { state: 'ok', role: sessionRole(session), checking: false })
   } catch (err) {
     const invalid = err instanceof LoginError && err.reason === 'invalid_token'
     patchHealth(name, {

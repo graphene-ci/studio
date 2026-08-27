@@ -8,6 +8,7 @@
       "!!dist_packaged",
       "!!node_modules",
       "!!src/proto",
+      "!!src/assets/icons",
       "!!bin/yarn.cjs"
     ]
   },

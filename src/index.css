@@ -123,6 +123,18 @@
   --workspace-resize-accent: #7f68ff;
   --workspace-resize-accent-active: #9b87ff;
 
+  /* Scrollbars follow the mark violet, like the resize handles. */
+  --scrollbar-thumb: rgb(127 104 255 / 0.35);
+  --scrollbar-thumb-active: #7f68ff;
+
+  /* Code highlighting (CodeMirror) — light ramp, Pajamas 500s. */
+  --code-key: #1f75cb; /* blue-500 */
+  --code-string: #108548; /* green-500 */
+  --code-number: #ab6100; /* orange-500 */
+  --code-keyword: #d84280; /* magenta-500 — true/false/null */
+  --code-comment: #737278; /* gray-500 */
+  --code-punct: #89888d; /* gray-400 */
+
   /* Scrim over media — the only sanctioned translucent surface. */
   --scrim: rgb(0 0 0 / 0.3);
 
@@ -195,6 +207,17 @@
   --workspace-chrome-accent-soft: rgb(155 135 255 / 0.12);
   --workspace-chrome-highlight: rgb(255 255 255 / 0.05);
   --workspace-chrome-shade: rgb(77 71 111 / 0.14);
+
+  --scrollbar-thumb: rgb(155 135 255 / 0.4);
+  --scrollbar-thumb-active: #9b87ff;
+
+  /* Code highlighting — dark ramp, one step lighter (300s). */
+  --code-key: #63a6e9; /* blue-300 */
+  --code-string: #52b87a; /* green-300 */
+  --code-number: #d99530; /* orange-300 */
+  --code-keyword: #e57fa6; /* magenta-300 */
+  --code-comment: #89888d; /* gray-400 */
+  --code-punct: #a4a3a8; /* gray-300 */
 
   /* CI status (dark ramp — one step lighter for contrast) */
   --status-success: #52b87a; /* green-300 */
@@ -441,12 +464,16 @@
 }
 
 .workspace-statusbar {
-  height: 1.5rem;
-  min-height: 1.5rem;
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
   background-color: transparent;
 }
 
 .workspace-layout {
+  /* Resource tree geometry (TreeRow indentation). */
+  --tree-indent: 0.5rem;
+  --tree-pad: 0.25rem;
   --workspace-panel-gap: 0.5rem;
   --workspace-panel-radius: 0.625rem;
   --workspace-toolbar-width: 3rem;
@@ -470,7 +497,9 @@
   grid-template-rows: minmax(0, 1fr) var(--workspace-bottom-resize-track) var(
       --workspace-bottom-track
     );
-  padding-block: var(--workspace-panel-gap);
+  /* The footer supplies the bottom air — a symmetric padding here
+     would fuse with it into one tall band with an off-center text. */
+  padding-block-start: var(--workspace-panel-gap);
 }
 
 .workspace-layout-resources-open {
@@ -703,12 +732,15 @@
   transform: translateY(1px);
 }
 
-.workspace-toolbar-action > svg {
+.workspace-toolbar-action > :is(svg, img, span) {
   grid-area: 1 / 1;
+  place-self: center;
+}
+
+.workspace-toolbar-action :is(svg, img) {
   display: block;
   width: 1.125rem;
   height: 1.125rem;
-  place-self: center;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -729,4 +761,143 @@
 /* Scroll containers reserve their gutter for the same reason. */
 @utility scrollbar-stable {
   scrollbar-gutter: stable;
+}
+
+/* ============================================================
+   Scrollbars — a continuation of the mark violet, like the
+   resize handles: transparent track, thin thumb, no buttons.
+   Modern Chrome honors scrollbar-color; the ::-webkit-* rules
+   cover Electron builds where the standard properties lose.
+   ============================================================ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 0.1875rem solid transparent;
+  border-radius: 999px;
+  background-color: var(--scrollbar-thumb);
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-thumb-active);
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* ============================================================
+   CodeEditor (CodeMirror) — the kit-styled code surface: same
+   chrome as the Textarea primitive, token-driven highlighting.
+   ============================================================ */
+
+.code-editor {
+  overflow: hidden;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  background-color: transparent;
+  transition: border-color 140ms ease;
+}
+
+.dark .code-editor,
+.midnight .code-editor,
+.graphite .code-editor {
+  background-color: color-mix(in oklab, var(--input) 30%, transparent);
+}
+
+.code-editor:focus-within {
+  border-color: var(--ring);
+  outline: 3px solid color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-offset: 0;
+}
+
+.code-editor[data-invalid="true"] {
+  border-color: var(--destructive);
+}
+
+.code-editor[data-invalid="true"]:focus-within {
+  outline-color: color-mix(in oklab, var(--destructive) 30%, transparent);
+}
+
+.code-editor .cm-editor {
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.code-editor .cm-scroller {
+  min-height: 10rem;
+  max-height: 14rem;
+  overflow: auto;
+  line-height: var(--text-xs--line-height);
+}
+
+.code-editor .cm-content {
+  padding: 0.5rem 0;
+  caret-color: var(--foreground);
+}
+
+.code-editor .cm-line {
+  padding: 0 0.625rem;
+}
+
+.code-editor .cm-placeholder {
+  color: var(--muted-foreground);
+}
+
+.code-editor .cm-selectionBackground,
+.code-editor .cm-editor ::selection {
+  background-color: color-mix(in oklab, var(--primary) 25%, transparent);
+}
+
+.code-editor .cm-cursor {
+  border-color: var(--foreground);
+}
+
+/* Lint: the invalid span carries a wavy destructive underline. */
+.code-editor .cm-lintRange-error {
+  background: none;
+  text-decoration: underline wavy var(--destructive);
+  text-underline-offset: 0.2em;
+}
+
+.code-tok-key {
+  color: var(--code-key);
+}
+
+.code-tok-string {
+  color: var(--code-string);
+}
+
+.code-tok-number {
+  color: var(--code-number);
+}
+
+.code-tok-keyword {
+  color: var(--code-keyword);
+}
+
+.code-tok-comment {
+  color: var(--code-comment);
+}
+
+.code-tok-punct {
+  color: var(--code-punct);
 }

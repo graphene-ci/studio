@@ -32,7 +32,8 @@
         "resizeResources": "Изменить ширину панели ресурсов",
         "resizeInspector": "Изменить ширину инспектора",
         "resizeBottom": "Изменить высоту нижних панелей",
-        "resizeBottomSplit": "Изменить ширину терминала и уведомлений"
+        "resizeBottomSplit": "Изменить ширину терминала и уведомлений",
+        "files": "Файлы"
       }
     },
     "runs": {
@@ -131,7 +132,12 @@
     },
     "statusbar": {
       "server": "server v{{version}}",
-      "escHint": "esc — закрыть панель"
+      "escHint": "esc — закрыть панель",
+      "serverDown": "сервер недоступен",
+      "degraded": "часть данных не обновляется",
+      "serverLost": "Сервер {{context}} перестал отвечать",
+      "serverBack": "Сервер {{context}} снова на связи",
+      "notOk": "не в порядке"
     },
     "inspector": {
       "close": "Закрыть панель",
@@ -163,7 +169,10 @@
       "view": {
         "table": "Таблица",
         "tree": "Дерево"
-      }
+      },
+      "treeFilter": "фильтр: kind/имя… (/)",
+      "treeError": "Не удалось загрузить дерево",
+      "treeNoMatch": "Ничего не подходит под фильтр"
     },
     "namespace": {
       "varsSubtitle": "Значения окружения, которые пайплайны читают как ${var:name} — значения видимы",
@@ -274,6 +283,43 @@
         "nameFormat": "Буквы, цифры, точка, дефис, подчёркивание — например prod-eu",
         "unparsable": "Не похоже ни на YAML, ни на JSON с контекстами — проверьте содержимое"
       }
+    },
+    "ns": {
+      "manage": "Управление namespace…",
+      "manageTitle": "Namespaces",
+      "manageSubtitle": "Изоляционные единицы инсталляции: записи, очереди и visibility",
+      "system": "системный — неудаляем",
+      "create": "Создать namespace",
+      "createSubmit": "Создать",
+      "nameLabel": "Имя",
+      "descriptionLabel": "Описание",
+      "retentionLabel": "Retention, дней",
+      "retentionHint": "0 — дефолт инсталляции",
+      "retention": "retention {{days}} дн.",
+      "retentionShort": "{{days}}д",
+      "retentionDefault": "retention по умолчанию",
+      "delete": "Удалить namespace {{name}}",
+      "deleteConfirm": "Удалить?",
+      "deleteHint": "Удаление снимает обслуживание — содержимое доживает под своим retention и не воскресает",
+      "deleteFailed": "Не удалось удалить {{name}}",
+      "errors": {
+        "nameRequired": "Назовите — например team-a или staging",
+        "nameFormat": "Строчные буквы, цифры, точка, дефис, подчёркивание — например team-a",
+        "retentionFormat": "Целое число дней, 0 и больше",
+        "createFailed": "Сервер отклонил создание — проверьте имя и права"
+      }
+    },
+    "files": {
+      "filter": "фильтр: путь… (/)",
+      "empty": "Пайплайнов с источниками пока нет",
+      "noMatch": "Ничего не подходит под фильтр",
+      "loading": "загрузка файлов…",
+      "error": "Не удалось загрузить файлы",
+      "readOnly": "только чтение — git-источник"
+    },
+    "notifications": {
+      "empty": "Уведомлений пока нет",
+      "clear": "Очистить"
     }
   },
   "common": {}

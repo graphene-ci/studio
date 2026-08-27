@@ -9,6 +9,8 @@
 import { atom, map, type WritableAtom } from 'nanostores'
 
 import type { Resource, TreeNode } from '@/proto/management/v1/resources_pb'
+import type { ServerInfoResponse } from '@/proto/management/v1/namespaces_pb'
+import type { ListFilesResponse } from '@/proto/management/v1/source_pb'
 
 /** One watched dataset: undefined until the first snapshot lands. */
 export interface Snapshot<T> {
@@ -36,6 +38,9 @@ export class DataStores {
   private readonly listingPool = new Map<string, WritableAtom<Snapshot<Resource[]>>>()
   private readonly recordPool = new Map<string, WritableAtom<Snapshot<Resource>>>()
   private readonly treePool = new Map<string, WritableAtom<Snapshot<TreeNode[]>>>()
+  private readonly filesPool = new Map<string, WritableAtom<Snapshot<ListFilesResponse>>>()
+  /** Door heartbeat: ServerInfo — version + component health. */
+  readonly server = atom<Snapshot<ServerInfoResponse>>(emptySnapshot())
 
   listing(key: string): WritableAtom<Snapshot<Resource[]>> {
     return getOrCreate(this.listingPool, key)
@@ -49,13 +54,23 @@ export class DataStores {
     return getOrCreate(this.treePool, key)
   }
 
+  files(key: string): WritableAtom<Snapshot<ListFilesResponse>> {
+    return getOrCreate(this.filesPool, key)
+  }
+
   /** Context/namespace switch: the old world is gone. Pools keep the
    * atom identities (external computed stores hold references) but the
    * contents reset to "never loaded". */
   reset(): void {
-    for (const pool of [this.listingPool, this.recordPool, this.treePool]) {
-      for (const store of pool.values()) store.set(emptySnapshot())
+    for (const store of [
+      ...this.listingPool.values(),
+      ...this.recordPool.values(),
+      ...this.treePool.values(),
+    ]) {
+      store.set(emptySnapshot())
     }
+    for (const store of this.filesPool.values()) store.set(emptySnapshot())
+    this.server.set(emptySnapshot())
   }
 }
 
