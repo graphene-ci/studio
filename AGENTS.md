@@ -129,12 +129,52 @@ Domain-free primitives only — zero product knowledge in `ui/`.
   Too many props → split or compose (children/slots).
 - Dead code is deleted, not deprecated.
 
-## Data layer
+## Data layer — headless GrapheneClient (`src/client/`)
 
-All backend data flows through **connect-es** clients wired in `lib/api.ts`
-(graphene-server, Connect protocol). Views read stores/hooks; mutations go
-through `api.<service>.*` facades. Never open transports or call RPC/fetch
-from a `.tsx` file.
+The app is MVC-reactive around a headless client (komeet pattern). The
+UI has exactly two touch points:
+
+```ts
+// read: pure subscription — subscribing IS what makes it live
+const runs = useStore(client.stores.listing('kind=run'))
+// write: direct typed client methods; no RPC from components ever
+```
+
+The write side is NOT built yet — it is designed together with the
+resource surfaces. Direction fixed now: direct typed methods (no
+stringly generic verbs); dynamic dictionary commands will live on a
+resource handle (`handle.invoke(command, data)` / `handle.commands()`).
+
+- **`src/client/` is framework-agnostic**: no React, no DOM, no JSX,
+  no i18n. UI imports ONLY `client` from `@/client` — hub, targets,
+  internal stores are not a public surface.
+- **Two store worlds.** `InternalStores` (source of truth: `data` =
+  proto objects as-is — never parallel DTOs; `meta` = client behavior
+  state) are written ONLY by watch runners (durable writers) and
+  verbs. `ExternalStores` is the only read surface: computed
+  projections, no RPC/effects inside; view-models carry raw data +
+  classification — localization happens in the app.
+- **Everything watchable auto-watches.** An external store acquires
+  its `WatchHub` target in `onMount` and releases on the last
+  unsubscriber (5s linger survives remounts): list+watch+re-render is
+  the default, not an opt-in. Listings/tree/get have no server watch —
+  poll targets mirror graphenectl `-w`: full snapshot, 2s cadence,
+  client-side diff (equal snapshots never re-render). Observe/
+  WatchRun/Materialize are stream targets with reconnect backoff.
+  Real push will come with the server projection (backlog) — target
+  internals change, the store surface does not.
+- **No optimistic writes.** A mutation reply means "accepted", not
+  "the world changed": a write method pokes affected targets (burst
+  0/1/3s — visibility lags) and durable truth folds in via the next
+  snapshot.
+- **World lifecycle.** Context/namespace switch resets internal
+  stores and restarts subscribed runners; the UI never re-subscribes.
+  Layer DAG inside the client: `keys` → `store` → `watch` →
+  `client.ts` (apex); lower layers never import upper.
+
+Transport stays in `lib/api.ts` (connect-es client set; auth read per
+request). `stores/apiStore.ts` derives `$api` from the current context
+and feeds the client; components use the client, not `$api`.
 
 - **Generated contracts** live in `src/proto/` (`*_pb.ts`). The source of
   truth is `proto/management/v1` in `graphene-ci/graphene`. Never hand-edit
