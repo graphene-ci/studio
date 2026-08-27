@@ -8,8 +8,10 @@ import { WorkspaceResizeHandle } from '@/components/WorkspaceResizeHandle'
 import { cn } from '@/lib/utils'
 import {
   $workspaceLayout,
+  setWorkspaceBottomSplit,
   setWorkspacePanelSize,
   toggleWorkspacePanel,
+  WORKSPACE_BOTTOM_SPLIT_LIMITS,
   WORKSPACE_PANEL_LIMITS,
 } from '@/stores/workspaceLayoutStore'
 
@@ -59,6 +61,8 @@ export function WorkspaceLayout() {
     '--workspace-resources-width': `${layout.resources.size}px`,
     '--workspace-inspector-width': `${layout.inspector.size}px`,
     '--workspace-bottom-height': `${layout.bottom.size}px`,
+    '--workspace-bottom-terminal-track': `${layout.bottom.split}fr`,
+    '--workspace-bottom-notifications-track': `${100 - layout.bottom.split}fr`,
   } as CSSProperties
 
   return (
@@ -197,16 +201,29 @@ export function WorkspaceLayout() {
         >
           {layout.terminal.isOpen && (
             <WorkspacePanel
-              className="size-full"
+              className="workspace-bottom-terminal-panel size-full"
               header={
                 <WorkspacePanelTitle>{t('graphene.workspace.panels.terminal')}</WorkspacePanelTitle>
               }
               aria-label={t('graphene.workspace.panels.terminal')}
             />
           )}
+          {layout.terminal.isOpen && layout.notifications.isOpen && (
+            <WorkspaceResizeHandle
+              orientation="vertical"
+              direction={1}
+              relative
+              label={t('graphene.workspace.panels.resizeBottomSplit')}
+              size={layout.bottom.split}
+              min={WORKSPACE_BOTTOM_SPLIT_LIMITS.min}
+              max={WORKSPACE_BOTTOM_SPLIT_LIMITS.max}
+              className="workspace-resize-handle-grid workspace-bottom-split-handle"
+              onResize={setWorkspaceBottomSplit}
+            />
+          )}
           {layout.notifications.isOpen && (
             <WorkspacePanel
-              className="size-full"
+              className="workspace-bottom-notifications-panel size-full"
               header={
                 <WorkspacePanelTitle>
                   {t('graphene.workspace.panels.notifications')}

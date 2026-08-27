@@ -31,7 +31,8 @@
         "notifications": "Notifications",
         "resizeResources": "Resize the resources panel",
         "resizeInspector": "Resize the inspector panel",
-        "resizeBottom": "Resize the bottom panels"
+        "resizeBottom": "Resize the bottom panels",
+        "resizeBottomSplit": "Resize terminal and notifications"
       }
     },
     "runs": {
