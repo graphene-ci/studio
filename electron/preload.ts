@@ -23,7 +23,8 @@ contextBridge.exposeInMainWorld('desktop', {
         listener(isMaximized)
       }
       ipcRenderer.on(WINDOW_CONTROL_CHANNELS.maximizedChanged, handleChange)
-      return () => ipcRenderer.removeListener(WINDOW_CONTROL_CHANNELS.maximizedChanged, handleChange)
+      return () =>
+        ipcRenderer.removeListener(WINDOW_CONTROL_CHANNELS.maximizedChanged, handleChange)
     },
   },
 })

@@ -115,6 +115,12 @@
   --radius: 0.375rem;
   --window-titlebar-height: 2.75rem;
 
+  /* Graphene mark violet and metal highlights for the shared glass chrome. */
+  --workspace-chrome-accent-strong: rgb(127 104 255 / 0.16);
+  --workspace-chrome-accent-soft: rgb(155 135 255 / 0.1);
+  --workspace-chrome-highlight: rgb(255 255 255 / 0.44);
+  --workspace-chrome-shade: rgb(77 71 111 / 0.1);
+
   /* Scrim over media — the only sanctioned translucent surface. */
   --scrim: rgb(0 0 0 / 0.3);
 
@@ -182,6 +188,11 @@
 .midnight,
 .graphite {
   --scrim: rgb(0 0 0 / 0.45);
+
+  --workspace-chrome-accent-strong: rgb(127 104 255 / 0.2);
+  --workspace-chrome-accent-soft: rgb(155 135 255 / 0.12);
+  --workspace-chrome-highlight: rgb(255 255 255 / 0.05);
+  --workspace-chrome-shade: rgb(77 71 111 / 0.14);
 
   /* CI status (dark ramp — one step lighter for contrast) */
   --status-success: #52b87a; /* green-300 */
@@ -411,6 +422,295 @@
 .window-titlebar .window-controls {
   -webkit-app-region: no-drag;
   app-region: no-drag;
+}
+
+/* Studio owns the workspace geometry and chrome across all six themes. */
+.workspace-shell {
+  background-color: var(--sidebar);
+  background-image:
+    radial-gradient(48rem 24rem at -6% -12%, var(--workspace-chrome-accent-strong), transparent 72%),
+    radial-gradient(42rem 26rem at 106% 4%, var(--workspace-chrome-accent-soft), transparent 74%),
+    linear-gradient(
+      125deg,
+      var(--workspace-chrome-highlight),
+      transparent 42%,
+      var(--workspace-chrome-shade)
+    );
+}
+
+.workspace-statusbar {
+  height: 1.5rem;
+  min-height: 1.5rem;
+  background-color: transparent;
+}
+
+.workspace-layout {
+  --workspace-panel-gap: 0.5rem;
+  --workspace-panel-radius: 0.625rem;
+  --workspace-toolbar-width: 3rem;
+  --workspace-resources-track: 0rem;
+  --workspace-resources-resize-track: 0rem;
+  --workspace-inspector-track: 0rem;
+  --workspace-inspector-resize-track: 0rem;
+  --workspace-bottom-track: 0rem;
+  --workspace-bottom-resize-track: 0rem;
+  --workspace-resources-width: 17.5rem;
+  --workspace-inspector-width: 20rem;
+  --workspace-bottom-height: 18rem;
+  display: grid;
+  grid-template-columns:
+    var(--workspace-toolbar-width) var(--workspace-resources-track)
+    var(--workspace-resources-resize-track) minmax(0, 1fr)
+    var(--workspace-inspector-resize-track) var(--workspace-inspector-track)
+    var(--workspace-toolbar-width);
+  grid-template-rows: minmax(0, 1fr) var(--workspace-bottom-resize-track) var(
+      --workspace-bottom-track
+    );
+  padding-block: var(--workspace-panel-gap);
+}
+
+.workspace-layout-resources-open {
+  --workspace-resources-track: var(--workspace-resources-width);
+  --workspace-resources-resize-track: var(--workspace-panel-gap);
+}
+
+.workspace-layout-inspector-open {
+  --workspace-inspector-track: var(--workspace-inspector-width);
+  --workspace-inspector-resize-track: var(--workspace-panel-gap);
+}
+
+.workspace-layout-bottom-open {
+  --workspace-bottom-track: var(--workspace-bottom-height);
+  --workspace-bottom-resize-track: var(--workspace-panel-gap);
+}
+
+.workspace-toolbar-left {
+  grid-column: 1;
+}
+
+.workspace-resources-panel {
+  grid-column: 2;
+}
+
+.workspace-resources-resize-handle {
+  grid-column: 3;
+}
+
+.workspace-canvas-panel {
+  grid-column: 4;
+}
+
+.workspace-inspector-resize-handle {
+  grid-column: 5;
+}
+
+.workspace-inspector-panel {
+  grid-column: 6;
+}
+
+.workspace-toolbar-right {
+  grid-column: 7;
+}
+
+.workspace-panel-slot,
+.workspace-canvas-panel,
+.workspace-resources-resize-handle,
+.workspace-inspector-resize-handle {
+  grid-row: 1;
+}
+
+.workspace-toolbar {
+  grid-row: 1 / 4;
+}
+
+.workspace-bottom-resize-handle {
+  grid-row: 2;
+  grid-column: 2 / 7;
+}
+
+.workspace-bottom-panels {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-row: 3;
+  grid-column: 2 / 7;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--workspace-panel-gap);
+}
+
+.workspace-bottom-panels-split {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.workspace-panel-slot {
+  min-width: 0;
+  min-height: 0;
+}
+
+.workspace-panel {
+  overflow: hidden;
+  border-radius: var(--workspace-panel-radius);
+  color: var(--foreground);
+  background-color: var(--background);
+}
+
+.workspace-panel-header {
+  min-height: 2.25rem;
+  color: var(--foreground);
+}
+
+.workspace-resize-handle {
+  position: absolute;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  touch-action: none;
+  user-select: none;
+  transition: background-color 140ms ease;
+}
+
+.workspace-resize-handle::after {
+  position: absolute;
+  content: "";
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  transition: background-color 140ms ease;
+}
+
+.workspace-resize-handle-vertical {
+  inset-block: 0;
+  width: var(--workspace-panel-gap);
+  cursor: col-resize;
+}
+
+.workspace-resize-handle-vertical::after {
+  inset-block: 0.5rem;
+  inset-inline-start: calc(50% - 0.0625rem);
+  width: 0.125rem;
+}
+
+.workspace-resize-handle-horizontal {
+  inset-inline: 0;
+  height: var(--workspace-panel-gap);
+  cursor: row-resize;
+}
+
+.workspace-resize-handle-horizontal::after {
+  inset-inline: 0.5rem;
+  inset-block-start: calc(50% - 0.0625rem);
+  height: 0.125rem;
+}
+
+.workspace-resize-handle-vertical.workspace-resize-handle-start {
+  inset-inline-end: 100%;
+}
+
+.workspace-resize-handle-vertical.workspace-resize-handle-end {
+  inset-inline-start: 100%;
+}
+
+.workspace-resize-handle-horizontal.workspace-resize-handle-start {
+  inset-block-end: 100%;
+}
+
+.workspace-resize-handle-horizontal.workspace-resize-handle-end {
+  inset-block-start: 100%;
+}
+
+.workspace-resize-handle-grid {
+  position: relative;
+  inset: auto;
+  width: auto;
+  height: auto;
+  align-self: stretch;
+}
+
+.workspace-resize-handle:focus-visible::after {
+  background-color: var(--primary);
+}
+
+.workspace-toolbar {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workspace-toolbar-group {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.workspace-toolbar-action {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  box-sizing: border-box;
+  padding: 0;
+  cursor: pointer;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-md);
+  color: var(--muted-foreground);
+  background-color: transparent;
+  line-height: 0;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 140ms ease;
+}
+
+.workspace-toolbar-action-active {
+  color: var(--foreground);
+  background-color: var(--accent);
+}
+
+.workspace-toolbar-action:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.workspace-toolbar-action:active {
+  transform: translateY(1px);
+}
+
+.workspace-toolbar-action > svg {
+  grid-area: 1 / 1;
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  place-self: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .workspace-toolbar-action:hover {
+    color: var(--foreground);
+    background-color: var(--surface-hover);
+  }
+
+  .workspace-resize-handle:hover::after {
+    background-color: var(--primary);
+  }
+
+  .workspace-resize-handle:hover {
+    background-color: var(--accent);
+  }
+}
+
+.workspace-resize-handle:active {
+  background-color: var(--surface-hover);
+}
+
+.workspace-resize-handle:active::after {
+  background-color: var(--primary);
 }
 
 /* Scroll containers reserve their gutter for the same reason. */

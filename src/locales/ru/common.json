@@ -15,6 +15,25 @@
       "restore": "Восстановить окно",
       "close": "Закрыть приложение"
     },
+    "workspace": {
+      "surface": "Рабочая область",
+      "empty": {
+        "selectResource": "Выберите ресурс слева, чтобы открыть его здесь"
+      },
+      "toolbars": {
+        "left": "Левый ToolBar",
+        "right": "Правый ToolBar"
+      },
+      "panels": {
+        "resources": "Ресурсы",
+        "inspector": "Инспектор",
+        "terminal": "Терминал",
+        "notifications": "Уведомления",
+        "resizeResources": "Изменить ширину панели ресурсов",
+        "resizeInspector": "Изменить ширину инспектора",
+        "resizeBottom": "Изменить высоту нижних панелей"
+      }
+    },
     "runs": {
       "statusFilter": "Статус",
       "pipelineFilter": "пайплайн…",
