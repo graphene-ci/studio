@@ -181,7 +181,8 @@ function CreateNamespaceForm({ onDone }: { onDone: () => void }) {
   })
 
   const handleCreate = form.handleSubmit(async (values) => {
-    const retentionDays = values.retentionDays === '' ? 0 : Number.parseInt(values.retentionDays, 10)
+    const retentionDays =
+      values.retentionDays === '' ? 0 : Number.parseInt(values.retentionDays, 10)
     try {
       await client.namespaces.create(values.name, {
         description: values.description === '' ? undefined : values.description,
@@ -203,7 +204,12 @@ function CreateNamespaceForm({ onDone }: { onDone: () => void }) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="ns-name">{t('graphene.ns.nameLabel')}</FieldLabel>
-              <Input {...field} id="ns-name" aria-invalid={fieldState.invalid} className="font-mono" />
+              <Input
+                {...field}
+                id="ns-name"
+                aria-invalid={fieldState.invalid}
+                className="font-mono"
+              />
               {fieldState.error && <FieldError>{fieldState.error.message}</FieldError>}
             </Field>
           )}

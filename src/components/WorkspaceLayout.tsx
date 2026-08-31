@@ -2,23 +2,31 @@ import { useStore } from '@nanostores/react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import filesIcon from '@/assets/icons/toolwindow/files.svg'
-import filesIconDark from '@/assets/icons/toolwindow/files_dark.svg'
 import inspectorIcon from '@/assets/icons/toolwindow/inspector.svg'
 import inspectorIconDark from '@/assets/icons/toolwindow/inspector_dark.svg'
 import notificationsIcon from '@/assets/icons/toolwindow/notifications.svg'
 import notificationsIconDark from '@/assets/icons/toolwindow/notifications_dark.svg'
+import pipelinesIcon from '@/assets/icons/kind/pipeline.svg'
 import resourcesIcon from '@/assets/icons/toolwindow/resources.svg'
+import agentsIcon from '@/assets/icons/toolwindow/agents.svg'
+import agentsIconDark from '@/assets/icons/toolwindow/agents_dark.svg'
 import terminalIcon from '@/assets/icons/toolwindow/terminal.svg'
 import terminalIconDark from '@/assets/icons/toolwindow/terminal_dark.svg'
 import { ThemedIcon } from '@/components/ThemedIcon'
 
-import { FileTreePanel } from '@/components/files/FileTreePanel'
+import buildIcon from '@/assets/icons/toolwindow/build.svg'
+import buildIconDark from '@/assets/icons/toolwindow/build_dark.svg'
+import { BuildPanel } from '@/components/build/BuildPanel'
+import { EditorArea, EditorTabBar } from '@/components/editor/EditorArea'
+import { PipelinesPanel } from '@/components/pipelines/PipelinesPanel'
 import {
   NotificationsPanel,
   NotificationsPanelActions,
 } from '@/components/notifications/NotificationsPanel'
 import { ResourceTreePanel } from '@/components/resources/tree/ResourceTreePanel'
+import { AgentsPanel } from '@/components/agents/AgentsPanel'
+import { TerminalPanel } from '@/components/terminal/TerminalPanel'
+import { TerminalTabs } from '@/components/terminal/TerminalTabs'
 import { WorkspacePanel, WorkspacePanelTitle } from '@/components/WorkspacePanel'
 import { WorkspaceResizeHandle } from '@/components/WorkspaceResizeHandle'
 import { cn } from '@/lib/utils'
@@ -74,12 +82,20 @@ export function WorkspaceLayout() {
   const { t } = useTranslation()
   const layout = useStore($workspaceLayout)
   const unreadCount = useStore($notifications).filter((n) => !n.read).length
-  const isBottomOpen = layout.terminal.isOpen || layout.notifications.isOpen
-  // The left slot holds one panel at a time: resources or files.
-  const leftPanel = layout.resources.isOpen ? 'resources' : layout.files.isOpen ? 'files' : null
+  const isBottomOpen = layout.terminal.isOpen || layout.agents.isOpen || layout.notifications.isOpen
+  const bottomOpenCount = [layout.terminal, layout.agents, layout.notifications].filter(
+    (p) => p.isOpen,
+  ).length
+  // A side slot holds one panel at a time.
+  const leftPanel = layout.resources.isOpen
+    ? 'resources'
+    : layout.pipelines.isOpen
+      ? 'pipelines'
+      : null
+  const rightPanel = layout.inspector.isOpen ? 'inspector' : layout.build.isOpen ? 'build' : null
   const layoutStyle = {
     '--workspace-resources-width': `${leftPanel === null ? layout.resources.size : layout[leftPanel].size}px`,
-    '--workspace-inspector-width': `${layout.inspector.size}px`,
+    '--workspace-inspector-width': `${rightPanel === null ? layout.inspector.size : layout[rightPanel].size}px`,
     '--workspace-bottom-height': `${layout.bottom.size}px`,
     '--workspace-bottom-terminal-track': `${layout.bottom.split}fr`,
     '--workspace-bottom-notifications-track': `${100 - layout.bottom.split}fr`,
@@ -90,7 +106,7 @@ export function WorkspaceLayout() {
       className={cn(
         'workspace-layout absolute inset-0 overflow-hidden',
         leftPanel !== null && 'workspace-layout-resources-open',
-        layout.inspector.isOpen && 'workspace-layout-inspector-open',
+        rightPanel !== null && 'workspace-layout-inspector-open',
         isBottomOpen && 'workspace-layout-bottom-open',
       )}
       style={layoutStyle}
@@ -107,20 +123,28 @@ export function WorkspaceLayout() {
               onToggle={() => toggleWorkspacePanel('resources')}
             />
             <ToolBarAction
-              buttonLabel={t('graphene.workspace.panels.files')}
-              isActive={layout.files.isOpen}
-              icon={<ThemedIcon light={filesIcon} dark={filesIconDark} />}
-              onToggle={() => toggleWorkspacePanel('files')}
+              buttonLabel={t('graphene.workspace.panels.pipelines')}
+              isActive={layout.pipelines.isOpen}
+              icon={<ThemedIcon light={pipelinesIcon} />}
+              onToggle={() => toggleWorkspacePanel('pipelines')}
             />
           </>
         }
         bottom={
-          <ToolBarAction
-            buttonLabel={t('graphene.workspace.panels.terminal')}
-            isActive={layout.terminal.isOpen}
-            icon={<ThemedIcon light={terminalIcon} dark={terminalIconDark} />}
-            onToggle={() => toggleWorkspacePanel('terminal')}
-          />
+          <>
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.agents')}
+              isActive={layout.agents.isOpen}
+              icon={<ThemedIcon light={agentsIcon} dark={agentsIconDark} />}
+              onToggle={() => toggleWorkspacePanel('agents')}
+            />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.terminal')}
+              isActive={layout.terminal.isOpen}
+              icon={<ThemedIcon light={terminalIcon} dark={terminalIconDark} />}
+              onToggle={() => toggleWorkspacePanel('terminal')}
+            />
+          </>
         }
       />
 
@@ -135,7 +159,7 @@ export function WorkspaceLayout() {
             }
             aria-label={t(`graphene.workspace.panels.${leftPanel}`)}
           >
-            {leftPanel === 'resources' ? <ResourceTreePanel /> : <FileTreePanel />}
+            {leftPanel === 'resources' ? <ResourceTreePanel /> : <PipelinesPanel />}
           </WorkspacePanel>
         </aside>
       )}
@@ -155,36 +179,38 @@ export function WorkspaceLayout() {
 
       <WorkspacePanel
         className="workspace-canvas-panel size-full"
-        bodyClassName="flex items-center justify-center px-6"
+        header={<EditorTabBar />}
         aria-label={t('graphene.workspace.surface')}
       >
-        <p className="max-w-sm text-center text-xs text-muted-foreground">
-          {t('graphene.workspace.empty.selectResource')}
-        </p>
+        <EditorArea />
       </WorkspacePanel>
 
-      {layout.inspector.isOpen && (
+      {rightPanel !== null && (
         <WorkspaceResizeHandle
           orientation="vertical"
           direction={-1}
           label={t('graphene.workspace.panels.resizeInspector')}
-          size={layout.inspector.size}
-          min={WORKSPACE_PANEL_LIMITS.inspector.min}
-          max={WORKSPACE_PANEL_LIMITS.inspector.max}
+          size={layout[rightPanel].size}
+          min={WORKSPACE_PANEL_LIMITS[rightPanel].min}
+          max={WORKSPACE_PANEL_LIMITS[rightPanel].max}
           className="workspace-resize-handle-grid workspace-inspector-resize-handle"
-          onResize={(size) => setWorkspacePanelSize('inspector', size)}
+          onResize={(size) => setWorkspacePanelSize(rightPanel, size)}
         />
       )}
 
-      {layout.inspector.isOpen && (
+      {rightPanel !== null && (
         <aside className="workspace-panel-slot workspace-inspector-panel min-h-0 min-w-0">
           <WorkspacePanel
             className="size-full"
             header={
-              <WorkspacePanelTitle>{t('graphene.workspace.panels.inspector')}</WorkspacePanelTitle>
+              <WorkspacePanelTitle>
+                {t(`graphene.workspace.panels.${rightPanel}`)}
+              </WorkspacePanelTitle>
             }
-            aria-label={t('graphene.workspace.panels.inspector')}
-          />
+            aria-label={t(`graphene.workspace.panels.${rightPanel}`)}
+          >
+            {rightPanel === 'build' && <BuildPanel />}
+          </WorkspacePanel>
         </aside>
       )}
 
@@ -192,12 +218,20 @@ export function WorkspaceLayout() {
         side="right"
         label={t('graphene.workspace.toolbars.right')}
         top={
-          <ToolBarAction
-            buttonLabel={t('graphene.workspace.panels.inspector')}
-            isActive={layout.inspector.isOpen}
-            icon={<ThemedIcon light={inspectorIcon} dark={inspectorIconDark} />}
-            onToggle={() => toggleWorkspacePanel('inspector')}
-          />
+          <>
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.inspector')}
+              isActive={layout.inspector.isOpen}
+              icon={<ThemedIcon light={inspectorIcon} dark={inspectorIconDark} />}
+              onToggle={() => toggleWorkspacePanel('inspector')}
+            />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.build')}
+              isActive={layout.build.isOpen}
+              icon={<ThemedIcon light={buildIcon} dark={buildIconDark} />}
+              onToggle={() => toggleWorkspacePanel('build')}
+            />
+          </>
         }
         bottom={
           <ToolBarAction
@@ -235,21 +269,53 @@ export function WorkspaceLayout() {
         <div
           className={cn(
             'workspace-bottom-panels min-h-0 min-w-0',
-            layout.terminal.isOpen &&
-              layout.notifications.isOpen &&
-              'workspace-bottom-panels-split',
+            bottomOpenCount === 2 && 'workspace-bottom-panels-split',
           )}
+          style={
+            bottomOpenCount === 3 ? { gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' } : undefined
+          }
         >
+          {layout.agents.isOpen && (
+            <WorkspacePanel
+              className="workspace-bottom-notifications-panel size-full"
+              header={
+                <WorkspacePanelTitle>{t('graphene.workspace.panels.agents')}</WorkspacePanelTitle>
+              }
+              aria-label={t('graphene.workspace.panels.agents')}
+            >
+              <AgentsPanel />
+            </WorkspacePanel>
+          )}
+          {bottomOpenCount === 2 && layout.agents.isOpen && (
+            <WorkspaceResizeHandle
+              orientation="vertical"
+              direction={1}
+              relative
+              label={t('graphene.workspace.panels.resizeBottomSplit')}
+              size={layout.bottom.split}
+              min={WORKSPACE_BOTTOM_SPLIT_LIMITS.min}
+              max={WORKSPACE_BOTTOM_SPLIT_LIMITS.max}
+              className="workspace-resize-handle-grid workspace-bottom-split-handle"
+              onResize={setWorkspaceBottomSplit}
+            />
+          )}
           {layout.terminal.isOpen && (
             <WorkspacePanel
               className="workspace-bottom-terminal-panel size-full"
               header={
-                <WorkspacePanelTitle>{t('graphene.workspace.panels.terminal')}</WorkspacePanelTitle>
+                <>
+                  <WorkspacePanelTitle className="flex-none">
+                    {t('graphene.workspace.panels.terminal')}
+                  </WorkspacePanelTitle>
+                  <TerminalTabs />
+                </>
               }
               aria-label={t('graphene.workspace.panels.terminal')}
-            />
+            >
+              <TerminalPanel />
+            </WorkspacePanel>
           )}
-          {layout.terminal.isOpen && layout.notifications.isOpen && (
+          {bottomOpenCount === 2 && !layout.agents.isOpen && layout.terminal.isOpen && (
             <WorkspaceResizeHandle
               orientation="vertical"
               direction={1}

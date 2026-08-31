@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/source.proto.
  */
 export const file_proto_management_v1_source: GenFile = /*@__PURE__*/
-  fileDesc("CiBwcm90by9tYW5hZ2VtZW50L3YxL3NvdXJjZS5wcm90bxIWZ3JhcGhlbmUubWFuYWdlbWVudC52MSI6ChNVcGxvYWRTb3VyY2VSZXF1ZXN0EhMKC3BpcGVsaW5lX2lkGAEgASgJEg4KBnNvdXJjZRgCIAEoDCI4ChRVcGxvYWRTb3VyY2VSZXNwb25zZRIQCghsb2NhdGlvbhgBIAEoCRIOCgZkaWdlc3QYAiABKAkiJwoVRG93bmxvYWRTb3VyY2VSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCSIjChNEb3dubG9hZFNvdXJjZUNodW5rEgwKBGRhdGEYASABKAwiFQoTTGlzdFJ1bnRpbWVzUmVxdWVzdCKrAQoUTGlzdFJ1bnRpbWVzUmVzcG9uc2USRgoIcnVudGltZXMYASADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3RSdW50aW1lc1Jlc3BvbnNlLlJ1bnRpbWUaSwoHUnVudGltZRIMCgRuYW1lGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSDQoFaW1hZ2UYAyABKAkSEgoKaXNfZGVmYXVsdBgEIAEoCCIiChBMaXN0RmlsZXNSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCSKLAQoRTGlzdEZpbGVzUmVzcG9uc2USPQoFZmlsZXMYASADKAsyLi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3RGaWxlc1Jlc3BvbnNlLkZpbGUSEwoLdHJlZV9kaWdlc3QYAiABKAkaIgoERmlsZRIMCgRwYXRoGAEgASgJEgwKBHNpemUYAiABKAMiLwoPUmVhZEZpbGVSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCRIMCgRwYXRoGAIgASgJIiMKEFJlYWRGaWxlUmVzcG9uc2USDwoHY29udGVudBgBIAEoDCJBChBXcml0ZUZpbGVSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCRIMCgRwYXRoGAIgASgJEg8KB2NvbnRlbnQYAyABKAwiPAoRV3JpdGVGaWxlUmVzcG9uc2USEwoLdHJlZV9kaWdlc3QYASABKAkSEgoKZ2VuZXJhdGlvbhgCIAEoBCIxChFEZWxldGVGaWxlUmVxdWVzdBIOCgZzb3VyY2UYASABKAkSDAoEcGF0aBgCIAEoCTLYBQoJU291cmNlQVBJEmkKDFVwbG9hZFNvdXJjZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVXBsb2FkU291cmNlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVXBsb2FkU291cmNlUmVzcG9uc2USbgoORG93bmxvYWRTb3VyY2USLS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkRvd25sb2FkU291cmNlUmVxdWVzdBorLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRG93bmxvYWRTb3VyY2VDaHVuazABEmkKDExpc3RSdW50aW1lcxIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJ1bnRpbWVzUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJ1bnRpbWVzUmVzcG9uc2USYAoJTGlzdEZpbGVzEiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0RmlsZXNSZXF1ZXN0GikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0RmlsZXNSZXNwb25zZRJdCghSZWFkRmlsZRInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVhZEZpbGVSZXF1ZXN0GiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZWFkRmlsZVJlc3BvbnNlEmAKCVdyaXRlRmlsZRIoLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuV3JpdGVGaWxlUmVxdWVzdBopLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuV3JpdGVGaWxlUmVzcG9uc2USYgoKRGVsZXRlRmlsZRIpLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRGVsZXRlRmlsZVJlcXVlc3QaKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldyaXRlRmlsZVJlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
+  fileDesc("CiBwcm90by9tYW5hZ2VtZW50L3YxL3NvdXJjZS5wcm90bxIWZ3JhcGhlbmUubWFuYWdlbWVudC52MSI6ChNVcGxvYWRTb3VyY2VSZXF1ZXN0EhMKC3BpcGVsaW5lX2lkGAEgASgJEg4KBnNvdXJjZRgCIAEoDCI4ChRVcGxvYWRTb3VyY2VSZXNwb25zZRIQCghsb2NhdGlvbhgBIAEoCRIOCgZkaWdlc3QYAiABKAkiJwoVRG93bmxvYWRTb3VyY2VSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCSIjChNEb3dubG9hZFNvdXJjZUNodW5rEgwKBGRhdGEYASABKAwiFQoTTGlzdFJ1bnRpbWVzUmVxdWVzdCKrAQoUTGlzdFJ1bnRpbWVzUmVzcG9uc2USRgoIcnVudGltZXMYASADKAsyNC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3RSdW50aW1lc1Jlc3BvbnNlLlJ1bnRpbWUaSwoHUnVudGltZRIMCgRuYW1lGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSDQoFaW1hZ2UYAyABKAkSEgoKaXNfZGVmYXVsdBgEIAEoCCIiChBMaXN0RmlsZXNSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCSKLAQoRTGlzdEZpbGVzUmVzcG9uc2USPQoFZmlsZXMYASADKAsyLi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxpc3RGaWxlc1Jlc3BvbnNlLkZpbGUSEwoLdHJlZV9kaWdlc3QYAiABKAkaIgoERmlsZRIMCgRwYXRoGAEgASgJEgwKBHNpemUYAiABKAMiLwoPUmVhZEZpbGVSZXF1ZXN0Eg4KBnNvdXJjZRgBIAEoCRIMCgRwYXRoGAIgASgJIiMKEFJlYWRGaWxlUmVzcG9uc2USDwoHY29udGVudBgBIAEoDDKSBAoJU291cmNlQVBJEmkKDFVwbG9hZFNvdXJjZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVXBsb2FkU291cmNlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVXBsb2FkU291cmNlUmVzcG9uc2USbgoORG93bmxvYWRTb3VyY2USLS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkRvd25sb2FkU291cmNlUmVxdWVzdBorLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRG93bmxvYWRTb3VyY2VDaHVuazABEmkKDExpc3RSdW50aW1lcxIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJ1bnRpbWVzUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJ1bnRpbWVzUmVzcG9uc2USYAoJTGlzdEZpbGVzEiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0RmlsZXNSZXF1ZXN0GikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0RmlsZXNSZXNwb25zZRJdCghSZWFkRmlsZRInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVhZEZpbGVSZXF1ZXN0GiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZWFkRmlsZVJlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
 
 /**
  * @generated from message graphene.management.v1.UploadSourceRequest
@@ -18,7 +18,7 @@ export const file_proto_management_v1_source: GenFile = /*@__PURE__*/
 export type UploadSourceRequest = Message<"graphene.management.v1.UploadSourceRequest"> & {
   /**
    * Pipeline the uploaded tree is meant for; the upload area is per
-   * pipeline, and a managedsource adopts it by copy.
+   * pipeline, and a revision materialization builds from it.
    *
    * @generated from field: string pipeline_id = 1;
    */
@@ -261,82 +261,11 @@ export const ReadFileResponseSchema: GenMessage<ReadFileResponse> = /*@__PURE__*
   messageDesc(file_proto_management_v1_source, 9);
 
 /**
- * @generated from message graphene.management.v1.WriteFileRequest
- */
-export type WriteFileRequest = Message<"graphene.management.v1.WriteFileRequest"> & {
-  /**
-   * @generated from field: string source = 1;
-   */
-  source: string;
-
-  /**
-   * @generated from field: string path = 2;
-   */
-  path: string;
-
-  /**
-   * @generated from field: bytes content = 3;
-   */
-  content: Uint8Array;
-};
-
-/**
- * Describes the message graphene.management.v1.WriteFileRequest.
- * Use `create(WriteFileRequestSchema)` to create a new message.
- */
-export const WriteFileRequestSchema: GenMessage<WriteFileRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_source, 10);
-
-/**
- * @generated from message graphene.management.v1.WriteFileResponse
- */
-export type WriteFileResponse = Message<"graphene.management.v1.WriteFileResponse"> & {
-  /**
-   * @generated from field: string tree_digest = 1;
-   */
-  treeDigest: string;
-
-  /**
-   * @generated from field: uint64 generation = 2;
-   */
-  generation: bigint;
-};
-
-/**
- * Describes the message graphene.management.v1.WriteFileResponse.
- * Use `create(WriteFileResponseSchema)` to create a new message.
- */
-export const WriteFileResponseSchema: GenMessage<WriteFileResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_source, 11);
-
-/**
- * @generated from message graphene.management.v1.DeleteFileRequest
- */
-export type DeleteFileRequest = Message<"graphene.management.v1.DeleteFileRequest"> & {
-  /**
-   * @generated from field: string source = 1;
-   */
-  source: string;
-
-  /**
-   * @generated from field: string path = 2;
-   */
-  path: string;
-};
-
-/**
- * Describes the message graphene.management.v1.DeleteFileRequest.
- * Use `create(DeleteFileRequestSchema)` to create a new message.
- */
-export const DeleteFileRequestSchema: GenMessage<DeleteFileRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_source, 12);
-
-/**
  * SourceAPI is the BYTES side of a source. A source is an ordinary
- * record — gitsource or managedsource, declared with Apply, changed
- * with Invoke, read with Get — so what stays here is only what a
- * command cannot carry: file content, and questions about the
- * installation rather than about a record.
+ * record — a gitsource, declared with Apply, synced with Invoke, read
+ * with Get — so what stays here is only what a command cannot carry:
+ * file content, and questions about the installation rather than about
+ * a record.
  *
  * Every request names a source as "kind/id" ("gitsource/main"). Files
  * of a gitsource are readable and not writable: it is a checkout of a
@@ -379,9 +308,8 @@ export const SourceAPI: GenService<{
     output: typeof ListRuntimesResponseSchema;
   },
   /**
-   * The working tree is EDITABLE: Studio reads and writes files
-   * straight into the pipeline's tree, and every write is durable —
-   * that is the whole point of the tree living on the server.
+   * The tree is READ-ONLY: Studio lists and reads files of a checkout;
+   * a source follows its ref and is never written into.
    *
    * @generated from rpc graphene.management.v1.SourceAPI.ListFiles
    */
@@ -397,22 +325,6 @@ export const SourceAPI: GenService<{
     methodKind: "unary";
     input: typeof ReadFileRequestSchema;
     output: typeof ReadFileResponseSchema;
-  },
-  /**
-   * @generated from rpc graphene.management.v1.SourceAPI.WriteFile
-   */
-  writeFile: {
-    methodKind: "unary";
-    input: typeof WriteFileRequestSchema;
-    output: typeof WriteFileResponseSchema;
-  },
-  /**
-   * @generated from rpc graphene.management.v1.SourceAPI.DeleteFile
-   */
-  deleteFile: {
-    methodKind: "unary";
-    input: typeof DeleteFileRequestSchema;
-    output: typeof WriteFileResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_proto_management_v1_source, 0);

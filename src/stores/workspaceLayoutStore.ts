@@ -1,7 +1,19 @@
 import { persistentAtom } from '@nanostores/persistent'
 
-export type WorkspacePanelId = 'resources' | 'files' | 'inspector' | 'terminal' | 'notifications'
-export type WorkspaceResizablePanelId = 'resources' | 'files' | 'inspector' | 'bottom'
+export type WorkspacePanelId =
+  | 'resources'
+  | 'pipelines'
+  | 'inspector'
+  | 'build'
+  | 'terminal'
+  | 'agents'
+  | 'notifications'
+export type WorkspaceResizablePanelId =
+  | 'resources'
+  | 'pipelines'
+  | 'inspector'
+  | 'build'
+  | 'bottom'
 
 export interface WorkspacePanelVisibility {
   isOpen: boolean
@@ -13,9 +25,11 @@ export interface WorkspacePanelLayout extends WorkspacePanelVisibility {
 
 export interface WorkspaceLayoutState {
   resources: WorkspacePanelLayout
-  files: WorkspacePanelLayout
+  pipelines: WorkspacePanelLayout
   inspector: WorkspacePanelLayout
+  build: WorkspacePanelLayout
   terminal: WorkspacePanelVisibility
+  agents: WorkspacePanelVisibility
   notifications: WorkspacePanelVisibility
   bottom: { size: number; split: number }
 }
@@ -27,16 +41,19 @@ export const WORKSPACE_PANEL_LIMITS: Record<
   { min: number; max: number }
 > = {
   resources: { min: 200, max: 640 },
-  files: { min: 200, max: 640 },
+  pipelines: { min: 200, max: 640 },
   inspector: { min: 240, max: 720 },
+  build: { min: 260, max: 720 },
   bottom: { min: 160, max: 640 },
 }
 
 const DEFAULT_WORKSPACE_LAYOUT: WorkspaceLayoutState = {
   resources: { isOpen: true, size: 288 },
-  files: { isOpen: false, size: 288 },
+  pipelines: { isOpen: false, size: 288 },
   inspector: { isOpen: false, size: 320 },
+  build: { isOpen: false, size: 340 },
   terminal: { isOpen: false },
+  agents: { isOpen: false },
   notifications: { isOpen: false },
   bottom: { size: 288, split: 50 },
 }
@@ -59,7 +76,7 @@ function decodeVisibility(
 function decodePanel(
   value: unknown,
   fallback: WorkspacePanelLayout,
-  panel: 'resources' | 'files' | 'inspector',
+  panel: 'resources' | 'pipelines' | 'inspector' | 'build',
 ): WorkspacePanelLayout {
   const visibility = decodeVisibility(value, fallback)
   if (typeof value !== 'object' || value === null) return fallback
@@ -93,19 +110,28 @@ function decodeWorkspaceLayout(raw: string): WorkspaceLayoutState {
         DEFAULT_WORKSPACE_LAYOUT.resources,
         'resources',
       ),
-      files: decodePanel(
-        'files' in parsed ? parsed.files : undefined,
-        DEFAULT_WORKSPACE_LAYOUT.files,
-        'files',
+      pipelines: decodePanel(
+        'pipelines' in parsed ? parsed.pipelines : undefined,
+        DEFAULT_WORKSPACE_LAYOUT.pipelines,
+        'pipelines',
       ),
       inspector: decodePanel(
         'inspector' in parsed ? parsed.inspector : undefined,
         DEFAULT_WORKSPACE_LAYOUT.inspector,
         'inspector',
       ),
+      build: decodePanel(
+        'build' in parsed ? parsed.build : undefined,
+        DEFAULT_WORKSPACE_LAYOUT.build,
+        'build',
+      ),
       terminal: decodeVisibility(
         'terminal' in parsed ? parsed.terminal : undefined,
         DEFAULT_WORKSPACE_LAYOUT.terminal,
+      ),
+      agents: decodeVisibility(
+        'agents' in parsed ? parsed.agents : undefined,
+        DEFAULT_WORKSPACE_LAYOUT.agents,
       ),
       notifications: decodeVisibility(
         'notifications' in parsed ? parsed.notifications : undefined,
@@ -124,9 +150,9 @@ export const $workspaceLayout = persistentAtom<WorkspaceLayoutState>(
   { encode: JSON.stringify, decode: decodeWorkspaceLayout },
 )
 
-// The left slot holds ONE panel at a time (IDE toolwindow behavior):
-// opening resources closes files and vice versa.
-const LEFT_SLOT = ['resources', 'files'] as const
+// A side slot holds ONE panel at a time (IDE toolwindow behavior).
+const LEFT_SLOT = ['resources', 'pipelines'] as const
+const RIGHT_SLOT = ['inspector', 'build'] as const
 
 export function toggleWorkspacePanel(panel: WorkspacePanelId): void {
   const current = $workspaceLayout.get()
@@ -134,12 +160,22 @@ export function toggleWorkspacePanel(panel: WorkspacePanelId): void {
     ...current,
     [panel]: { ...current[panel], isOpen: !current[panel].isOpen },
   }
-  if ((panel === 'resources' || panel === 'files') && next[panel].isOpen) {
+  if ((panel === 'resources' || panel === 'pipelines') && next[panel].isOpen) {
     for (const other of LEFT_SLOT) {
       if (other !== panel) next[other] = { ...next[other], isOpen: false }
     }
   }
+  if ((panel === 'inspector' || panel === 'build') && next[panel].isOpen) {
+    for (const other of RIGHT_SLOT) {
+      if (other !== panel) next[other] = { ...next[other], isOpen: false }
+    }
+  }
   $workspaceLayout.set(next)
+}
+
+/** Opens a panel (idempotent), honoring the slot radio rules. */
+export function openWorkspacePanel(panel: WorkspacePanelId): void {
+  if (!$workspaceLayout.get()[panel].isOpen) toggleWorkspacePanel(panel)
 }
 
 export function setWorkspacePanelSize(panel: WorkspaceResizablePanelId, size: number): void {

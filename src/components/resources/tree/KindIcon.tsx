@@ -10,7 +10,6 @@ import gitsource from '@/assets/icons/kind/gitsource.svg'
 import gitsourceDark from '@/assets/icons/kind/gitsource_dark.svg'
 import kind_ from '@/assets/icons/kind/kind.svg'
 import machine from '@/assets/icons/kind/machine.svg'
-import managedsource from '@/assets/icons/kind/managedsource.svg'
 import namespace from '@/assets/icons/kind/namespace.svg'
 import pipeline from '@/assets/icons/kind/pipeline.svg'
 import revision from '@/assets/icons/kind/revision.svg'
@@ -37,7 +36,6 @@ interface IconAsset {
 const KIND_ICONS: Record<string, IconAsset> = {
   pipeline: { light: pipeline },
   gitsource: { light: gitsource, dark: gitsourceDark },
-  managedsource: { light: managedsource },
   revision: { light: revision },
   trigger: { light: trigger, dark: triggerDark },
   stand: { light: stand },

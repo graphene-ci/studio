@@ -33,7 +33,10 @@
         "resizeInspector": "Изменить ширину инспектора",
         "resizeBottom": "Изменить высоту нижних панелей",
         "resizeBottomSplit": "Изменить ширину терминала и уведомлений",
-        "files": "Файлы"
+        "files": "Файлы",
+        "build": "Сборка",
+        "agents": "Агенты",
+        "pipelines": "Пайплайны"
       }
     },
     "runs": {
@@ -311,7 +314,7 @@
     },
     "files": {
       "filter": "фильтр: путь… (/)",
-      "empty": "Пайплайнов с источниками пока нет",
+      "empty": "В этом источнике нет файлов",
       "noMatch": "Ничего не подходит под фильтр",
       "loading": "загрузка файлов…",
       "error": "Не удалось загрузить файлы",
@@ -320,6 +323,174 @@
     "notifications": {
       "empty": "Уведомлений пока нет",
       "clear": "Очистить"
+    },
+    "editor": {
+      "tabs": "Открытые вкладки",
+      "close": "Закрыть {{name}}",
+      "readOnly": "только чтение",
+      "readOnlyBanner": "git-источник — только чтение: файлы движутся только sync",
+      "loadFailed": "Не удалось прочитать {{path}}",
+      "saveFailed": "Не удалось сохранить {{path}}",
+      "saving": "сохраняю…",
+      "saved": "сохранено",
+      "savedGen": "сохранено · #{{gen}}",
+      "saveError": "ошибка сохранения",
+      "noFormatter": "Для {{name}} нет форматтера",
+      "formatFailed": "Форматирование {{name}} не удалось — проверьте синтаксис"
+    },
+    "fork": {
+      "action": "Форкнуть в managedsource…",
+      "title": "Форк {{from}}",
+      "subtitle": "Копия дерева с provenance — осознанное ответвление, назад ничего не синкается",
+      "nameLabel": "Имя нового источника",
+      "submit": "Форкнуть",
+      "done": "Создан managedsource/{{id}} из {{from}}",
+      "errors": {
+        "nameRequired": "Назовите источник — например main-edit",
+        "nameFormat": "Строчные буквы, цифры, точка, дефис, подчёркивание",
+        "noPipeline": "Не нашёл пайплайн этого источника в дереве",
+        "failed": "Сервер отклонил форк — проверьте имя и права"
+      }
+    },
+    "settings": {
+      "title": "Настройки",
+      "subtitle": "Внешний вид и поведение редактора — сохраняются в этом браузере",
+      "editor": "Редактор",
+      "editorToggles": {
+        "wordWrap": "Перенос длинных строк",
+        "showWhitespace": "Показывать пробелы",
+        "indentationMarkers": "Направляющие отступов",
+        "minimap": "Миникарта",
+        "formatOnSave": "Форматировать при сохранении (Ctrl+S)",
+        "trimOnSave": "Срезать хвостовые пробелы при записи"
+      }
+    },
+    "terminal": {
+      "agents": "Агенты",
+      "empty": "Агентов в namespace пока нет",
+      "listError": "Не удалось загрузить агентов",
+      "offline": "Агент {{id}} не в сети — терминал недоступен",
+      "reconnect": "Переподключиться",
+      "closed": "Сессия завершена · код {{code}}",
+      "failed": "Сессия оборвалась",
+      "newSession": "Новая сессия",
+      "closeSession": "Закрыть {{title}}",
+      "openHint": "Сессий нет — открой через ▾ в шапке или из панели Агенты",
+      "newSessionOn": "Новая сессия на {{id}}",
+      "pickAgent": "Открыть на агенте…",
+      "noneOnline": "Нет агентов в сети"
+    },
+    "resourceView": {
+      "started": "запущен",
+      "finished": "завершён",
+      "emptyBlock": "пусто",
+      "stale": "Данные не обновляются: {{error}}",
+      "protected": "защищена",
+      "systemLabels": "система · {{count}}",
+      "apply": "Apply",
+      "reset": "Сбросить",
+      "specDirty": "изменено",
+      "applyBadYaml": "Spec — невалидный YAML",
+      "applied": "{{ref}}: spec применён",
+      "applyFailed": "Apply отклонён для {{ref}}"
+    },
+    "build": {
+      "noPipelines": "Пайплайнов пока нет",
+      "sources": "Источники",
+      "noSources": "У пайплайна нет источников",
+      "materialize": "Собрать",
+      "builtRevision": "Ревизия готова: {{id}}",
+      "revisions": "Ревизии",
+      "noRevisions": "Ревизий пока нет — соберите источник",
+      "active": "ACTIVE",
+      "activate": "Активировать",
+      "activated": "Ревизия {{id}} активирована у {{pipeline}}",
+      "activateFailed": "Не удалось активировать {{id}}",
+      "generations": "Поколения (autosave)",
+      "files_one": "{{count}} файл",
+      "files_few": "{{count}} файла",
+      "files_many": "{{count}} файлов",
+      "files_other": "{{count}} файла"
+    },
+    "agentsPanel": {
+      "colAgent": "Агент",
+      "colStatus": "Статус",
+      "colAddresses": "Адреса",
+      "colCapabilities": "Возможности",
+      "colActions": "Действия",
+      "online": "в сети {{since}}",
+      "offline": "не в сети",
+      "shell": "Shell",
+      "update": "Обновить",
+      "restart": "Перезапустить",
+      "colMachine": "Машина"
+    },
+    "observe": {
+      "eventsWaiting": "ждём события…",
+      "logsWaiting": "ждём логи…",
+      "logFilter": "фильтр: текст или атрибут…",
+      "follow": "хвост",
+      "time": "время",
+      "sortToggle": "Порядок по времени",
+      "dropped": "потеряно: {{count}}",
+      "shown": "{{shown}} / {{total}}",
+      "metricFilter": "фильтр метрик…",
+      "metricsWaiting": "ждём метрики…",
+      "metricsEmpty": "Точек за последний час нет",
+      "window1h": "окно: 1ч · обновление 10с",
+      "traceWaiting": "ждём трассы…",
+      "traceEmpty": "Трасс нет",
+      "sortRecent": "свежие",
+      "sortDuration": "по длительности",
+      "spans": "спанов"
+    },
+    "commands": {
+      "title": "Команды",
+      "none": "У этого kind нет команд",
+      "invoke": "Выполнить",
+      "noPayload": "Команда без параметров",
+      "badJson": "Поле {{field}}: невалидный JSON",
+      "done": "{{command}} — принято ({{ref}})",
+      "openFiles": "Открыть файлы",
+      "openTerminal": "Терминал",
+      "transfer": "Передать владение",
+      "transferred": "{{ref}} передан {{owner}}",
+      "transferOwnerPlaceholder": "новый владелец: stand/x, run/y…",
+      "transferKeepPlaceholder": "keep, секунд (0 — до удаления)",
+      "delete": "Удалить запись",
+      "deleteConfirm": "Удалить? Каскад гарантирован",
+      "deleted": "{{ref}} удаляется",
+      "deleteFailed": "Не удалось удалить {{ref}}",
+      "cascade": "Умрут вместе ({{count}}):"
+    },
+    "pipeline": {
+      "plan": "План",
+      "noPlan": "Манифест не несёт план — активируйте ревизию",
+      "record": "Запись",
+      "activeRevision": "активная ревизия",
+      "revisions": "Ревизии",
+      "activate": "Активировать {{revisionId}}",
+      "activated": "{{pipelineId}}: активирована {{revisionId}}",
+      "activateFailed": "Активация {{revisionId}} отклонена",
+      "draftRun": "Draft-run {{revisionId}}",
+      "start": "Запустить",
+      "startDraft": "Draft-run · {{revisionId}}",
+      "startSubmit": "Запустить",
+      "started": "Прогон {{runId}} запущен",
+      "cancelSent": "Отмена {{runId}} отправлена",
+      "cancelFailed": "Не удалось отменить {{runId}}",
+      "op": {
+        "declare": "объявление",
+        "activity": "активность",
+        "transfer": "передача"
+      },
+      "status": {
+        "pending": "ждёт",
+        "running": "идёт",
+        "completed": "готово",
+        "failed": "упал"
+      },
+      "panelFilter": "фильтр пайплайнов…"
     }
   },
   "common": {}

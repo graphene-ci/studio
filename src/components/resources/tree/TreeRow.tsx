@@ -1,6 +1,8 @@
-import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronDownIcon, ChevronRightIcon, FolderIcon } from 'lucide-react'
 import type { Ref } from 'react'
+import { useTranslation } from 'react-i18next'
 
+import { FileIcon } from '@/components/files/FileIcon'
 import { KindIcon } from '@/components/resources/tree/KindIcon'
 import { PendingCommandsDot } from '@/components/status/PendingCommandsDot'
 import { PhaseText } from '@/components/status/PhaseText'
@@ -12,9 +14,11 @@ interface TreeRowProps {
   isSelected: boolean
   isActive: boolean
   rowRef?: Ref<HTMLDivElement>
-  /** Single click: activate the row (records also select). */
+  /** Single click: activate the row (records also select + expand). */
   onActivate: (row: TreeRowVM) => void
   onToggle: (key: string, open?: boolean) => void
+  /** Double click on a record: open it in the center. */
+  onOpen: (ref: string) => void
 }
 
 function Chevron({ isExpanded }: { isExpanded: boolean }) {
@@ -27,7 +31,16 @@ function Chevron({ isExpanded }: { isExpanded: boolean }) {
 
 /** One tree row: a kind group (`pipeline/ · 3`) or a record
  * (`kind/` muted + id, phase colored on the right). Dense, mono. */
-export function TreeRow({ row, isSelected, isActive, rowRef, onActivate, onToggle }: TreeRowProps) {
+export function TreeRow({
+  row,
+  isSelected,
+  isActive,
+  rowRef,
+  onActivate,
+  onToggle,
+  onOpen,
+}: TreeRowProps) {
+  const { t } = useTranslation()
   const hasChildren = row.type === 'group' ? row.count > 0 : row.hasChildren
 
   return (
@@ -49,7 +62,7 @@ export function TreeRow({ row, isSelected, isActive, rowRef, onActivate, onToggl
       style={{ paddingLeft: `calc(${row.depth} * var(--tree-indent) + var(--tree-pad))` }}
       onClick={() => onActivate(row)}
       onDoubleClick={() => {
-        if (hasChildren) onToggle(row.key)
+        if (row.type === 'record') onOpen(row.ref)
       }}
     >
       {hasChildren ? (
@@ -68,13 +81,21 @@ export function TreeRow({ row, isSelected, isActive, rowRef, onActivate, onToggl
       ) : (
         <span className="size-4 shrink-0" />
       )}
-      <KindIcon kind={row.kind} />
+      {row.type === 'file' ? (
+        <FileIcon name={row.name} className="size-3.5 shrink-0" />
+      ) : row.type === 'dir' ? (
+        <FolderIcon className="size-3.5 shrink-0 text-muted-foreground" />
+      ) : row.type === 'note' ? (
+        <span className="size-3.5 shrink-0" />
+      ) : (
+        <KindIcon kind={row.kind} />
+      )}
       {row.type === 'group' ? (
         <span className="flex min-w-0 grow items-baseline gap-1.5">
           <span className="truncate">{row.kind}/</span>
           <span className="text-2xs text-muted-foreground">{row.count}</span>
         </span>
-      ) : (
+      ) : row.type === 'record' ? (
         <>
           <span
             className={cn(
@@ -88,6 +109,12 @@ export function TreeRow({ row, isSelected, isActive, rowRef, onActivate, onToggl
           <PendingCommandsDot count={row.pendingCommands} />
           <PhaseText phase={row.phase} className="shrink-0 text-2xs" />
         </>
+      ) : row.type === 'note' ? (
+        <span className="min-w-0 grow truncate text-2xs text-muted-foreground italic">
+          {t(`graphene.files.${row.note}`)}
+        </span>
+      ) : (
+        <span className="min-w-0 grow truncate">{row.name}</span>
       )}
     </div>
   )

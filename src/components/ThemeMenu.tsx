@@ -18,7 +18,7 @@ const DARK_THEMES: readonly Theme[] = ['dark', 'midnight', 'graphite']
 // Mini window painted with the THEME'S OWN tokens: the theme class on
 // the swatch root re-scopes every CSS variable for the subtree, so the
 // preview can never drift from index.css.
-function ThemeSwatch({ theme }: { theme: Theme }) {
+export function ThemeSwatch({ theme }: { theme: Theme }) {
   return (
     <span
       className={cn(

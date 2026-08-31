@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/nav/Breadcrumbs'
 import { StatusDot } from '@/components/status/StatusDot'
 import { TONE_TEXT } from '@/components/status/tones'
 import { $currentContext } from '@/stores/contextsStore'
+import { $editorFileStatus } from '@/stores/editorTabsStore'
 import { dismissBalloon, notify } from '@/stores/notificationsStore'
 import { cn } from '@/lib/utils'
 
@@ -53,6 +54,7 @@ export function StatusBar() {
   }, [doorDown, context, t])
 
   const sickComponents = (server.data?.components ?? []).filter((c) => !c.ok)
+  const fileStatus = useStore($editorFileStatus)
 
   return (
     <div className="flex w-full items-center gap-3 px-3 font-mono text-2xs leading-none text-muted-foreground">
@@ -68,7 +70,15 @@ export function StatusBar() {
       )}
       {state !== 'down' && sickComponents.length > 0 && (
         <span className={cn('min-w-0 truncate', TONE_TEXT.warning)}>
-          {sickComponents.map((c) => `${c.name}: ${c.detail || t('graphene.statusbar.notOk')}`).join(' · ')}
+          {sickComponents
+            .map((c) => `${c.name}: ${c.detail || t('graphene.statusbar.notOk')}`)
+            .join(' · ')}
+        </span>
+      )}
+      {fileStatus !== null && (
+        <span className="shrink-0 text-muted-foreground">
+          {fileStatus.state === 'readonly' && t('graphene.editor.readOnly')}
+          {fileStatus.state === 'loading' && '…'}
         </span>
       )}
       <span className="flex shrink-0 items-center gap-1.5">
@@ -76,7 +86,8 @@ export function StatusBar() {
           tone={state === 'live' ? 'success' : state === 'degraded' ? 'warning' : 'failed'}
         />
         {context}
-        {server.data !== null && ` · ${t('graphene.statusbar.server', { version: server.data.version })}`}
+        {server.data !== null &&
+          ` · ${t('graphene.statusbar.server', { version: server.data.version })}`}
       </span>
     </div>
   )

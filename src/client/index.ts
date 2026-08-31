@@ -29,3 +29,4 @@ export const client = new GrapheneClient({
 })
 
 export type { View } from './external'
+export type { PtyHandle } from './verbs/agents'

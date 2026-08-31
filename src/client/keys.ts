@@ -10,10 +10,14 @@ export function normalizeQuery(query: string): string {
 
 export const listKey = (query: string) => `list:${normalizeQuery(query)}`
 export const recordKey = (ref: string) => `record:${ref}`
-export const treeKey = () => 'tree'
+export const treeKey = (owner = '') => (owner === '' ? 'tree' : `tree:${owner}`)
 export const namespacesKey = () => 'namespaces'
 export const filesKey = (sourceRef: string) => `files:${sourceRef}`
 export const serverKey = () => 'server'
+export const eventsKey = (ref: string) => `events:${ref}`
+export const logsKey = (ref: string) => `logs:${ref}`
+export const metricsKey = (ref: string) => `metrics:${ref}`
+export const tracesKey = (ref: string) => `traces:${ref}`
 
 /** Where the installation's own records live: the namespace
  * dictionary and the authorization contour. */
