@@ -117,16 +117,16 @@ export function WorkspaceLayout() {
         top={
           <>
             <ToolBarAction
-              buttonLabel={t('graphene.workspace.panels.resources')}
-              isActive={layout.resources.isOpen}
-              icon={<ThemedIcon light={resourcesIcon} />}
-              onToggle={() => toggleWorkspacePanel('resources')}
-            />
-            <ToolBarAction
               buttonLabel={t('graphene.workspace.panels.pipelines')}
               isActive={layout.pipelines.isOpen}
               icon={<ThemedIcon light={pipelinesIcon} />}
               onToggle={() => toggleWorkspacePanel('pipelines')}
+            />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.resources')}
+              isActive={layout.resources.isOpen}
+              icon={<ThemedIcon light={resourcesIcon} />}
+              onToggle={() => toggleWorkspacePanel('resources')}
             />
           </>
         }
