@@ -28,3 +28,8 @@ Source: https://github.com/JetBrains/intellij-community
 (`platform/icons/src/fileTypes/` and `platform/icons/src/expui/fileTypes/`).
 License: Apache License 2.0. Language icons (go, rust, python, kotlin,
 php, ruby, scala) come from `platform/icons/src/language/`.
+
+## `src/assets/icons/os/` — devicon logos
+
+Source: https://github.com/devicons/devicon (MIT). Distro and Docker
+brand marks for the Agents board.

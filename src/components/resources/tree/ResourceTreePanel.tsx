@@ -1,5 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { SearchIcon } from 'lucide-react'
+import { atom, computed } from 'nanostores'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,12 +8,56 @@ import { client } from '@/client'
 import { TreeRow } from '@/components/resources/tree/TreeRow'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
-import { findAncestry, flattenTree, type TreeRowVM } from '@/helpers/resourceTree'
+import {
+  findAncestry,
+  flattenTree,
+  type SourceFilesView,
+  type TreeRowVM,
+} from '@/helpers/resourceTree'
 import { useTreeNavigation } from '@/hooks/useTreeNavigation'
+import type { TreeNode } from '@/proto/management/v1/resources_pb'
 import { useParams } from '@/router'
 import { setBreadcrumbs } from '@/stores/breadcrumbsStore'
+import { openFileTab, openResourceTab } from '@/stores/editorTabsStore'
 import { $selection, selectResource } from '@/stores/selectionStore'
 import { $treeExpanded, $treeFilter, toggleTreeExpanded } from '@/stores/treeStore'
+
+/** Every gitsource ref in the ownership tree (files live under it). */
+function collectGitsourceRefs(roots: TreeNode[]): string[] {
+  const out: string[] = []
+  const walk = (nodes: TreeNode[]) => {
+    for (const node of nodes) {
+      if (node.resource?.kind === 'gitsource' && node.resource.ref !== '') {
+        out.push(node.resource.ref)
+      }
+      walk(node.children)
+    }
+  }
+  walk(roots)
+  return out
+}
+
+// Live file listings for a dynamic set of gitsources — subscribing is
+// what starts each ListFiles watch (dropped when the source collapses).
+function useSourceFiles(refs: string[]): ReadonlyMap<string, SourceFilesView> {
+  const refsKey = [...refs].sort().join('\n')
+  const combined = useMemo(() => {
+    const list = refsKey === '' ? [] : refsKey.split('\n')
+    if (list.length === 0) return atom<ReadonlyMap<string, SourceFilesView>>(new Map())
+    return computed(
+      list.map((ref) => client.stores.files(ref)),
+      (...views) => {
+        const map = new Map<string, SourceFilesView>()
+        list.forEach((ref, i) => {
+          const v = views[i]
+          map.set(ref, { loaded: v.loaded, error: v.error, data: v.data })
+        })
+        return map
+      },
+    )
+  }, [refsKey])
+  return useStore(combined)
+}
 
 // The left-panel resource tree: kind groups at every level (roots are
 // kind groups; a group opens into records; a record opens into the
@@ -43,17 +88,35 @@ export function ResourceTreePanel() {
   }, [ns, selection, view.data])
 
   const expandedSet = useMemo(() => new Set(expanded), [expanded])
+  // Watch the file listing of every EXPANDED gitsource (only those —
+  // collapsing a source releases its watch).
+  const watchedSources = useMemo(
+    () => collectGitsourceRefs(view.data).filter((ref) => expandedSet.has(ref)),
+    [view.data, expandedSet],
+  )
+  const filesBySource = useSourceFiles(watchedSources)
   const rows = useMemo(
-    () => flattenTree(view.data, expandedSet, filter),
-    [view.data, expandedSet, filter],
+    () => flattenTree(view.data, expandedSet, filter, filesBySource),
+    [view.data, expandedSet, filter, filesBySource],
   )
 
+  // Gestures: single click/Space — select + expand; double click or
+  // Enter — open the record in the center.
   const nav = useTreeNavigation<TreeRowVM>({
     rows,
     onToggle: toggleTreeExpanded,
     onPrimary: (row) => {
-      if (row.type === 'group') toggleTreeExpanded(row.key)
-      else selectResource(row.ref)
+      switch (row.type) {
+        case 'record':
+          selectResource(row.ref)
+          openResourceTab(row.ref)
+          break
+        case 'file':
+          openFileTab({ sourceRef: row.sourceRef, path: row.path, name: row.name, readOnly: true })
+          break
+        default:
+          toggleTreeExpanded(row.key)
+      }
     },
     onFocusFilter: () => filterRef.current?.focus(),
   })
@@ -111,9 +174,27 @@ export function ResourceTreePanel() {
             rowRef={nav.registerRow(row.key)}
             onActivate={(r) => {
               nav.setActiveKey(r.key)
-              if (r.type === 'record') selectResource(r.ref)
+              switch (r.type) {
+                case 'record':
+                  selectResource(r.ref)
+                  if (r.hasChildren) toggleTreeExpanded(r.key)
+                  break
+                case 'file':
+                  openFileTab({
+                    sourceRef: r.sourceRef,
+                    path: r.path,
+                    name: r.name,
+                    readOnly: true,
+                  })
+                  break
+                case 'note':
+                  break
+                default:
+                  toggleTreeExpanded(r.key)
+              }
             }}
             onToggle={toggleTreeExpanded}
+            onOpen={openResourceTab}
           />
         ))}
       </div>

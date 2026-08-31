@@ -127,6 +127,10 @@
   --scrollbar-thumb: rgb(127 104 255 / 0.35);
   --scrollbar-thumb-active: #7f68ff;
 
+  /* Editor indentation guides — barely-there by design. */
+  --indent-guide: rgb(51 50 56 / 0.08); /* gray-900 */
+  --indent-guide-active: rgb(51 50 56 / 0.18);
+
   /* Code highlighting (CodeMirror) — light ramp, Pajamas 500s. */
   --code-key: #1f75cb; /* blue-500 */
   --code-string: #108548; /* green-500 */
@@ -210,6 +214,9 @@
 
   --scrollbar-thumb: rgb(155 135 255 / 0.4);
   --scrollbar-thumb-active: #9b87ff;
+
+  --indent-guide: rgb(236 236 239 / 0.07); /* gray-50 */
+  --indent-guide-active: rgb(236 236 239 / 0.16);
 
   /* Code highlighting — dark ramp, one step lighter (300s). */
   --code-key: #63a6e9; /* blue-300 */
@@ -578,7 +585,7 @@
   gap: 0;
 }
 
-.workspace-bottom-panels-split .workspace-bottom-terminal-panel {
+.workspace-bottom-panels-split > :first-child {
   grid-row: 1;
   grid-column: 1;
 }
@@ -588,7 +595,7 @@
   grid-column: 2;
 }
 
-.workspace-bottom-panels-split .workspace-bottom-notifications-panel {
+.workspace-bottom-panels-split > :last-child {
   grid-row: 1;
   grid-column: 3;
 }
@@ -849,6 +856,33 @@
   line-height: var(--text-xs--line-height);
 }
 
+/* Describe blocks: grow with content, no artificial min/max. */
+.code-editor[data-auto] .cm-scroller {
+  min-height: 0;
+  max-height: none;
+}
+
+/* The canvas variant: borderless, fills its panel. */
+.code-editor[data-fill] {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+.code-editor[data-fill] .cm-editor {
+  height: 100%;
+}
+
+.code-editor[data-fill] .cm-scroller {
+  min-height: 0;
+  max-height: none;
+  height: 100%;
+}
+
+.code-editor[data-fill]:focus-within {
+  outline: none;
+}
+
 .code-editor .cm-content {
   padding: 0.5rem 0;
   caret-color: var(--foreground);
@@ -869,6 +903,63 @@
 
 .code-editor .cm-cursor {
   border-color: var(--foreground);
+}
+
+/* Indentation guides: the package injects its own runtime vars —
+   higher specificity puts the barely-there tokens back in charge. */
+.workspace-layout .code-editor .cm-editor {
+  --indent-marker-bg-color: var(--indent-guide);
+  --indent-marker-active-bg-color: var(--indent-guide-active);
+}
+
+/* IDE chrome (fill mode): gutters and active line on theme tokens. */
+.code-editor .cm-gutters {
+  border-right: 1px solid var(--border);
+  color: var(--muted-foreground);
+  background-color: transparent;
+  font-size: var(--text-2xs);
+}
+
+/* Narrow gutters, numbers centered on their line. */
+.code-editor .cm-lineNumbers .cm-gutterElement {
+  display: flex;
+  min-width: 1.375rem;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 0.3125rem 0 0.375rem;
+}
+
+.code-editor .cm-foldGutter .cm-gutterElement {
+  display: flex;
+  width: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.code-editor .cm-lint-marker {
+  width: 0.6em;
+  height: 0.6em;
+}
+
+.code-editor .cm-activeLine {
+  background-color: color-mix(in oklab, var(--surface-hover) 55%, transparent);
+}
+
+.code-editor .cm-activeLineGutter {
+  color: var(--foreground);
+  background-color: transparent;
+}
+
+.code-editor .cm-foldPlaceholder {
+  border: 0;
+  color: var(--muted-foreground);
+  background-color: var(--muted);
+}
+
+.code-editor .cm-panels {
+  color: var(--foreground);
+  background-color: var(--popover);
 }
 
 /* Lint: the invalid span carries a wavy destructive underline. */

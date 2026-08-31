@@ -1,0 +1,11 @@
+<!-- Graphene Studio: Ubuntu circle-of-friends mark, drawn for identification. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="12" fill="#E95420"/>
+  <g fill="#fff">
+    <circle cx="18.9" cy="12" r="2.1"/>
+    <circle cx="8.55" cy="17.98" r="2.1"/>
+    <circle cx="8.55" cy="6.02" r="2.1"/>
+  </g>
+  <circle cx="12" cy="12" r="6" fill="none" stroke="#fff" stroke-width="2.4"
+    stroke-dasharray="8.57 4" stroke-dashoffset="10.57"/>
+</svg>

@@ -5,9 +5,11 @@ import { ContextSwitcher } from '@/components/auth/ContextSwitcher'
 import { NamespaceSwitcher } from '@/components/nav/NamespaceSwitcher'
 import { SignInCard } from '@/components/auth/SignInCard'
 import { Logo } from '@/components/Logo'
+import { EditorUrlSync } from '@/components/editor/EditorUrlSync'
 import { WorkspaceLayout } from '@/components/WorkspaceLayout'
 import { WindowControls } from '@/components/WindowControls'
 import { AppearanceMenus } from '@/components/nav/AppearanceMenus'
+import { SettingsButton } from '@/components/settings/SettingsButton'
 import { StatusBar } from '@/components/nav/StatusBar'
 import { Toaster } from '@/components/ui/sonner'
 import { Spinner } from '@/components/ui/spinner'
@@ -69,10 +71,11 @@ export function AppLayout() {
         <span className="grow" />
         <NamespaceSwitcher />
         <ContextSwitcher />
-        <AppearanceMenus />
+        <SettingsButton />
         <WindowControls />
       </header>
       <main className="relative min-h-0 min-w-0 flex-1">
+        <EditorUrlSync />
         <WorkspaceLayout />
       </main>
       <footer className="workspace-statusbar shrink-0">

@@ -33,7 +33,10 @@
         "resizeInspector": "Resize the inspector panel",
         "resizeBottom": "Resize the bottom panels",
         "resizeBottomSplit": "Resize terminal and notifications",
-        "files": "Files"
+        "files": "Files",
+        "build": "Build",
+        "agents": "Agents",
+        "pipelines": "Pipelines"
       }
     },
     "runs": {
@@ -307,7 +310,7 @@
     },
     "files": {
       "filter": "filter: path… (/)",
-      "empty": "No pipelines with sources yet",
+      "empty": "No files in this source",
       "noMatch": "Nothing matches the filter",
       "loading": "loading files…",
       "error": "Could not load files",
@@ -316,6 +319,172 @@
     "notifications": {
       "empty": "No notifications yet",
       "clear": "Clear"
+    },
+    "editor": {
+      "tabs": "Open tabs",
+      "close": "Close {{name}}",
+      "readOnly": "read-only",
+      "readOnlyBanner": "git source — read-only: files move only by sync",
+      "loadFailed": "Could not read {{path}}",
+      "saveFailed": "Could not save {{path}}",
+      "saving": "saving…",
+      "saved": "saved",
+      "savedGen": "saved · #{{gen}}",
+      "saveError": "save failed",
+      "noFormatter": "No formatter for {{name}}",
+      "formatFailed": "Formatting {{name}} failed — check the syntax"
+    },
+    "fork": {
+      "action": "Fork into managedsource…",
+      "title": "Fork {{from}}",
+      "subtitle": "A copy of the tree with provenance — a deliberate branch, nothing syncs back",
+      "nameLabel": "New source name",
+      "submit": "Fork",
+      "done": "Created managedsource/{{id}} from {{from}}",
+      "errors": {
+        "nameRequired": "Name the source — for example main-edit",
+        "nameFormat": "Lowercase letters, digits, dot, dash, underscore",
+        "noPipeline": "Could not find this source's pipeline in the tree",
+        "failed": "The server refused the fork — check the name and permissions"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Appearance and editor behavior — stored in this browser",
+      "editor": "Editor",
+      "editorToggles": {
+        "wordWrap": "Wrap long lines",
+        "showWhitespace": "Show whitespace",
+        "indentationMarkers": "Indentation guides",
+        "minimap": "Minimap",
+        "formatOnSave": "Format on save (Ctrl+S)",
+        "trimOnSave": "Trim trailing spaces on write"
+      }
+    },
+    "terminal": {
+      "agents": "Agents",
+      "empty": "No agents in this namespace yet",
+      "listError": "Could not load agents",
+      "offline": "Agent {{id}} is offline — no terminal",
+      "reconnect": "Reconnect",
+      "closed": "Session ended · code {{code}}",
+      "failed": "Session dropped",
+      "newSession": "New session",
+      "closeSession": "Close {{title}}",
+      "openHint": "No sessions — open one via ▾ in the header or from the Agents board",
+      "newSessionOn": "New session on {{id}}",
+      "pickAgent": "Open on agent…",
+      "noneOnline": "No agents online"
+    },
+    "resourceView": {
+      "started": "started",
+      "finished": "finished",
+      "emptyBlock": "empty",
+      "stale": "Data is not refreshing: {{error}}",
+      "protected": "protected",
+      "systemLabels": "system · {{count}}",
+      "apply": "Apply",
+      "reset": "Reset",
+      "specDirty": "edited",
+      "applyBadYaml": "Spec is not valid YAML",
+      "applied": "{{ref}}: spec applied",
+      "applyFailed": "Apply refused for {{ref}}"
+    },
+    "build": {
+      "noPipelines": "No pipelines yet",
+      "sources": "Sources",
+      "noSources": "The pipeline has no sources",
+      "materialize": "Build",
+      "builtRevision": "Revision ready: {{id}}",
+      "revisions": "Revisions",
+      "noRevisions": "No revisions yet — build a source",
+      "active": "ACTIVE",
+      "activate": "Activate",
+      "activated": "Revision {{id}} activated on {{pipeline}}",
+      "activateFailed": "Could not activate {{id}}",
+      "generations": "Generations (autosave)",
+      "files_one": "{{count}} file",
+      "files_other": "{{count}} files"
+    },
+    "agentsPanel": {
+      "colAgent": "Agent",
+      "colStatus": "Status",
+      "colAddresses": "Addresses",
+      "colCapabilities": "Capabilities",
+      "colActions": "Actions",
+      "online": "online {{since}}",
+      "offline": "offline",
+      "shell": "Shell",
+      "update": "Update",
+      "restart": "Restart",
+      "colMachine": "Machine"
+    },
+    "observe": {
+      "eventsWaiting": "waiting for events…",
+      "logsWaiting": "waiting for logs…",
+      "logFilter": "filter: text or attribute…",
+      "follow": "follow",
+      "time": "time",
+      "sortToggle": "Toggle time order",
+      "dropped": "dropped: {{count}}",
+      "shown": "{{shown}} / {{total}}",
+      "metricFilter": "filter metrics…",
+      "metricsWaiting": "waiting for metrics…",
+      "metricsEmpty": "No points in the last hour",
+      "window1h": "window: 1h · refresh 10s",
+      "traceWaiting": "waiting for traces…",
+      "traceEmpty": "No traces",
+      "sortRecent": "recent",
+      "sortDuration": "by duration",
+      "spans": "spans"
+    },
+    "commands": {
+      "title": "Commands",
+      "none": "This kind has no commands",
+      "invoke": "Invoke",
+      "noPayload": "The command takes no payload",
+      "badJson": "Field {{field}}: invalid JSON",
+      "done": "{{command}} — accepted ({{ref}})",
+      "openFiles": "Open files",
+      "openTerminal": "Terminal",
+      "transfer": "Transfer ownership",
+      "transferred": "{{ref}} transferred to {{owner}}",
+      "transferOwnerPlaceholder": "new owner: stand/x, run/y…",
+      "transferKeepPlaceholder": "keep, seconds (0 — until delete)",
+      "delete": "Delete record",
+      "deleteConfirm": "Delete? The cascade is guaranteed",
+      "deleted": "{{ref}} is being deleted",
+      "deleteFailed": "Could not delete {{ref}}",
+      "cascade": "Dying together ({{count}}):"
+    },
+    "pipeline": {
+      "plan": "Plan",
+      "noPlan": "The manifest carries no plan — activate a revision",
+      "record": "Record",
+      "activeRevision": "active revision",
+      "revisions": "Revisions",
+      "activate": "Activate {{revisionId}}",
+      "activated": "{{pipelineId}}: activated {{revisionId}}",
+      "activateFailed": "Activation of {{revisionId}} refused",
+      "draftRun": "Draft-run {{revisionId}}",
+      "start": "Start",
+      "startDraft": "Draft-run · {{revisionId}}",
+      "startSubmit": "Start",
+      "started": "Run {{runId}} started",
+      "cancelSent": "Cancel for {{runId}} sent",
+      "cancelFailed": "Could not cancel {{runId}}",
+      "op": {
+        "declare": "declare",
+        "activity": "activity",
+        "transfer": "transfer"
+      },
+      "status": {
+        "pending": "pending",
+        "running": "running",
+        "completed": "done",
+        "failed": "failed"
+      },
+      "panelFilter": "filter pipelines…"
     }
   },
   "common": {}

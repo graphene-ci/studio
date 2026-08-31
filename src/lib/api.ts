@@ -1,6 +1,7 @@
 import { createClient, type Interceptor } from '@connectrpc/connect'
 import { createConnectTransport } from '@connectrpc/connect-web'
 
+import { AgentsAPI } from '@/proto/management/v1/agents_pb'
 import { NamespacesAPI } from '@/proto/management/v1/namespaces_pb'
 import { ObserveAPI } from '@/proto/management/v1/observe_pb'
 import { RbacAPI } from '@/proto/management/v1/rbac_pb'
@@ -30,6 +31,7 @@ export function makeApi(baseUrl: string, auth: () => ApiAuth) {
   }
   const transport = createConnectTransport({ baseUrl, interceptors: [withAuth] })
   return {
+    agents: createClient(AgentsAPI, transport),
     namespaces: createClient(NamespacesAPI, transport),
     observe: createClient(ObserveAPI, transport),
     rbac: createClient(RbacAPI, transport),
