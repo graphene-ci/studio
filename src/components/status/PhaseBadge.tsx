@@ -16,16 +16,21 @@ const TONE_CLASSES: Record<Tone, string> = {
 function toneOf(phase: string): Tone {
   switch (phase.toLowerCase()) {
     case 'ready':
+    case 'completed':
       return 'success'
     case 'creating':
     case 'pending':
       return 'pending'
     case 'deleting':
+    case 'running':
       return 'warning'
     case 'failed':
     case 'deleted':
+    case 'terminated':
+    case 'timedout':
       return 'failed'
     default:
+      // canceled and any unknown status.
       return 'canceled'
   }
 }
