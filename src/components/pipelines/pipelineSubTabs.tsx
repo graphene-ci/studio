@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { ExternalLinkIcon, PlayIcon, RefreshCwIcon, Trash2Icon } from 'lucide-react'
+import { DownloadIcon, ExternalLinkIcon, PlayIcon, RefreshCwIcon, Trash2Icon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -16,6 +16,7 @@ import { PhaseText } from '@/components/status/PhaseText'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { timestampMs } from '@/helpers/describe'
+import { saveBytes } from '@/helpers/download'
 import { pipelineManifest } from '@/helpers/pipelineManifest'
 import type { Resource } from '@/proto/management/v1/resources_pb'
 import { openResourceTab } from '@/stores/editorTabsStore'
@@ -160,10 +161,14 @@ function DeliveryRow({
   resource,
   onSync,
   syncing,
+  onDownload,
+  downloading,
 }: {
   resource: Resource
   onSync?: () => void
   syncing?: boolean
+  onDownload?: () => void
+  downloading?: boolean
 }) {
   const { t } = useTranslation()
   return (
@@ -177,6 +182,18 @@ function DeliveryRow({
         <span className="min-w-0 truncate">{resource.ref}</span>
         <PhaseText phase={resource.phase} className="shrink-0 text-2xs" />
       </button>
+      {onDownload !== undefined && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          disabled={downloading}
+          aria-label={t('graphene.download.download')}
+          title={t('graphene.download.download')}
+          onClick={onDownload}
+        >
+          {downloading ? <Spinner /> : <DownloadIcon />}
+        </Button>
+      )}
       {onSync !== undefined && (
         <Button
           variant="ghost"
@@ -207,11 +224,15 @@ function DeliverySection({
   resources,
   onSync,
   syncing,
+  onDownload,
+  downloading,
 }: {
   labelKey: string
   resources: Resource[]
   onSync?: (ref: string) => void
   syncing?: string | null
+  onDownload?: (ref: string) => void
+  downloading?: string | null
 }) {
   const { t } = useTranslation()
   if (resources.length === 0) return null
@@ -227,6 +248,8 @@ function DeliverySection({
             resource={resource}
             onSync={onSync === undefined ? undefined : () => onSync(resource.ref)}
             syncing={syncing === resource.ref}
+            onDownload={onDownload === undefined ? undefined : () => onDownload(resource.ref)}
+            downloading={downloading === resource.ref}
           />
         ))}
       </ul>
@@ -238,6 +261,7 @@ function DeliveryTab({ record }: { record: Resource }) {
   const { t } = useTranslation()
   const subtree = useStore(client.stores.tree(record.ref))
   const [syncing, setSyncing] = useState<string | null>(null)
+  const [downloading, setDownloading] = useState<string | null>(null)
 
   const children = subtree.data
     .map((node) => node.resource)
@@ -263,6 +287,24 @@ function DeliveryTab({ record }: { record: Resource }) {
     }
   }
 
+  const download = async (sourceRef: string) => {
+    setDownloading(sourceRef)
+    try {
+      const bytes = await client.sources.download(sourceRef)
+      const name = `${sourceRef.slice(sourceRef.lastIndexOf('/') + 1)}.tgz`
+      saveBytes(name, bytes)
+      notify({ severity: 'success', title: t('graphene.download.downloaded', { name }) })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.download.downloadFailed'),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setDownloading(null)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4 px-4 py-3">
       {!subtree.loaded && subtree.error === null && (
@@ -278,6 +320,8 @@ function DeliveryTab({ record }: { record: Resource }) {
         resources={sources}
         onSync={(ref) => void sync(ref)}
         syncing={syncing}
+        onDownload={(ref) => void download(ref)}
+        downloading={downloading}
       />
       <DeliverySection labelKey="graphene.pipeline.triggersSection" resources={triggers} />
       <DeliverySection labelKey="graphene.pipeline.standSection" resources={stands} />
@@ -293,7 +337,27 @@ function DeliveryTab({ record }: { record: Resource }) {
 function StandCard({ resource }: { resource: Resource }) {
   const { t } = useTranslation()
   const [releasing, setReleasing] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   const marks = Object.entries(resource.labels).filter(([k]) => k.startsWith('graphene.io/'))
+  const isArtifact = resource.kind === 'artifact'
+
+  const download = async () => {
+    setDownloading(true)
+    try {
+      const bytes = await client.resource(resource.ref).download()
+      const name = `${resource.ref.slice(resource.ref.lastIndexOf('/') + 1)}.tgz`
+      saveBytes(name, bytes)
+      notify({ severity: 'success', title: t('graphene.download.downloaded', { name }) })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.download.downloadFailed'),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const release = async () => {
     setReleasing(true)
@@ -343,6 +407,17 @@ function StandCard({ resource }: { resource: Resource }) {
           <ExternalLinkIcon />
           {t('graphene.pipeline.openRecord')}
         </Button>
+        {isArtifact && (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={downloading}
+            onClick={() => void download()}
+          >
+            {downloading ? <Spinner /> : <DownloadIcon />}
+            {t('graphene.download.download')}
+          </Button>
+        )}
         <span className="grow" />
         <Button variant="ghost" size="sm" disabled={releasing} onClick={() => void release()}>
           {releasing ? <Spinner /> : <Trash2Icon />}

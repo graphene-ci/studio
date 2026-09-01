@@ -538,6 +538,11 @@
       "standRelease": "Release",
       "standReleased": "Released {{ref}} from the stand",
       "standReleaseFailed": "Could not release {{ref}}"
+    },
+    "download": {
+      "download": "Download",
+      "downloaded": "Downloaded {{name}}",
+      "downloadFailed": "Download failed"
     }
   },
   "common": {}

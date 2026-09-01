@@ -17,7 +17,41 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/resources.proto.
  */
 export const file_proto_management_v1_resources: GenFile = /*@__PURE__*/
-  fileDesc("CiNwcm90by9tYW5hZ2VtZW50L3YxL3Jlc291cmNlcy5wcm90bxIWZ3JhcGhlbmUubWFuYWdlbWVudC52MSKjAQoIU2VsZWN0b3ISDAoEa2luZBgBIAEoCRINCgVwaGFzZRgCIAEoCRINCgVvd25lchgDIAEoCRI8CgZsYWJlbHMYBCADKAsyLC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlbGVjdG9yLkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEidwoLTGlzdFJlcXVlc3QSMgoIc2VsZWN0b3IYASABKAsyIC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlbGVjdG9yEg0KBXF1ZXJ5GAQgASgJEhEKCXBhZ2Vfc2l6ZRgCIAEoBRISCgpwYWdlX3Rva2VuGAMgASgJImoKDENvdW50UmVxdWVzdBIyCghzZWxlY3RvchgBIAEoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU2VsZWN0b3ISDQoFcXVlcnkYAiABKAkSFwoPZ3JvdXBfYnlfc3RhdHVzGAMgASgIIiMKEUNvdW50T3duZWRSZXF1ZXN0Eg4KBm93bmVycxgBIAMoCSKLAQoSQ291bnRPd25lZFJlc3BvbnNlEkYKBmNvdW50cxgBIAMoCzI2LmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ291bnRPd25lZFJlc3BvbnNlLkNvdW50c0VudHJ5Gi0KC0NvdW50c0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoAzoCOAEigwEKDUNvdW50UmVzcG9uc2USDQoFdG90YWwYASABKAMSOwoGZ3JvdXBzGAIgAygLMisuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Db3VudFJlc3BvbnNlLkdyb3VwGiYKBUdyb3VwEg4KBnN0YXR1cxgBIAEoCRINCgVjb3VudBgCIAEoAyL4AgoIUmVzb3VyY2USCwoDcmVmGAEgASgJEgwKBGtpbmQYAiABKAkSDQoFcGhhc2UYAyABKAkSDQoFb3duZXIYBCABKAkSDAoEc3BlYxgFIAEoDBINCgVzdGF0ZRgGIAEoDBIYChBwZW5kaW5nX2NvbW1hbmRzGAcgASgFEhsKE21hcmtlZF9mb3JfZGVsZXRpb24YCCABKAgSPAoGbGFiZWxzGAkgAygLMiwuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZS5MYWJlbHNFbnRyeRIRCglwcm90ZWN0ZWQYDCABKAgSLgoKc3RhcnRlZF9hdBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLwoLZmluaXNoZWRfYXQYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wGi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiXAoMTGlzdFJlc3BvbnNlEjMKCXJlc291cmNlcxgBIAMoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVzb3VyY2USFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJIhkKCkdldFJlcXVlc3QSCwoDcmVmGAEgASgJIkEKC0dldFJlc3BvbnNlEjIKCHJlc291cmNlGAEgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSIcCgtUcmVlUmVxdWVzdBINCgVvd25lchgBIAEoCSJyCghUcmVlTm9kZRIyCghyZXNvdXJjZRgBIAEoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVzb3VyY2USMgoIY2hpbGRyZW4YAiADKAsyIC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyZWVOb2RlIj8KDFRyZWVSZXNwb25zZRIvCgVyb290cxgBIAMoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJlZU5vZGUiHAoNRGVsZXRlUmVxdWVzdBILCgNyZWYYASABKAkiEAoORGVsZXRlUmVzcG9uc2UiRwoPVHJhbnNmZXJSZXF1ZXN0EgsKA3JlZhgBIAEoCRIRCgluZXdfb3duZXIYAiABKAkSFAoMa2VlcF9zZWNvbmRzGAMgASgDIhIKEFRyYW5zZmVyUmVzcG9uc2UiUgoNSW52b2tlUmVxdWVzdBILCgNyZWYYASABKAkSDwoHY29tbWFuZBgCIAEoCRIPCgdwYXlsb2FkGAMgASgMEhIKCnJlcXVlc3RfaWQYBCABKAkiIAoOSW52b2tlUmVzcG9uc2USDgoGcmVzdWx0GAEgASgMIqcBCgxBcHBseVJlcXVlc3QSDAoEa2luZBgBIAEoCRIKCgJpZBgCIAEoCRIMCgRzcGVjGAMgASgMEkAKBmxhYmVscxgEIAMoCzIwLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQXBwbHlSZXF1ZXN0LkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiHAoNQXBwbHlSZXNwb25zZRILCgNyZWYYASABKAkypgYKDFJlc291cmNlc0FQSRJRCgRMaXN0EiMuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0UmVxdWVzdBokLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJlc3BvbnNlElQKBUNvdW50EiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Db3VudFJlcXVlc3QaJS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNvdW50UmVzcG9uc2USYwoKQ291bnRPd25lZBIpLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ291bnRPd25lZFJlcXVlc3QaKi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNvdW50T3duZWRSZXNwb25zZRJOCgNHZXQSIi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkdldFJlcXVlc3QaIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkdldFJlc3BvbnNlElEKBFRyZWUSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyZWVSZXF1ZXN0GiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmVlUmVzcG9uc2USVwoGRGVsZXRlEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5EZWxldGVSZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5EZWxldGVSZXNwb25zZRJdCghUcmFuc2ZlchInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJhbnNmZXJSZXF1ZXN0GiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFuc2ZlclJlc3BvbnNlElcKBkludm9rZRIlLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuSW52b2tlUmVxdWVzdBomLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuSW52b2tlUmVzcG9uc2USVAoFQXBwbHkSJC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkFwcGx5UmVxdWVzdBolLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQXBwbHlSZXNwb25zZUJGWkRnaXRodWIuY29tL2dyYXBoZW5lLWNpL2dyYXBoZW5lL3BrZy9wcm90by9tYW5hZ2VtZW50L3YxO21hbmFnZW1lbnR2MWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+  fileDesc("CiNwcm90by9tYW5hZ2VtZW50L3YxL3Jlc291cmNlcy5wcm90bxIWZ3JhcGhlbmUubWFuYWdlbWVudC52MSIeCg9Eb3dubG9hZFJlcXVlc3QSCwoDcmVmGAEgASgJIh0KDURvd25sb2FkQ2h1bmsSDAoEZGF0YRgBIAEoDCKjAQoIU2VsZWN0b3ISDAoEa2luZBgBIAEoCRINCgVwaGFzZRgCIAEoCRINCgVvd25lchgDIAEoCRI8CgZsYWJlbHMYBCADKAsyLC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlbGVjdG9yLkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEidwoLTGlzdFJlcXVlc3QSMgoIc2VsZWN0b3IYASABKAsyIC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlNlbGVjdG9yEg0KBXF1ZXJ5GAQgASgJEhEKCXBhZ2Vfc2l6ZRgCIAEoBRISCgpwYWdlX3Rva2VuGAMgASgJImoKDENvdW50UmVxdWVzdBIyCghzZWxlY3RvchgBIAEoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU2VsZWN0b3ISDQoFcXVlcnkYAiABKAkSFwoPZ3JvdXBfYnlfc3RhdHVzGAMgASgIIiMKEUNvdW50T3duZWRSZXF1ZXN0Eg4KBm93bmVycxgBIAMoCSKLAQoSQ291bnRPd25lZFJlc3BvbnNlEkYKBmNvdW50cxgBIAMoCzI2LmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ291bnRPd25lZFJlc3BvbnNlLkNvdW50c0VudHJ5Gi0KC0NvdW50c0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoAzoCOAEigwEKDUNvdW50UmVzcG9uc2USDQoFdG90YWwYASABKAMSOwoGZ3JvdXBzGAIgAygLMisuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Db3VudFJlc3BvbnNlLkdyb3VwGiYKBUdyb3VwEg4KBnN0YXR1cxgBIAEoCRINCgVjb3VudBgCIAEoAyL4AgoIUmVzb3VyY2USCwoDcmVmGAEgASgJEgwKBGtpbmQYAiABKAkSDQoFcGhhc2UYAyABKAkSDQoFb3duZXIYBCABKAkSDAoEc3BlYxgFIAEoDBINCgVzdGF0ZRgGIAEoDBIYChBwZW5kaW5nX2NvbW1hbmRzGAcgASgFEhsKE21hcmtlZF9mb3JfZGVsZXRpb24YCCABKAgSPAoGbGFiZWxzGAkgAygLMiwuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZS5MYWJlbHNFbnRyeRIRCglwcm90ZWN0ZWQYDCABKAgSLgoKc3RhcnRlZF9hdBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLwoLZmluaXNoZWRfYXQYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wGi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiXAoMTGlzdFJlc3BvbnNlEjMKCXJlc291cmNlcxgBIAMoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVzb3VyY2USFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJIhkKCkdldFJlcXVlc3QSCwoDcmVmGAEgASgJIkEKC0dldFJlc3BvbnNlEjIKCHJlc291cmNlGAEgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSIcCgtUcmVlUmVxdWVzdBINCgVvd25lchgBIAEoCSJyCghUcmVlTm9kZRIyCghyZXNvdXJjZRgBIAEoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUmVzb3VyY2USMgoIY2hpbGRyZW4YAiADKAsyIC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyZWVOb2RlIj8KDFRyZWVSZXNwb25zZRIvCgVyb290cxgBIAMoCzIgLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJlZU5vZGUiHAoNRGVsZXRlUmVxdWVzdBILCgNyZWYYASABKAkiEAoORGVsZXRlUmVzcG9uc2UiRwoPVHJhbnNmZXJSZXF1ZXN0EgsKA3JlZhgBIAEoCRIRCgluZXdfb3duZXIYAiABKAkSFAoMa2VlcF9zZWNvbmRzGAMgASgDIhIKEFRyYW5zZmVyUmVzcG9uc2UiUgoNSW52b2tlUmVxdWVzdBILCgNyZWYYASABKAkSDwoHY29tbWFuZBgCIAEoCRIPCgdwYXlsb2FkGAMgASgMEhIKCnJlcXVlc3RfaWQYBCABKAkiIAoOSW52b2tlUmVzcG9uc2USDgoGcmVzdWx0GAEgASgMIqcBCgxBcHBseVJlcXVlc3QSDAoEa2luZBgBIAEoCRIKCgJpZBgCIAEoCRIMCgRzcGVjGAMgASgMEkAKBmxhYmVscxgEIAMoCzIwLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQXBwbHlSZXF1ZXN0LkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiHAoNQXBwbHlSZXNwb25zZRILCgNyZWYYASABKAkyhAcKDFJlc291cmNlc0FQSRJRCgRMaXN0EiMuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5MaXN0UmVxdWVzdBokLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTGlzdFJlc3BvbnNlElQKBUNvdW50EiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Db3VudFJlcXVlc3QaJS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNvdW50UmVzcG9uc2USYwoKQ291bnRPd25lZBIpLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQ291bnRPd25lZFJlcXVlc3QaKi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNvdW50T3duZWRSZXNwb25zZRJOCgNHZXQSIi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkdldFJlcXVlc3QaIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkdldFJlc3BvbnNlElEKBFRyZWUSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyZWVSZXF1ZXN0GiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmVlUmVzcG9uc2USVwoGRGVsZXRlEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5EZWxldGVSZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5EZWxldGVSZXNwb25zZRJdCghUcmFuc2ZlchInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJhbnNmZXJSZXF1ZXN0GiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFuc2ZlclJlc3BvbnNlElcKBkludm9rZRIlLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuSW52b2tlUmVxdWVzdBomLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuSW52b2tlUmVzcG9uc2USVAoFQXBwbHkSJC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkFwcGx5UmVxdWVzdBolLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuQXBwbHlSZXNwb25zZRJcCghEb3dubG9hZBInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuRG93bmxvYWRSZXF1ZXN0GiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Eb3dubG9hZENodW5rMAFCRlpEZ2l0aHViLmNvbS9ncmFwaGVuZS1jaS9ncmFwaGVuZS9wa2cvcHJvdG8vbWFuYWdlbWVudC92MTttYW5hZ2VtZW50djFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+
+/**
+ * @generated from message graphene.management.v1.DownloadRequest
+ */
+export type DownloadRequest = Message<"graphene.management.v1.DownloadRequest"> & {
+  /**
+   * @generated from field: string ref = 1;
+   */
+  ref: string;
+};
+
+/**
+ * Describes the message graphene.management.v1.DownloadRequest.
+ * Use `create(DownloadRequestSchema)` to create a new message.
+ */
+export const DownloadRequestSchema: GenMessage<DownloadRequest> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_resources, 0);
+
+/**
+ * @generated from message graphene.management.v1.DownloadChunk
+ */
+export type DownloadChunk = Message<"graphene.management.v1.DownloadChunk"> & {
+  /**
+   * @generated from field: bytes data = 1;
+   */
+  data: Uint8Array;
+};
+
+/**
+ * Describes the message graphene.management.v1.DownloadChunk.
+ * Use `create(DownloadChunkSchema)` to create a new message.
+ */
+export const DownloadChunkSchema: GenMessage<DownloadChunk> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_resources, 1);
 
 /**
  * Selector picks resources: every set field must match.
@@ -59,7 +93,7 @@ export type Selector = Message<"graphene.management.v1.Selector"> & {
  * Use `create(SelectorSchema)` to create a new message.
  */
 export const SelectorSchema: GenMessage<Selector> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 0);
+  messageDesc(file_proto_management_v1_resources, 2);
 
 /**
  * @generated from message graphene.management.v1.ListRequest
@@ -102,7 +136,7 @@ export type ListRequest = Message<"graphene.management.v1.ListRequest"> & {
  * Use `create(ListRequestSchema)` to create a new message.
  */
 export const ListRequestSchema: GenMessage<ListRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 1);
+  messageDesc(file_proto_management_v1_resources, 3);
 
 /**
  * @generated from message graphene.management.v1.CountRequest
@@ -133,7 +167,7 @@ export type CountRequest = Message<"graphene.management.v1.CountRequest"> & {
  * Use `create(CountRequestSchema)` to create a new message.
  */
 export const CountRequestSchema: GenMessage<CountRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 2);
+  messageDesc(file_proto_management_v1_resources, 4);
 
 /**
  * @generated from message graphene.management.v1.CountOwnedRequest
@@ -152,7 +186,7 @@ export type CountOwnedRequest = Message<"graphene.management.v1.CountOwnedReques
  * Use `create(CountOwnedRequestSchema)` to create a new message.
  */
 export const CountOwnedRequestSchema: GenMessage<CountOwnedRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 3);
+  messageDesc(file_proto_management_v1_resources, 5);
 
 /**
  * @generated from message graphene.management.v1.CountOwnedResponse
@@ -171,7 +205,7 @@ export type CountOwnedResponse = Message<"graphene.management.v1.CountOwnedRespo
  * Use `create(CountOwnedResponseSchema)` to create a new message.
  */
 export const CountOwnedResponseSchema: GenMessage<CountOwnedResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 4);
+  messageDesc(file_proto_management_v1_resources, 6);
 
 /**
  * @generated from message graphene.management.v1.CountResponse
@@ -193,7 +227,7 @@ export type CountResponse = Message<"graphene.management.v1.CountResponse"> & {
  * Use `create(CountResponseSchema)` to create a new message.
  */
 export const CountResponseSchema: GenMessage<CountResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 5);
+  messageDesc(file_proto_management_v1_resources, 7);
 
 /**
  * @generated from message graphene.management.v1.CountResponse.Group
@@ -217,7 +251,7 @@ export type CountResponse_Group = Message<"graphene.management.v1.CountResponse.
  * Use `create(CountResponse_GroupSchema)` to create a new message.
  */
 export const CountResponse_GroupSchema: GenMessage<CountResponse_Group> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 5, 0);
+  messageDesc(file_proto_management_v1_resources, 7, 0);
 
 /**
  * @generated from message graphene.management.v1.Resource
@@ -308,7 +342,7 @@ export type Resource = Message<"graphene.management.v1.Resource"> & {
  * Use `create(ResourceSchema)` to create a new message.
  */
 export const ResourceSchema: GenMessage<Resource> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 6);
+  messageDesc(file_proto_management_v1_resources, 8);
 
 /**
  * @generated from message graphene.management.v1.ListResponse
@@ -332,7 +366,7 @@ export type ListResponse = Message<"graphene.management.v1.ListResponse"> & {
  * Use `create(ListResponseSchema)` to create a new message.
  */
 export const ListResponseSchema: GenMessage<ListResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 7);
+  messageDesc(file_proto_management_v1_resources, 9);
 
 /**
  * @generated from message graphene.management.v1.GetRequest
@@ -349,7 +383,7 @@ export type GetRequest = Message<"graphene.management.v1.GetRequest"> & {
  * Use `create(GetRequestSchema)` to create a new message.
  */
 export const GetRequestSchema: GenMessage<GetRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 8);
+  messageDesc(file_proto_management_v1_resources, 10);
 
 /**
  * @generated from message graphene.management.v1.GetResponse
@@ -366,7 +400,7 @@ export type GetResponse = Message<"graphene.management.v1.GetResponse"> & {
  * Use `create(GetResponseSchema)` to create a new message.
  */
 export const GetResponseSchema: GenMessage<GetResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 9);
+  messageDesc(file_proto_management_v1_resources, 11);
 
 /**
  * @generated from message graphene.management.v1.TreeRequest
@@ -385,7 +419,7 @@ export type TreeRequest = Message<"graphene.management.v1.TreeRequest"> & {
  * Use `create(TreeRequestSchema)` to create a new message.
  */
 export const TreeRequestSchema: GenMessage<TreeRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 10);
+  messageDesc(file_proto_management_v1_resources, 12);
 
 /**
  * TreeNode is one resource with its children.
@@ -409,7 +443,7 @@ export type TreeNode = Message<"graphene.management.v1.TreeNode"> & {
  * Use `create(TreeNodeSchema)` to create a new message.
  */
 export const TreeNodeSchema: GenMessage<TreeNode> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 11);
+  messageDesc(file_proto_management_v1_resources, 13);
 
 /**
  * @generated from message graphene.management.v1.TreeResponse
@@ -426,7 +460,7 @@ export type TreeResponse = Message<"graphene.management.v1.TreeResponse"> & {
  * Use `create(TreeResponseSchema)` to create a new message.
  */
 export const TreeResponseSchema: GenMessage<TreeResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 12);
+  messageDesc(file_proto_management_v1_resources, 14);
 
 /**
  * @generated from message graphene.management.v1.DeleteRequest
@@ -443,7 +477,7 @@ export type DeleteRequest = Message<"graphene.management.v1.DeleteRequest"> & {
  * Use `create(DeleteRequestSchema)` to create a new message.
  */
 export const DeleteRequestSchema: GenMessage<DeleteRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 13);
+  messageDesc(file_proto_management_v1_resources, 15);
 
 /**
  * @generated from message graphene.management.v1.DeleteResponse
@@ -456,7 +490,7 @@ export type DeleteResponse = Message<"graphene.management.v1.DeleteResponse"> & 
  * Use `create(DeleteResponseSchema)` to create a new message.
  */
 export const DeleteResponseSchema: GenMessage<DeleteResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 14);
+  messageDesc(file_proto_management_v1_resources, 16);
 
 /**
  * @generated from message graphene.management.v1.TransferRequest
@@ -486,7 +520,7 @@ export type TransferRequest = Message<"graphene.management.v1.TransferRequest"> 
  * Use `create(TransferRequestSchema)` to create a new message.
  */
 export const TransferRequestSchema: GenMessage<TransferRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 15);
+  messageDesc(file_proto_management_v1_resources, 17);
 
 /**
  * @generated from message graphene.management.v1.TransferResponse
@@ -499,7 +533,7 @@ export type TransferResponse = Message<"graphene.management.v1.TransferResponse"
  * Use `create(TransferResponseSchema)` to create a new message.
  */
 export const TransferResponseSchema: GenMessage<TransferResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 16);
+  messageDesc(file_proto_management_v1_resources, 18);
 
 /**
  * @generated from message graphene.management.v1.InvokeRequest
@@ -535,7 +569,7 @@ export type InvokeRequest = Message<"graphene.management.v1.InvokeRequest"> & {
  * Use `create(InvokeRequestSchema)` to create a new message.
  */
 export const InvokeRequestSchema: GenMessage<InvokeRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 17);
+  messageDesc(file_proto_management_v1_resources, 19);
 
 /**
  * @generated from message graphene.management.v1.InvokeResponse
@@ -554,7 +588,7 @@ export type InvokeResponse = Message<"graphene.management.v1.InvokeResponse"> & 
  * Use `create(InvokeResponseSchema)` to create a new message.
  */
 export const InvokeResponseSchema: GenMessage<InvokeResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 18);
+  messageDesc(file_proto_management_v1_resources, 20);
 
 /**
  * @generated from message graphene.management.v1.ApplyRequest
@@ -588,7 +622,7 @@ export type ApplyRequest = Message<"graphene.management.v1.ApplyRequest"> & {
  * Use `create(ApplyRequestSchema)` to create a new message.
  */
 export const ApplyRequestSchema: GenMessage<ApplyRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 19);
+  messageDesc(file_proto_management_v1_resources, 21);
 
 /**
  * @generated from message graphene.management.v1.ApplyResponse
@@ -607,7 +641,7 @@ export type ApplyResponse = Message<"graphene.management.v1.ApplyResponse"> & {
  * Use `create(ApplyResponseSchema)` to create a new message.
  */
 export const ApplyResponseSchema: GenMessage<ApplyResponse> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_resources, 20);
+  messageDesc(file_proto_management_v1_resources, 22);
 
 /**
  * ResourcesAPI operates the resource records: entity workflows with
@@ -715,6 +749,18 @@ export const ResourcesAPI: GenService<{
     methodKind: "unary";
     input: typeof ApplyRequestSchema;
     output: typeof ApplyResponseSchema;
+  },
+  /**
+   * Download streams the bytes a record holds — an artifact's blob, and
+   * anything else whose state names a blob. NotFound when the record
+   * has no downloadable bytes.
+   *
+   * @generated from rpc graphene.management.v1.ResourcesAPI.Download
+   */
+  download: {
+    methodKind: "server_streaming";
+    input: typeof DownloadRequestSchema;
+    output: typeof DownloadChunkSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_proto_management_v1_resources, 0);

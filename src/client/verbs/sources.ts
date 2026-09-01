@@ -4,6 +4,8 @@
 
 import type { Api } from '@/lib/api'
 
+import { collectChunks } from './resources'
+
 export interface SourceVerbDeps {
   api: () => Api
 }
@@ -21,5 +23,12 @@ export class SourceVerbs {
   async readFile(sourceRef: string, path: string): Promise<string> {
     const reply = await this.deps.api().source.readFile({ source: sourceRef, path })
     return decoder.decode(reply.content)
+  }
+
+  /** Streams the source's current working tree (a .tgz) and joins the
+   * chunks into one Uint8Array. */
+  async download(sourceRef: string): Promise<Uint8Array> {
+    const stream = this.deps.api().source.downloadSource({ source: sourceRef })
+    return collectChunks(stream, (chunk) => chunk.data)
   }
 }
