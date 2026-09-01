@@ -1,30 +1,31 @@
 import { useStore } from '@nanostores/react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import pipelinesIcon from '@/assets/icons/kind/pipeline.svg'
+import runsIcon from '@/assets/icons/kind/run.svg'
+import runsIconDark from '@/assets/icons/kind/run_dark.svg'
+import agentsIcon from '@/assets/icons/toolwindow/agents.svg'
+import agentsIconDark from '@/assets/icons/toolwindow/agents_dark.svg'
+import buildIcon from '@/assets/icons/toolwindow/build.svg'
+import buildIconDark from '@/assets/icons/toolwindow/build_dark.svg'
 import inspectorIcon from '@/assets/icons/toolwindow/inspector.svg'
 import inspectorIconDark from '@/assets/icons/toolwindow/inspector_dark.svg'
 import notificationsIcon from '@/assets/icons/toolwindow/notifications.svg'
 import notificationsIconDark from '@/assets/icons/toolwindow/notifications_dark.svg'
-import pipelinesIcon from '@/assets/icons/kind/pipeline.svg'
 import resourcesIcon from '@/assets/icons/toolwindow/resources.svg'
-import agentsIcon from '@/assets/icons/toolwindow/agents.svg'
-import agentsIconDark from '@/assets/icons/toolwindow/agents_dark.svg'
 import terminalIcon from '@/assets/icons/toolwindow/terminal.svg'
 import terminalIconDark from '@/assets/icons/toolwindow/terminal_dark.svg'
-import { ThemedIcon } from '@/components/ThemedIcon'
-
-import buildIcon from '@/assets/icons/toolwindow/build.svg'
-import buildIconDark from '@/assets/icons/toolwindow/build_dark.svg'
+import { AgentsPanel } from '@/components/agents/AgentsPanel'
 import { BuildPanel } from '@/components/build/BuildPanel'
 import { EditorArea, EditorTabBar } from '@/components/editor/EditorArea'
-import { PipelinesPanel } from '@/components/pipelines/PipelinesPanel'
 import {
   NotificationsPanel,
   NotificationsPanelActions,
 } from '@/components/notifications/NotificationsPanel'
+import { PipelinesPanel } from '@/components/pipelines/PipelinesPanel'
 import { ResourceTreePanel } from '@/components/resources/tree/ResourceTreePanel'
-import { AgentsPanel } from '@/components/agents/AgentsPanel'
+import { RunsPanel } from '@/components/runs/RunsPanel'
+import { ThemedIcon } from '@/components/ThemedIcon'
 import { TerminalPanel } from '@/components/terminal/TerminalPanel'
 import { TerminalTabs } from '@/components/terminal/TerminalTabs'
 import { WorkspacePanel, WorkspacePanelTitle } from '@/components/WorkspacePanel'
@@ -91,7 +92,9 @@ export function WorkspaceLayout() {
     ? 'resources'
     : layout.pipelines.isOpen
       ? 'pipelines'
-      : null
+      : layout.runs.isOpen
+        ? 'runs'
+        : null
   const rightPanel = layout.inspector.isOpen ? 'inspector' : layout.build.isOpen ? 'build' : null
   const layoutStyle = {
     '--workspace-resources-width': `${leftPanel === null ? layout.resources.size : layout[leftPanel].size}px`,
@@ -128,6 +131,12 @@ export function WorkspaceLayout() {
               icon={<ThemedIcon light={resourcesIcon} />}
               onToggle={() => toggleWorkspacePanel('resources')}
             />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.runs')}
+              isActive={layout.runs.isOpen}
+              icon={<ThemedIcon light={runsIcon} dark={runsIconDark} />}
+              onToggle={() => toggleWorkspacePanel('runs')}
+            />
           </>
         }
         bottom={
@@ -159,7 +168,13 @@ export function WorkspaceLayout() {
             }
             aria-label={t(`graphene.workspace.panels.${leftPanel}`)}
           >
-            {leftPanel === 'resources' ? <ResourceTreePanel /> : <PipelinesPanel />}
+            {leftPanel === 'resources' ? (
+              <ResourceTreePanel />
+            ) : leftPanel === 'pipelines' ? (
+              <PipelinesPanel />
+            ) : (
+              <RunsPanel />
+            )}
           </WorkspacePanel>
         </aside>
       )}

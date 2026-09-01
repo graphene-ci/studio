@@ -36,7 +36,8 @@
         "files": "Files",
         "build": "Build",
         "agents": "Agents",
-        "pipelines": "Pipelines"
+        "pipelines": "Pipelines",
+        "runs": "Runs"
       }
     },
     "runs": {
@@ -389,7 +390,8 @@
       "applyBadYaml": "Spec is not valid YAML",
       "applied": "{{ref}}: spec applied",
       "applyFailed": "Apply refused for {{ref}}",
-      "observability": "Observability"
+      "observability": "Observability",
+      "commands": "Commands"
     },
     "build": {
       "noPipelines": "No pipelines yet",
@@ -496,7 +498,9 @@
       "openRecord": "Open",
       "noDelivery": "No source, triggers, or stand yet",
       "selectRun": "Run",
-      "stepNoEvents": "No events for this step yet"
+      "stepNoEvents": "No events for this step yet",
+      "children": "Children",
+      "noChildren": "This run owns no records"
     }
   },
   "common": {}

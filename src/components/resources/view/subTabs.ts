@@ -9,6 +9,7 @@
 import type { ComponentType } from 'react'
 
 import { PipelineOverviewHeader, pipelineSubTabs } from '@/components/pipelines/pipelineSubTabs'
+import { runSubTabs } from '@/components/runs/runSubTabs'
 import type { Resource } from '@/proto/management/v1/resources_pb'
 
 /** One extra sub-tab of a resource view. */
@@ -23,6 +24,7 @@ export interface SubTabDef {
 /** Extra sub-tabs per kind, inserted BEFORE Observability. */
 export const kindSubTabs: Record<string, SubTabDef[]> = {
   pipeline: pipelineSubTabs,
+  run: runSubTabs,
 }
 
 /** Optional header rendered at the top of the Overview body per kind. */

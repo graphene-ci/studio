@@ -11,6 +11,7 @@ import { KindIcon } from '@/components/resources/tree/KindIcon'
 import { ActionsPane } from '@/components/resources/view/ActionsPane'
 import { EventsFeed } from '@/components/resources/view/EventsFeed'
 import { ObsPane } from '@/components/resources/view/ObsPane'
+import { OwnsSection } from '@/components/resources/view/OwnsSection'
 import {
   kindOverviewHeader,
   kindSubTabs,
@@ -18,7 +19,6 @@ import {
 } from '@/components/resources/view/subTabs'
 import { PendingCommandsDot } from '@/components/status/PendingCommandsDot'
 import { PhaseBadge } from '@/components/status/PhaseBadge'
-import { PhaseText } from '@/components/status/PhaseText'
 import { StatusBanner } from '@/components/status/StatusBanner'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -34,9 +34,10 @@ import { notify } from '@/stores/notificationsStore'
 
 // The ONE central resource view: the shell — header, breadcrumbs,
 // loading/stale, and the SUB-TAB BAR — is common to every kind. Base
-// sub-tabs are Overview (spec/state/owns + commands + events) and
-// Observability (logs/metrics/trace); a per-kind registry contributes
-// EXTRA sub-tabs (pipeline → Plan/Runs/Revisions/Delivery). Everything
+// sub-tabs are Overview (spec/state/owns + events), Commands (the
+// action surface) and Observability (logs/metrics/trace); a per-kind
+// registry contributes EXTRA sub-tabs (pipeline → Plan/Runs/Revisions/
+// Delivery; run → Plan/Children). Everything
 // is live by subscription; nothing here is a workspace panel.
 export function ResourceView({ tab }: { tab: ResourceTab }) {
   const { t } = useTranslation()
@@ -54,11 +55,12 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
     setBreadcrumbs([{ id: 'ns', label: ns }, ...chain.map((ref) => ({ id: ref, label: ref }))])
   }, [ns, tab.ref, tree.data])
 
-  // Base tabs bracket the kind's extras: Overview first, Observability
-  // last, contributed sub-tabs (if any) between.
+  // Base tabs bracket the kind's extras: Overview + Commands first,
+  // Observability last, contributed sub-tabs (if any) between.
   const subTabs = useMemo<SubTabDef[]>(
     () => [
       { id: 'overview', labelKey: 'graphene.inspector.tab.overview', Body: OverviewPane },
+      { id: 'commands', labelKey: 'graphene.resourceView.commands', Body: CommandsPane },
       ...(kindSubTabs[tab.kind] ?? []),
       {
         id: 'observability',
@@ -117,21 +119,28 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
   )
 }
 
-// Overview — the generic plane of truth: state/spec/owns in the middle,
-// commands and the live event feed on the right. A kind may prepend a
-// small header (pipeline: active revision / image).
+// Overview — the generic plane of truth: state/spec/owns on top, then
+// the live event feed full width below. A kind may prepend a small
+// header (pipeline: active revision / image).
 function OverviewPane({ record }: { record: Resource }) {
   const Header = kindOverviewHeader[record.kind]
   return (
-    <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_20rem] gap-4 px-4 pt-2 pb-3">
+    <div className="flex flex-col gap-4 px-4 pt-2 pb-3">
       <StatePane
         record={record}
         header={Header === undefined ? null : <Header record={record} />}
       />
-      <div className="flex min-h-0 flex-col gap-3 overflow-y-auto">
-        <ActionsPane record={record} />
-        <EventsFeed resourceRef={record.ref} />
-      </div>
+      <EventsFeed resourceRef={record.ref} />
+    </div>
+  )
+}
+
+// Commands — the record's action surface (dictionary command forms +
+// the system verbs), with room to breathe on its own sub-tab.
+function CommandsPane({ record }: { record: Resource }) {
+  return (
+    <div className="max-w-2xl px-4 pt-2 pb-3">
+      <ActionsPane record={record} />
     </div>
   )
 }
@@ -326,39 +335,5 @@ export function StatePane({ record, header }: { record: Resource; header?: React
 
       <OwnsSection ownerRef={record.ref} />
     </div>
-  )
-}
-
-// The record's own subtree — what dies with it. Live while visible.
-function OwnsSection({ ownerRef }: { ownerRef: string }) {
-  const { t } = useTranslation()
-  const view = useStore(client.stores.tree(ownerRef))
-  if (!view.loaded || view.data.length === 0) return null
-  return (
-    <section className="flex flex-col gap-1.5">
-      <h3 className="text-2xs font-semibold tracking-wide text-muted-foreground uppercase">
-        {t('graphene.inspector.tab.owns')}
-      </h3>
-      <ul className="flex flex-col">
-        {view.data.map((node) => {
-          const resource = node.resource
-          if (resource === undefined) return null
-          return (
-            <li key={resource.ref}>
-              <button
-                type="button"
-                className="flex h-6 w-full min-w-0 items-center gap-1.5 rounded-sm px-1.5 text-left font-mono text-xs hover:bg-surface-hover"
-                onClick={() => openResourceTab(resource.ref)}
-              >
-                <KindIcon kind={resource.kind} className="size-3.5" />
-                <span className="min-w-0 truncate">{resource.ref}</span>
-                <span className="grow" />
-                <PhaseText phase={resource.phase} className="text-2xs" />
-              </button>
-            </li>
-          )
-        })}
-      </ul>
-    </section>
   )
 }

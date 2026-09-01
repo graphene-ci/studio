@@ -36,7 +36,8 @@
         "files": "Файлы",
         "build": "Сборка",
         "agents": "Агенты",
-        "pipelines": "Пайплайны"
+        "pipelines": "Пайплайны",
+        "runs": "Запуски"
       }
     },
     "runs": {
@@ -393,7 +394,8 @@
       "applyBadYaml": "Spec — невалидный YAML",
       "applied": "{{ref}}: spec применён",
       "applyFailed": "Apply отклонён для {{ref}}",
-      "observability": "Наблюдаемость"
+      "observability": "Наблюдаемость",
+      "commands": "Команды"
     },
     "build": {
       "noPipelines": "Пайплайнов пока нет",
@@ -502,7 +504,9 @@
       "openRecord": "Открыть",
       "noDelivery": "Пока нет исходников, триггеров или стенда",
       "selectRun": "Прогон",
-      "stepNoEvents": "По этому шагу пока нет событий"
+      "stepNoEvents": "По этому шагу пока нет событий",
+      "children": "Дочерние",
+      "noChildren": "У этого запуска нет дочерних ресурсов"
     }
   },
   "common": {}
