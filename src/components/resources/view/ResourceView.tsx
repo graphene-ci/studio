@@ -9,7 +9,6 @@ import { CodeEditor } from '@/components/CodeEditor'
 import { CopyButton } from '@/components/CopyButton'
 import { KindIcon } from '@/components/resources/tree/KindIcon'
 import { ActionsPane } from '@/components/resources/view/ActionsPane'
-import { EventsFeed } from '@/components/resources/view/EventsFeed'
 import { ObsPane } from '@/components/resources/view/ObsPane'
 import { OwnsSection } from '@/components/resources/view/OwnsSection'
 import {
@@ -34,11 +33,11 @@ import { notify } from '@/stores/notificationsStore'
 
 // The ONE central resource view: the shell — header, breadcrumbs,
 // loading/stale, and the SUB-TAB BAR — is common to every kind. Base
-// sub-tabs are Overview (spec/state/owns + events), Commands (the
-// action surface) and Observability (logs/metrics/trace); a per-kind
-// registry contributes EXTRA sub-tabs (pipeline → Plan/Runs/Revisions/
-// Delivery; run → Plan/Children). Everything
-// is live by subscription; nothing here is a workspace panel.
+// sub-tabs are Overview (spec/state/owns + the command surface) and
+// Observability (events/logs/metrics/trace); a per-kind registry
+// contributes EXTRA sub-tabs between them (pipeline → Plan/Runs/
+// Revisions/Delivery; run → Plan/Children). Everything is live by
+// subscription; nothing here is a workspace panel.
 export function ResourceView({ tab }: { tab: ResourceTab }) {
   const { t } = useTranslation()
   const view = useStore(client.stores.record(tab.ref))
@@ -46,7 +45,6 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
   const { ns } = useParams()
   const record = view.data
   const [active, setActive] = useState('overview')
-  const [lower, setLower] = useState<'commands' | 'events'>('events')
 
   // The active record view owns the footer trail: namespace › the
   // ownership chain down to this record.
@@ -56,9 +54,9 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
     setBreadcrumbs([{ id: 'ns', label: ns }, ...chain.map((ref) => ({ id: ref, label: ref }))])
   }, [ns, tab.ref, tree.data])
 
-  // Upper bar = the content tabs: Overview, the kind's extras, then
-  // Observability. Commands and Events are NOT here — they live in the
-  // lower bar (below), always at hand regardless of the content tab.
+  // One content bar: Overview (state/spec/owns + the command surface),
+  // the kind's extras, then Observability (events/logs/metrics/trace).
+  // No second row — each tab gets the full pane.
   const subTabs = useMemo<SubTabDef[]>(
     () => [
       { id: 'overview', labelKey: 'graphene.inspector.tab.overview', Body: OverviewPane },
@@ -113,49 +111,16 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
           </button>
         ))}
       </div>
-      {/* Upper plane: the active content tab. */}
-      <div className="min-h-0 flex-[3] overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         <Body record={record} />
-      </div>
-      {/* Lower plane: commands and events, always reachable. */}
-      <div className="flex shrink-0 items-center gap-4 border-t border-border px-4">
-        {(
-          [
-            ['events', 'graphene.inspector.tab.events'],
-            ['commands', 'graphene.resourceView.commands'],
-          ] as const
-        ).map(([id, labelKey]) => (
-          <button
-            key={id}
-            type="button"
-            className={cn(
-              'py-1.5 text-xs',
-              lower === id
-                ? 'border-b-2 border-primary font-semibold text-foreground'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-            onClick={() => setLower(id)}
-          >
-            {t(labelKey)}
-          </button>
-        ))}
-      </div>
-      <div className="min-h-0 flex-[2] overflow-y-auto">
-        {lower === 'events' ? (
-          <div className="flex min-h-0 flex-col px-4 pt-2 pb-3">
-            <EventsFeed resourceRef={record.ref} />
-          </div>
-        ) : (
-          <CommandsPane record={record} />
-        )}
       </div>
     </div>
   )
 }
 
-// Overview — the generic plane of truth: state / spec / owns. Events
-// live in the lower bar, not here. A kind may prepend a small header
-// (pipeline: active revision / image).
+// Overview — the plane of truth: state / spec / owns, then the record's
+// command surface below. A kind may prepend a small header (pipeline:
+// active revision / image). Events live under Observability now.
 function OverviewPane({ record }: { record: Resource }) {
   const Header = kindOverviewHeader[record.kind]
   return (
@@ -164,21 +129,12 @@ function OverviewPane({ record }: { record: Resource }) {
         record={record}
         header={Header === undefined ? null : <Header record={record} />}
       />
-    </div>
-  )
-}
-
-// Commands — the record's action surface (dictionary command forms +
-// the system verbs), with room to breathe on its own sub-tab.
-function CommandsPane({ record }: { record: Resource }) {
-  return (
-    <div className="max-w-2xl px-4 pt-2 pb-3">
       <ActionsPane record={record} />
     </div>
   )
 }
 
-// Observability — the telemetry plane (logs/metrics/trace), unchanged.
+// Observability — the telemetry plane (events/logs/metrics/trace).
 function ObservabilityPane({ record }: { record: Resource }) {
   return (
     <div className="h-full min-h-0">
