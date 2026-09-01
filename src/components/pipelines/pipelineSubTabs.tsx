@@ -51,7 +51,7 @@ function PlanTab({ record }: { record: Resource }) {
   const manifest = pipelineManifest(record)
   const steps = manifest?.steps ?? []
   const pipelineId = pipelineIdOf(record)
-  const view = useStore(client.stores.listing(`kind=run label.graphene.io/pipeline=${pipelineId}`))
+  const view = useStore(client.stores.listing(`kind=run, pipeline=${pipelineId}`))
   const [selected, setSelected] = useState<string | null>(null)
 
   const runs = useMemo(

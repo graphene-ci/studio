@@ -16,7 +16,7 @@ import { openResourceTab } from '@/stores/editorTabsStore'
 // first. Running rows tick their duration locally.
 export function RunsFeed({ pipelineId }: { pipelineId: string }) {
   const { t, i18n } = useTranslation()
-  const view = useStore(client.stores.listing(`kind=run label.graphene.io/pipeline=${pipelineId}`))
+  const view = useStore(client.stores.listing(`kind=run, pipeline=${pipelineId}`))
 
   // A 1s pulse so running durations tick without server chatter.
   const [, setPulse] = useState(0)
@@ -47,9 +47,7 @@ export function RunsFeed({ pipelineId }: { pipelineId: string }) {
     <section className="flex flex-col gap-1.5">
       <h3 className="flex items-center gap-2 text-2xs font-semibold tracking-wide text-muted-foreground uppercase">
         {t('graphene.nav.runs')}
-        {view.loaded && (
-          <span className="font-mono text-3xs normal-case">{rows.length}</span>
-        )}
+        {view.loaded && <span className="font-mono text-3xs normal-case">{rows.length}</span>}
       </h3>
       {!view.loaded && view.error === null && (
         <div className="flex justify-center py-3">
@@ -65,8 +63,7 @@ export function RunsFeed({ pipelineId }: { pipelineId: string }) {
           const started = timestampMs(run.startedAt)
           const finished = timestampMs(run.finishedAt)
           const running = finished === null
-          const durationMs =
-            started === null ? null : (finished ?? Date.now()) - started
+          const durationMs = started === null ? null : (finished ?? Date.now()) - started
           const trigger = run.labels['graphene.io/trigger'] ?? ''
           return (
             <li key={run.ref} className="group flex min-w-0 items-center gap-2">
