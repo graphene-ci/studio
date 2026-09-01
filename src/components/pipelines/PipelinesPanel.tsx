@@ -120,7 +120,7 @@ export function PipelinesPanel() {
             const runs = runsView === undefined ? [] : sortedRuns(runsView.data)
             return (
               <li key={pipeline.ref}>
-                {/* biome-ignore lint/a11y/useKeyWithClickEvents: chevron toggles; row open is the primary click, matching the resource tree */}
+                {/* Single click toggles the runs (like a folder); double click opens the pipeline — matching the resource tree's group gesture. */}
                 <div
                   role="button"
                   tabIndex={0}
@@ -129,34 +129,32 @@ export function PipelinesPanel() {
                     'flex h-7 min-w-0 cursor-pointer items-center gap-1.5 rounded-sm pr-1.5 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     isOpen ? 'bg-accent text-accent-foreground' : 'hover:bg-surface-hover',
                   )}
-                  onClick={() => {
+                  onClick={() => toggle(id)}
+                  onDoubleClick={() => {
                     selectResource(pipeline.ref)
                     openResourceTab(pipeline.ref)
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === 'Enter') {
                       e.preventDefault()
                       selectResource(pipeline.ref)
                       openResourceTab(pipeline.ref)
+                    } else if (e.key === ' ') {
+                      e.preventDefault()
+                      toggle(id)
                     }
                   }}
                 >
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    aria-label={t('graphene.pipeline.toggleRuns', { id })}
+                  <span
+                    aria-hidden="true"
                     className="flex size-5 shrink-0 items-center justify-center text-muted-foreground"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      toggle(id)
-                    }}
                   >
                     {isExpanded ? (
                       <ChevronDownIcon className="size-3.5" />
                     ) : (
                       <ChevronRightIcon className="size-3.5" />
                     )}
-                  </button>
+                  </span>
                   <KindIcon kind="pipeline" className="size-3.5" />
                   <span className="min-w-0 truncate">{id}</span>
                   <span className="grow" />
