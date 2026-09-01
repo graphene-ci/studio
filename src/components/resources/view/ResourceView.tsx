@@ -1,16 +1,21 @@
 import { useStore } from '@nanostores/react'
 import { LockIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { parse as parseYamlText } from 'yaml'
 
 import { client } from '@/client'
 import { CodeEditor } from '@/components/CodeEditor'
 import { CopyButton } from '@/components/CopyButton'
+import { KindIcon } from '@/components/resources/tree/KindIcon'
 import { ActionsPane } from '@/components/resources/view/ActionsPane'
 import { EventsFeed } from '@/components/resources/view/EventsFeed'
 import { ObsPane } from '@/components/resources/view/ObsPane'
-import { KindIcon } from '@/components/resources/tree/KindIcon'
+import {
+  kindOverviewHeader,
+  kindSubTabs,
+  type SubTabDef,
+} from '@/components/resources/view/subTabs'
 import { PendingCommandsDot } from '@/components/status/PendingCommandsDot'
 import { PhaseBadge } from '@/components/status/PhaseBadge'
 import { PhaseText } from '@/components/status/PhaseText'
@@ -24,20 +29,22 @@ import { cn } from '@/lib/utils'
 import type { Resource } from '@/proto/management/v1/resources_pb'
 import { useParams } from '@/router'
 import { setBreadcrumbs } from '@/stores/breadcrumbsStore'
-import { notify } from '@/stores/notificationsStore'
 import { openResourceTab, type ResourceTab } from '@/stores/editorTabsStore'
+import { notify } from '@/stores/notificationsStore'
 
-// The record view — the central surface of a resource tab, all five
-// dimensions in one place: state + editable spec in the middle,
-// commands and the live event feed on the right, the telemetry plane
-// (logs/metrics/trace) in the bottom half. Everything is live by
-// subscription; nothing here is a workspace panel.
+// The ONE central resource view: the shell — header, breadcrumbs,
+// loading/stale, and the SUB-TAB BAR — is common to every kind. Base
+// sub-tabs are Overview (spec/state/owns + commands + events) and
+// Observability (logs/metrics/trace); a per-kind registry contributes
+// EXTRA sub-tabs (pipeline → Plan/Runs/Revisions/Delivery). Everything
+// is live by subscription; nothing here is a workspace panel.
 export function ResourceView({ tab }: { tab: ResourceTab }) {
   const { t } = useTranslation()
   const view = useStore(client.stores.record(tab.ref))
   const tree = useStore(client.stores.tree())
   const { ns } = useParams()
   const record = view.data
+  const [active, setActive] = useState('overview')
 
   // The active record view owns the footer trail: namespace › the
   // ownership chain down to this record.
@@ -46,6 +53,21 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
     const chain = findAncestry(tree.data, tab.ref) ?? [tab.ref]
     setBreadcrumbs([{ id: 'ns', label: ns }, ...chain.map((ref) => ({ id: ref, label: ref }))])
   }, [ns, tab.ref, tree.data])
+
+  // Base tabs bracket the kind's extras: Overview first, Observability
+  // last, contributed sub-tabs (if any) between.
+  const subTabs = useMemo<SubTabDef[]>(
+    () => [
+      { id: 'overview', labelKey: 'graphene.inspector.tab.overview', Body: OverviewPane },
+      ...(kindSubTabs[tab.kind] ?? []),
+      {
+        id: 'observability',
+        labelKey: 'graphene.resourceView.observability',
+        Body: ObservabilityPane,
+      },
+    ],
+    [tab.kind],
+  )
 
   if (record === null && view.error !== null) {
     return (
@@ -60,6 +82,9 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
     )
   }
 
+  const activeDef = subTabs.find((s) => s.id === active) ?? subTabs[0]
+  const Body = activeDef.Body
+
   return (
     <div className="flex h-full min-h-0 flex-col">
       <ResourceHeader record={record} />
@@ -68,18 +93,54 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
           {t('graphene.resourceView.stale', { error: view.error })}
         </StatusBanner>
       )}
-      {/* Plane of truth: state/spec in the middle, actions + events right. */}
-      <div className="grid min-h-0 flex-[3] grid-cols-[minmax(0,1fr)_20rem] gap-4 px-4 pt-2 pb-3">
-        <StatePane record={record} />
-        <div className="flex min-h-0 flex-col gap-3 overflow-y-auto">
-          <ActionsPane record={record} />
-          <EventsFeed resourceRef={record.ref} />
-        </div>
+      <div className="mt-1 flex shrink-0 items-center gap-4 border-b border-border px-4">
+        {subTabs.map((subTab) => (
+          <button
+            key={subTab.id}
+            type="button"
+            className={cn(
+              'py-1.5 text-xs',
+              subTab.id === activeDef.id
+                ? 'border-b-2 border-primary font-semibold text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+            onClick={() => setActive(subTab.id)}
+          >
+            {t(subTab.labelKey)}
+          </button>
+        ))}
       </div>
-      {/* Telemetry plane below. */}
-      <div className="min-h-0 flex-[2] border-t border-border">
-        <ObsPane resourceRef={record.ref} />
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <Body record={record} />
       </div>
+    </div>
+  )
+}
+
+// Overview — the generic plane of truth: state/spec/owns in the middle,
+// commands and the live event feed on the right. A kind may prepend a
+// small header (pipeline: active revision / image).
+function OverviewPane({ record }: { record: Resource }) {
+  const Header = kindOverviewHeader[record.kind]
+  return (
+    <div className="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_20rem] gap-4 px-4 pt-2 pb-3">
+      <StatePane
+        record={record}
+        header={Header === undefined ? null : <Header record={record} />}
+      />
+      <div className="flex min-h-0 flex-col gap-3 overflow-y-auto">
+        <ActionsPane record={record} />
+        <EventsFeed resourceRef={record.ref} />
+      </div>
+    </div>
+  )
+}
+
+// Observability — the telemetry plane (logs/metrics/trace), unchanged.
+function ObservabilityPane({ record }: { record: Resource }) {
+  return (
+    <div className="h-full min-h-0">
+      <ObsPane resourceRef={record.ref} />
     </div>
   )
 }
@@ -160,7 +221,7 @@ export function ResourceHeader({ record }: { record: Resource }) {
 
 // State (readonly truth) + spec (editable declaration, YAML in the
 // editor, applied as JSON) + the owned subtree.
-export function StatePane({ record }: { record: Resource }) {
+export function StatePane({ record, header }: { record: Resource; header?: ReactNode }) {
   const { t, i18n } = useTranslation()
   const spec = bytesAsYaml(record.spec)
   const state = bytesAsYaml(record.state)
@@ -202,6 +263,7 @@ export function StatePane({ record }: { record: Resource }) {
 
   return (
     <div className="flex min-h-0 flex-col gap-4 overflow-y-auto pr-1">
+      {header}
       {(started !== null || finished !== null) && (
         <div className="flex gap-6 font-mono text-2xs text-muted-foreground">
           {started !== null && (

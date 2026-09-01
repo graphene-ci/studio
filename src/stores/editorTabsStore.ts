@@ -26,14 +26,7 @@ export interface ResourceTab {
   kind: string
 }
 
-export interface PipelineTab {
-  type: 'pipeline'
-  /** "pipeline-hub:<id>" */
-  id: string
-  pipelineId: string
-}
-
-export type EditorTab = FileTab | ResourceTab | PipelineTab
+export type EditorTab = FileTab | ResourceTab
 
 export interface EditorTabsState {
   tabs: EditorTab[]
@@ -44,7 +37,6 @@ export interface EditorTabsState {
 
 export const fileTabId = (sourceRef: string, path: string) => `file:${sourceRef}:${path}`
 export const resourceTabId = (ref: string) => `resource:${ref}`
-export const pipelineTabId = (pipelineId: string) => `pipeline-hub:${pipelineId}`
 
 /** Mode state of the ACTIVE file view, for the status bar. */
 export interface EditorFileStatus {
@@ -59,11 +51,40 @@ export function setEditorFileStatus(status: EditorFileStatus | null): void {
 
 const EMPTY: EditorTabsState = { tabs: [], activeId: null, previewId: null }
 
+/** Legacy pipeline-hub tabs (removed) migrate to resource tabs for
+ * `pipeline/<id>` — the one central view now owns the pipeline. */
+function migrateTab(raw: unknown): EditorTab | null {
+  if (typeof raw !== 'object' || raw === null || !('type' in raw)) return null
+  const tab = raw as { type: string; pipelineId?: string }
+  if (tab.type === 'pipeline') {
+    const pipelineId = tab.pipelineId ?? ''
+    if (pipelineId === '') return null
+    const ref = `pipeline/${pipelineId}`
+    return { type: 'resource', id: resourceTabId(ref), ref, kind: 'pipeline' }
+  }
+  if (tab.type === 'file' || tab.type === 'resource') return raw as EditorTab
+  return null
+}
+
 function decodeTabs(raw: string): EditorTabsState {
   try {
     const parsed: unknown = JSON.parse(raw)
     if (typeof parsed !== 'object' || parsed === null || !('tabs' in parsed)) return EMPTY
-    return parsed as EditorTabsState
+    const state = parsed as { tabs: unknown[]; activeId?: unknown; previewId?: unknown }
+    const seen = new Set<string>()
+    const tabs: EditorTab[] = []
+    for (const entry of Array.isArray(state.tabs) ? state.tabs : []) {
+      const tab = migrateTab(entry)
+      if (tab === null || seen.has(tab.id)) continue
+      seen.add(tab.id)
+      tabs.push(tab)
+    }
+    const has = (id: unknown): id is string => typeof id === 'string' && seen.has(id)
+    return {
+      tabs,
+      activeId: has(state.activeId) ? state.activeId : (tabs[tabs.length - 1]?.id ?? null),
+      previewId: has(state.previewId) ? state.previewId : null,
+    }
   } catch {
     return EMPTY
   }
@@ -112,10 +133,6 @@ export function openFileTab(input: Omit<FileTab, 'type' | 'id'>, preview = false
 export function openResourceTab(ref: string, preview = false): void {
   const kind = ref.slice(0, Math.max(ref.indexOf('/'), 0))
   openTab({ type: 'resource', id: resourceTabId(ref), ref, kind }, preview)
-}
-
-export function openPipelineTab(pipelineId: string, preview = false): void {
-  openTab({ type: 'pipeline', id: pipelineTabId(pipelineId), pipelineId }, preview)
 }
 
 /** Editing (or an explicit gesture) keeps the tab for good. */
