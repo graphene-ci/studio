@@ -32,7 +32,7 @@ function usePipelineRuns(pipelineIds: string[]): ReadonlyMap<string, RunsView> {
     const list = idsKey === '' ? [] : idsKey.split('\n')
     if (list.length === 0) return atom<ReadonlyMap<string, RunsView>>(new Map())
     return computed(
-      list.map((id) => client.stores.listing(`kind=run label.graphene.io/pipeline=${id}`)),
+      list.map((id) => client.stores.listing(`kind=run, pipeline=${id}`)),
       (...views) => {
         const map = new Map<string, RunsView>()
         list.forEach((id, i) => {
@@ -120,19 +120,36 @@ export function PipelinesPanel() {
             const runs = runsView === undefined ? [] : sortedRuns(runsView.data)
             return (
               <li key={pipeline.ref}>
+                {/* biome-ignore lint/a11y/useKeyWithClickEvents: chevron toggles; row open is the primary click, matching the resource tree */}
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
                   className={cn(
-                    'flex h-7 w-full min-w-0 items-center rounded-sm font-mono text-xs',
+                    'flex h-7 min-w-0 cursor-pointer items-center gap-1.5 rounded-sm pr-1.5 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     isOpen ? 'bg-accent text-accent-foreground' : 'hover:bg-surface-hover',
                   )}
+                  onClick={() => {
+                    selectResource(pipeline.ref)
+                    openResourceTab(pipeline.ref)
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      selectResource(pipeline.ref)
+                      openResourceTab(pipeline.ref)
+                    }
+                  }}
                 >
                   <button
                     type="button"
                     tabIndex={-1}
                     aria-label={t('graphene.pipeline.toggleRuns', { id })}
-                    aria-expanded={isExpanded}
-                    className="flex size-6 shrink-0 items-center justify-center text-muted-foreground"
-                    onClick={() => toggle(id)}
+                    className="flex size-5 shrink-0 items-center justify-center text-muted-foreground"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggle(id)
+                    }}
                   >
                     {isExpanded ? (
                       <ChevronDownIcon className="size-3.5" />
@@ -140,19 +157,10 @@ export function PipelinesPanel() {
                       <ChevronRightIcon className="size-3.5" />
                     )}
                   </button>
-                  <button
-                    type="button"
-                    className="flex h-full min-w-0 grow items-center gap-1.5 pr-1.5 text-left"
-                    onClick={() => {
-                      selectResource(pipeline.ref)
-                      openResourceTab(pipeline.ref)
-                    }}
-                  >
-                    <KindIcon kind="pipeline" className="size-3.5" />
-                    <span className="min-w-0 truncate">{id}</span>
-                    <span className="grow" />
-                    <PhaseText phase={pipeline.phase} className="text-2xs" />
-                  </button>
+                  <KindIcon kind="pipeline" className="size-3.5" />
+                  <span className="min-w-0 truncate">{id}</span>
+                  <span className="grow" />
+                  <PhaseText phase={pipeline.phase} className="text-2xs" />
                 </div>
                 {isExpanded && (
                   <ul className="flex flex-col">
