@@ -9,12 +9,12 @@ import { PhaseText } from '@/components/status/PhaseText'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
-import { openPipelineTab, pipelineTabId, $editorTabs } from '@/stores/editorTabsStore'
+import { $editorTabs, openResourceTab, resourceTabId } from '@/stores/editorTabsStore'
 import { selectResource } from '@/stores/selectionStore'
 
 // The Pipelines panel — the CI entry point: every pipeline of the
-// namespace, live; opening one lands in its HUB tab in the center
-// (the resource view stays a separate, generic surface).
+// namespace, live; opening one lands in its resource tab in the center
+// (the one central view, with pipeline sub-tabs).
 export function PipelinesPanel() {
   const { t } = useTranslation()
   const view = useStore(client.stores.listing('kind=pipeline'))
@@ -49,14 +49,12 @@ export function PipelinesPanel() {
           </div>
         )}
         {view.loaded && rows.length === 0 && (
-          <p className="px-2 py-4 text-xs text-muted-foreground">
-            {t('graphene.pipelines.empty')}
-          </p>
+          <p className="px-2 py-4 text-xs text-muted-foreground">{t('graphene.pipelines.empty')}</p>
         )}
         <ul className="flex flex-col">
           {rows.map((pipeline) => {
             const id = pipeline.ref.slice(pipeline.ref.indexOf('/') + 1)
-            const isOpen = activeId === pipelineTabId(id)
+            const isOpen = activeId === resourceTabId(pipeline.ref)
             return (
               <li key={pipeline.ref}>
                 <button
@@ -67,7 +65,7 @@ export function PipelinesPanel() {
                   )}
                   onClick={() => {
                     selectResource(pipeline.ref)
-                    openPipelineTab(id)
+                    openResourceTab(pipeline.ref)
                   }}
                 >
                   <KindIcon kind="pipeline" className="size-3.5" />

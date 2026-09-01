@@ -392,7 +392,8 @@
       "specDirty": "изменено",
       "applyBadYaml": "Spec — невалидный YAML",
       "applied": "{{ref}}: spec применён",
-      "applyFailed": "Apply отклонён для {{ref}}"
+      "applyFailed": "Apply отклонён для {{ref}}",
+      "observability": "Наблюдаемость"
     },
     "build": {
       "noPipelines": "Пайплайнов пока нет",
@@ -490,7 +491,18 @@
         "completed": "готово",
         "failed": "упал"
       },
-      "panelFilter": "фильтр пайплайнов…"
+      "panelFilter": "фильтр пайплайнов…",
+      "delivery": "Поставка",
+      "sourceSection": "Исходники",
+      "triggersSection": "Триггеры",
+      "standSection": "Стенд",
+      "sync": "Синхронизировать",
+      "syncSent": "{{ref}}: синхронизация запрошена",
+      "syncFailed": "Синхронизация {{ref}} отклонена",
+      "openRecord": "Открыть",
+      "noDelivery": "Пока нет исходников, триггеров или стенда",
+      "selectRun": "Прогон",
+      "stepNoEvents": "По этому шагу пока нет событий"
     }
   },
   "common": {}

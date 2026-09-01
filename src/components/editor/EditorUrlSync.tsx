@@ -4,14 +4,12 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from '@/router'
 import {
   $editorTabs,
+  type EditorTab,
   fileTabId,
   openFileTab,
-  openPipelineTab,
   openResourceTab,
   pinTab,
-  pipelineTabId,
   resourceTabId,
-  type EditorTab,
 } from '@/stores/editorTabsStore'
 
 // Deep links: the route mirrors the ACTIVE center tab —
@@ -21,7 +19,6 @@ import {
 // the URL in place (replace — tab hopping is not history).
 function tabPath(tab: EditorTab): string {
   if (tab.type === 'resource') return `/resource/${tab.ref}`
-  if (tab.type === 'pipeline') return `/pipeline/${tab.pipelineId}`
   return `/file/${tab.sourceRef}/${tab.path}`
 }
 
@@ -47,10 +44,12 @@ export function EditorUrlSync() {
         pinTab(id)
       }
     } else if (rest.startsWith('/pipeline/')) {
+      // Legacy deep link: pipelines are now the ONE resource view.
       const pipelineId = decodeURIComponent(rest.slice('/pipeline/'.length))
-      const id = pipelineTabId(pipelineId)
+      const ref = `pipeline/${pipelineId}`
+      const id = resourceTabId(ref)
       if (activeId !== id) {
-        openPipelineTab(pipelineId)
+        openResourceTab(ref)
         pinTab(id)
       }
     } else if (rest.startsWith('/file/')) {

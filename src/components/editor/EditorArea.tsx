@@ -3,17 +3,16 @@ import { LockIcon, XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { FileEditorView } from '@/components/editor/FileEditorView'
-import { PipelineHubView } from '@/components/pipelines/PipelineHubView'
-import { ResourceView } from '@/components/resources/view/ResourceView'
 import { FileIcon } from '@/components/files/FileIcon'
 import { KindIcon } from '@/components/resources/tree/KindIcon'
+import { ResourceView } from '@/components/resources/view/ResourceView'
 import { cn } from '@/lib/utils'
 import {
   $editorTabs,
   closeTab,
+  type EditorTab,
   pinTab,
   setActiveTab,
-  type EditorTab,
 } from '@/stores/editorTabsStore'
 
 // The central canvas: tab bar (the panel's header) + the active view.
@@ -54,14 +53,10 @@ export function EditorTabBar() {
           {tab.type === 'file' ? (
             <FileIcon name={tab.name} className="size-3" />
           ) : (
-            <KindIcon kind={tab.type === 'pipeline' ? 'pipeline' : tab.kind} className="size-3" />
+            <KindIcon kind={tab.kind} className="size-3" />
           )}
           <span className={cn('truncate', tab.id === previewId && 'italic')}>
-            {tab.type === 'file'
-              ? tab.name
-              : tab.type === 'pipeline'
-                ? `pipeline/${tab.pipelineId}`
-                : tab.ref}
+            {tab.type === 'file' ? tab.name : tab.ref}
           </span>
           {tab.type === 'file' && tab.readOnly && (
             <LockIcon
@@ -73,12 +68,7 @@ export function EditorTabBar() {
             type="button"
             tabIndex={-1}
             aria-label={t('graphene.editor.close', {
-              name:
-                tab.type === 'file'
-                  ? tab.name
-                  : tab.type === 'pipeline'
-                    ? `pipeline/${tab.pipelineId}`
-                    : tab.ref,
+              name: tab.type === 'file' ? tab.name : tab.ref,
             })}
             className="flex size-3.5 shrink-0 items-center justify-center rounded-xs text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground"
             onClick={(e) => {
@@ -113,6 +103,5 @@ export function EditorArea() {
     )
   }
   if (active.type === 'file') return <FileEditorView key={active.id} tab={active} />
-  if (active.type === 'pipeline') return <PipelineHubView key={active.id} tab={active} />
   return <ResourceView key={active.id} tab={active} />
 }

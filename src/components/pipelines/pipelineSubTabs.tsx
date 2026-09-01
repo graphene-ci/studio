@@ -1,0 +1,379 @@
+import { useStore } from '@nanostores/react'
+import { ExternalLinkIcon, PlayIcon, RefreshCwIcon } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { client } from '@/client'
+import { PlanGraph, type StepStatus } from '@/components/pipelines/PlanGraph'
+import { RevisionsList } from '@/components/pipelines/RevisionsList'
+import { RunsFeed } from '@/components/pipelines/RunsFeed'
+import { StartRunForm } from '@/components/pipelines/StartRunForm'
+import { KindIcon } from '@/components/resources/tree/KindIcon'
+import type { SubTabDef } from '@/components/resources/view/subTabs'
+import { PhaseText } from '@/components/status/PhaseText'
+import { SeverityIcon } from '@/components/status/SeverityIcon'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
+import { timestampMs } from '@/helpers/describe'
+import { type PlanStep, pipelineManifest } from '@/helpers/pipelineManifest'
+import type { Event } from '@/proto/management/v1/observe_pb'
+import type { Resource } from '@/proto/management/v1/resources_pb'
+import { openResourceTab } from '@/stores/editorTabsStore'
+import { notify } from '@/stores/notificationsStore'
+
+const pipelineIdOf = (record: Resource) => record.ref.slice(record.ref.indexOf('/') + 1)
+
+// A pipeline as a project console: the plan (with live coloring from a
+// run), the run feed and launch, the revisions, and the delivery
+// surround (source / triggers / stand). Overview keeps spec/state.
+
+/** The active-revision / image line shown atop the pipeline Overview. */
+export function PipelineOverviewHeader({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const manifest = pipelineManifest(record)
+  if (manifest === null || (manifest.activeRevisionId === '' && manifest.image === '')) return null
+  return (
+    <div className="flex flex-wrap items-center gap-3 font-mono text-2xs text-muted-foreground">
+      {manifest.activeRevisionId !== '' && (
+        <span>
+          {t('graphene.pipeline.activeRevision')}:{' '}
+          <span className="text-foreground">{manifest.activeRevisionId}</span>
+        </span>
+      )}
+      {manifest.image !== '' && <span className="min-w-0 truncate">{manifest.image}</span>}
+    </div>
+  )
+}
+
+// ── Plan ──────────────────────────────────────────────────────────
+
+function statusFromEvent(event: Event): StepStatus | null {
+  if (event.error !== '' || event.kind.includes('failed') || event.kind.includes('timed-out'))
+    return 'failed'
+  if (event.kind.includes('completed')) return 'completed'
+  if (event.kind.includes('scheduled') || event.kind.includes('started')) return 'running'
+  return null
+}
+
+/** Colors the plan from ONE run's live event stream: a step's subject
+ * is the join key; chronological events overwrite so the last state
+ * wins (scheduled → running, completed/failed terminal). */
+function LivePlan({ steps, runRef }: { steps: PlanStep[]; runRef: string }) {
+  const { t, i18n } = useTranslation()
+  const events = useStore(client.stores.events(runRef))
+  const [focus, setFocus] = useState<string | null>(null)
+
+  const statusMap = useMemo(() => {
+    const map = new Map<string, StepStatus>()
+    for (const event of events.items) {
+      if (event.subject === '') continue
+      const status = statusFromEvent(event)
+      if (status !== null) map.set(event.subject, status)
+    }
+    return map
+  }, [events.items])
+
+  const focused = useMemo(
+    () => (focus === null ? [] : events.items.filter((e) => e.subject === focus)),
+    [events.items, focus],
+  )
+  const time = new Intl.DateTimeFormat(i18n.language, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+
+  return (
+    <div className="flex flex-col gap-2">
+      <PlanGraph
+        steps={steps}
+        statusOf={(step) => statusMap.get(step.subject) ?? null}
+        onStepClick={(step) => setFocus((prev) => (prev === step.subject ? null : step.subject))}
+      />
+      {focus !== null && (
+        <div className="flex flex-col gap-1 rounded-md bg-muted p-2">
+          <div className="flex items-center gap-2 font-mono text-2xs">
+            <span className="min-w-0 truncate">{focus}</span>
+            <span className="grow" />
+            <button
+              type="button"
+              className="text-2xs text-muted-foreground hover:text-foreground"
+              onClick={() => setFocus(null)}
+            >
+              {t('graphene.contexts.cancel')}
+            </button>
+          </div>
+          {focused.length === 0 ? (
+            <p className="text-3xs text-muted-foreground">{t('graphene.pipeline.stepNoEvents')}</p>
+          ) : (
+            <ul className="flex flex-col font-mono text-3xs">
+              {focused.map((event) => (
+                <li key={Number(event.eventId)} className="flex min-w-0 items-baseline gap-1.5">
+                  <SeverityIcon
+                    severity={
+                      event.error !== '' || event.kind.includes('failed') ? 'error' : 'info'
+                    }
+                    className="size-3 self-center"
+                  />
+                  <span className="min-w-0 truncate">{event.kind}</span>
+                  {event.error !== '' && (
+                    <span className="min-w-0 truncate text-destructive">{event.error}</span>
+                  )}
+                  <span className="grow" />
+                  <span className="shrink-0 text-muted-foreground">
+                    {time.format(Number(event.timeUnixNano / 1_000_000n))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PlanTab({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const manifest = pipelineManifest(record)
+  const steps = manifest?.steps ?? []
+  const pipelineId = pipelineIdOf(record)
+  const view = useStore(client.stores.listing(`kind=run label.graphene.io/pipeline=${pipelineId}`))
+  const [selected, setSelected] = useState<string | null>(null)
+
+  const runs = useMemo(
+    () =>
+      [...view.data].sort(
+        (a, b) => (timestampMs(b.startedAt) ?? 0) - (timestampMs(a.startedAt) ?? 0),
+      ),
+    [view.data],
+  )
+  const activeRef =
+    selected !== null && runs.some((r) => r.ref === selected) ? selected : (runs[0]?.ref ?? null)
+
+  return (
+    <section className="flex flex-col gap-2 px-4 py-3">
+      <div className="flex items-center gap-2">
+        <h3 className="text-2xs font-semibold tracking-wide text-muted-foreground uppercase">
+          {t('graphene.pipeline.plan')}
+        </h3>
+        <span className="grow" />
+        {runs.length > 0 && activeRef !== null && (
+          <label className="flex items-center gap-1.5 font-mono text-2xs text-muted-foreground">
+            {t('graphene.pipeline.selectRun')}
+            <select
+              value={activeRef}
+              onChange={(e) => setSelected(e.target.value)}
+              className="h-6 rounded-sm bg-muted px-1.5 font-mono text-2xs text-foreground"
+            >
+              {runs.map((run) => (
+                <option key={run.ref} value={run.ref}>
+                  {run.ref.slice(run.ref.indexOf('/') + 1)} · {run.phase}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
+      {activeRef === null ? (
+        <PlanGraph steps={steps} />
+      ) : (
+        <LivePlan steps={steps} runRef={activeRef} />
+      )}
+    </section>
+  )
+}
+
+// ── Runs ──────────────────────────────────────────────────────────
+
+function RunsTab({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const manifest = pipelineManifest(record)
+  const pipelineId = pipelineIdOf(record)
+  const [launching, setLaunching] = useState(false)
+
+  return (
+    <div className="flex flex-col gap-3 px-4 py-3">
+      {launching ? (
+        <StartRunForm
+          pipelineId={pipelineId}
+          paramsFields={manifest?.paramsFields ?? []}
+          draftRevisionId={null}
+          onDone={() => setLaunching(false)}
+        />
+      ) : (
+        <div>
+          <Button size="sm" onClick={() => setLaunching(true)}>
+            <PlayIcon />
+            {t('graphene.pipeline.start')}
+          </Button>
+        </div>
+      )}
+      <RunsFeed pipelineId={pipelineId} />
+    </div>
+  )
+}
+
+// ── Revisions ─────────────────────────────────────────────────────
+
+function RevisionsTab({ record }: { record: Resource }) {
+  const manifest = pipelineManifest(record)
+  const pipelineId = pipelineIdOf(record)
+  const [draft, setDraft] = useState<string | null>(null)
+
+  return (
+    <div className="flex flex-col gap-3 px-4 py-3">
+      {draft !== null && (
+        <StartRunForm
+          pipelineId={pipelineId}
+          paramsFields={manifest?.paramsFields ?? []}
+          draftRevisionId={draft}
+          onDone={() => setDraft(null)}
+        />
+      )}
+      <RevisionsList
+        pipelineId={pipelineId}
+        activeRevisionId={manifest?.activeRevisionId ?? ''}
+        onDraftRun={(revisionId) => setDraft(revisionId)}
+      />
+    </div>
+  )
+}
+
+// ── Delivery ──────────────────────────────────────────────────────
+
+function DeliveryRow({
+  resource,
+  onSync,
+  syncing,
+}: {
+  resource: Resource
+  onSync?: () => void
+  syncing?: boolean
+}) {
+  const { t } = useTranslation()
+  return (
+    <li className="flex min-w-0 items-center gap-2 rounded-sm px-1.5 py-1 hover:bg-surface-hover">
+      <KindIcon kind={resource.kind} className="size-3.5 shrink-0" />
+      <button
+        type="button"
+        className="flex min-w-0 grow items-center gap-2 text-left font-mono text-xs"
+        onClick={() => openResourceTab(resource.ref)}
+      >
+        <span className="min-w-0 truncate">{resource.ref}</span>
+        <PhaseText phase={resource.phase} className="shrink-0 text-2xs" />
+      </button>
+      {onSync !== undefined && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          disabled={syncing}
+          aria-label={t('graphene.pipeline.sync')}
+          title={t('graphene.pipeline.sync')}
+          onClick={onSync}
+        >
+          {syncing ? <Spinner /> : <RefreshCwIcon />}
+        </Button>
+      )}
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        aria-label={t('graphene.pipeline.openRecord')}
+        title={t('graphene.pipeline.openRecord')}
+        onClick={() => openResourceTab(resource.ref)}
+      >
+        <ExternalLinkIcon />
+      </Button>
+    </li>
+  )
+}
+
+function DeliverySection({
+  labelKey,
+  resources,
+  onSync,
+  syncing,
+}: {
+  labelKey: string
+  resources: Resource[]
+  onSync?: (ref: string) => void
+  syncing?: string | null
+}) {
+  const { t } = useTranslation()
+  if (resources.length === 0) return null
+  return (
+    <section className="flex flex-col gap-1.5">
+      <h3 className="text-2xs font-semibold tracking-wide text-muted-foreground uppercase">
+        {t(labelKey)}
+      </h3>
+      <ul className="flex flex-col">
+        {resources.map((resource) => (
+          <DeliveryRow
+            key={resource.ref}
+            resource={resource}
+            onSync={onSync === undefined ? undefined : () => onSync(resource.ref)}
+            syncing={syncing === resource.ref}
+          />
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function DeliveryTab({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const subtree = useStore(client.stores.tree(record.ref))
+  const [syncing, setSyncing] = useState<string | null>(null)
+
+  const children = subtree.data
+    .map((node) => node.resource)
+    .filter((r): r is Resource => r !== undefined)
+  const sources = children.filter((r) => r.kind === 'gitsource')
+  const triggers = children.filter((r) => r.kind === 'trigger')
+  const stands = children.filter((r) => r.kind === 'stand')
+  const empty = sources.length === 0 && triggers.length === 0 && stands.length === 0
+
+  const sync = async (sourceRef: string) => {
+    setSyncing(sourceRef)
+    try {
+      await client.resource(sourceRef).invoke('sync')
+      notify({ severity: 'success', title: t('graphene.pipeline.syncSent', { ref: sourceRef }) })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.pipeline.syncFailed', { ref: sourceRef }),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setSyncing(null)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4 px-4 py-3">
+      {!subtree.loaded && subtree.error === null && (
+        <div className="flex justify-center py-6">
+          <Spinner className="size-4" />
+        </div>
+      )}
+      {subtree.loaded && empty && (
+        <p className="text-xs text-muted-foreground">{t('graphene.pipeline.noDelivery')}</p>
+      )}
+      <DeliverySection
+        labelKey="graphene.pipeline.sourceSection"
+        resources={sources}
+        onSync={(ref) => void sync(ref)}
+        syncing={syncing}
+      />
+      <DeliverySection labelKey="graphene.pipeline.triggersSection" resources={triggers} />
+      <DeliverySection labelKey="graphene.pipeline.standSection" resources={stands} />
+    </div>
+  )
+}
+
+export const pipelineSubTabs: SubTabDef[] = [
+  { id: 'plan', labelKey: 'graphene.pipeline.plan', Body: PlanTab },
+  { id: 'runs', labelKey: 'graphene.nav.runs', Body: RunsTab },
+  { id: 'revisions', labelKey: 'graphene.pipeline.revisions', Body: RevisionsTab },
+  { id: 'delivery', labelKey: 'graphene.pipeline.delivery', Body: DeliveryTab },
+]

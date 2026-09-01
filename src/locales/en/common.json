@@ -388,7 +388,8 @@
       "specDirty": "edited",
       "applyBadYaml": "Spec is not valid YAML",
       "applied": "{{ref}}: spec applied",
-      "applyFailed": "Apply refused for {{ref}}"
+      "applyFailed": "Apply refused for {{ref}}",
+      "observability": "Observability"
     },
     "build": {
       "noPipelines": "No pipelines yet",
@@ -484,7 +485,18 @@
         "completed": "done",
         "failed": "failed"
       },
-      "panelFilter": "filter pipelines…"
+      "panelFilter": "filter pipelines…",
+      "delivery": "Delivery",
+      "sourceSection": "Source",
+      "triggersSection": "Triggers",
+      "standSection": "Stand",
+      "sync": "Sync",
+      "syncSent": "{{ref}}: sync requested",
+      "syncFailed": "Sync refused for {{ref}}",
+      "openRecord": "Open",
+      "noDelivery": "No source, triggers, or stand yet",
+      "selectRun": "Run",
+      "stepNoEvents": "No events for this step yet"
     }
   },
   "common": {}
