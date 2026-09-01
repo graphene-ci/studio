@@ -4,16 +4,17 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { client } from '@/client'
-import { OwnsSection } from '@/components/resources/view/OwnsSection'
+import { KindIcon } from '@/components/resources/tree/KindIcon'
 import type { SubTabDef } from '@/components/resources/view/subTabs'
 import { PhaseBadge } from '@/components/status/PhaseBadge'
+import { PhaseText } from '@/components/status/PhaseText'
 import { TONE_TEXT } from '@/components/status/tones'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { timestampMs } from '@/helpers/describe'
 import { foldStepStatus, stepsFromEvents, stepTimings } from '@/helpers/planStatus'
 import { cn } from '@/lib/utils'
-import type { Resource } from '@/proto/management/v1/resources_pb'
+import type { Resource, TreeNode } from '@/proto/management/v1/resources_pb'
 import { openResourceTab } from '@/stores/editorTabsStore'
 import { notify } from '@/stores/notificationsStore'
 
@@ -255,6 +256,35 @@ function RunPlanTab({ record }: { record: Resource }) {
 
 // ── Children ──────────────────────────────────────────────────────
 
+// The run's owned resources as the FULL tree — crossplane nests
+// Network → Subnet → Instance, and a flat one-level list hides that.
+function ChildNodes({ nodes, depth }: { nodes: readonly TreeNode[]; depth: number }) {
+  return (
+    <ul className="flex flex-col">
+      {nodes.map((node) => {
+        const r = node.resource
+        if (r === undefined) return null
+        return (
+          <li key={r.ref}>
+            <button
+              type="button"
+              className="flex h-6 w-full min-w-0 items-center gap-1.5 rounded-sm text-left font-mono text-xs hover:bg-surface-hover"
+              style={{ paddingLeft: `calc(${depth} * 1rem + 0.375rem)` }}
+              onClick={() => openResourceTab(r.ref)}
+            >
+              <KindIcon kind={r.kind} className="size-3.5 shrink-0" />
+              <span className="min-w-0 truncate">{r.ref}</span>
+              <span className="grow" />
+              <PhaseText phase={r.phase} className="shrink-0 text-2xs" />
+            </button>
+            {node.children.length > 0 && <ChildNodes nodes={node.children} depth={depth + 1} />}
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
 function RunChildrenTab({ record }: { record: Resource }) {
   const { t } = useTranslation()
   const subtree = useStore(client.stores.tree(record.ref))
@@ -269,7 +299,7 @@ function RunChildrenTab({ record }: { record: Resource }) {
       {subtree.loaded && subtree.data.length === 0 && (
         <p className="text-xs text-muted-foreground">{t('graphene.pipeline.noChildren')}</p>
       )}
-      <OwnsSection ownerRef={record.ref} />
+      {subtree.data.length > 0 && <ChildNodes nodes={subtree.data} depth={0} />}
     </div>
   )
 }
