@@ -103,6 +103,11 @@
     },
     "run": {
       "cancel": "Cancel",
+      "rerun": "Rerun",
+      "rerunFailed": "Rerun failed",
+      "duration": "Duration",
+      "result": "Result",
+      "noSteps": "No steps yet — nothing has run",
       "notFound": "No run {{id}} in this namespace",
       "tab": {
         "overview": "Overview",

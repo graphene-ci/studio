@@ -9,7 +9,7 @@
 import type { ComponentType } from 'react'
 
 import { PipelineOverviewHeader, pipelineSubTabs } from '@/components/pipelines/pipelineSubTabs'
-import { runSubTabs } from '@/components/runs/runSubTabs'
+import { RunOverviewHeader, runSubTabs } from '@/components/runs/runSubTabs'
 import type { Resource } from '@/proto/management/v1/resources_pb'
 
 /** One extra sub-tab of a resource view. */
@@ -30,4 +30,5 @@ export const kindSubTabs: Record<string, SubTabDef[]> = {
 /** Optional header rendered at the top of the Overview body per kind. */
 export const kindOverviewHeader: Record<string, ComponentType<{ record: Resource }>> = {
   pipeline: PipelineOverviewHeader,
+  run: RunOverviewHeader,
 }

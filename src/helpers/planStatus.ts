@@ -5,6 +5,7 @@
 // run Plan color the same PlanGraph from this.
 
 import type { StepStatus } from '@/components/pipelines/PlanGraph'
+import type { PlanStep } from '@/helpers/pipelineManifest'
 import type { Event } from '@/proto/management/v1/observe_pb'
 
 export function statusFromEvent(event: Event): StepStatus | null {
@@ -24,4 +25,41 @@ export function foldStepStatus(events: readonly Event[]): Map<string, StepStatus
     if (status !== null) map.set(event.subject, status)
   }
   return map
+}
+
+/** The op of a subject, from its ref prefix first (real names —
+ * agent/… declare, artifact/… transfer), else the event kind. */
+function opFromEvent(subject: string, kind: string): string {
+  if (subject.startsWith('agent/')) return 'declare'
+  if (subject.startsWith('artifact/')) return 'transfer'
+  if (kind.includes('declare')) return 'declare'
+  if (kind.includes('transfer')) return 'transfer'
+  return 'activity'
+}
+
+/** Derives plan steps from ONE run's OWN events — the graph of what
+ * actually happened, with real names. Each distinct subject becomes a
+ * node in first-appearance order; deps are a linear time chain (each
+ * step follows the previous). Server streams events chronologically,
+ * so iteration order is arrival = first-appearance order. */
+export function stepsFromEvents(events: readonly Event[]): PlanStep[] {
+  const order: string[] = []
+  const info = new Map<string, { op: string; agent: string }>()
+  for (const event of events) {
+    if (event.subject === '') continue
+    const seen = info.get(event.subject)
+    if (seen === undefined) {
+      order.push(event.subject)
+      info.set(event.subject, { op: opFromEvent(event.subject, event.kind), agent: event.agent })
+    } else if (seen.agent === '' && event.agent !== '') {
+      seen.agent = event.agent
+    }
+  }
+  return order.map((subject, i) => ({
+    op: info.get(subject)?.op ?? 'unknown',
+    subject,
+    agent: info.get(subject)?.agent ?? '',
+    note: '',
+    deps: i === 0 ? [] : [order[i - 1]],
+  }))
 }
