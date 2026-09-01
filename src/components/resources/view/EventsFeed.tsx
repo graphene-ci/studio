@@ -2,10 +2,13 @@ import { useStore } from '@nanostores/react'
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { stringify as stringifyYaml } from 'yaml'
 
 import { client } from '@/client'
+import { CodeEditor } from '@/components/CodeEditor'
 import { SeverityIcon } from '@/components/status/SeverityIcon'
 import { Spinner } from '@/components/ui/spinner'
+import { yamlLanguage } from '@/helpers/editorLanguage'
 import { cn } from '@/lib/utils'
 import type { Event } from '@/proto/management/v1/observe_pb'
 import type { NotificationSeverity } from '@/stores/notificationsStore'
@@ -20,11 +23,13 @@ function severityOf(event: Event): NotificationSeverity {
   return 'info'
 }
 
+// A payload reads as YAML — an object folds into keyed lines instead of
+// a wall of braces; non-JSON bytes pass through verbatim.
 function payloadText(bytes: Uint8Array): string {
   if (bytes.length === 0) return ''
   const raw = decoder.decode(bytes)
   try {
-    return JSON.stringify(JSON.parse(raw), null, 2)
+    return stringifyYaml(JSON.parse(raw)).trimEnd()
   } catch {
     return raw
   }
@@ -52,9 +57,7 @@ export function EventsFeed({ resourceRef }: { resourceRef: string }) {
           <span className="rounded-sm bg-muted px-1 font-mono text-3xs normal-case">live</span>
         )}
       </h3>
-      {snapshot.error !== null && (
-        <p className="text-2xs text-destructive">{snapshot.error}</p>
-      )}
+      {snapshot.error !== null && <p className="text-2xs text-destructive">{snapshot.error}</p>}
       {snapshot.items.length === 0 && snapshot.error === null && (
         <div className="flex items-center gap-2 py-2 text-2xs text-muted-foreground">
           <Spinner className="size-3" />
@@ -110,20 +113,36 @@ export function EventsFeed({ resourceRef }: { resourceRef: string }) {
                     {input !== '' && (
                       <details>
                         <summary className="cursor-pointer text-muted-foreground">input</summary>
-                        <pre className="overflow-x-auto whitespace-pre-wrap">{input}</pre>
+                        <CodeEditor
+                          value={input}
+                          onChange={() => {}}
+                          readOnly
+                          autoHeight
+                          language={yamlLanguage()}
+                        />
                       </details>
                     )}
                     {result !== '' && (
                       <details>
                         <summary className="cursor-pointer text-muted-foreground">result</summary>
-                        <pre className="overflow-x-auto whitespace-pre-wrap">{result}</pre>
+                        <CodeEditor
+                          value={result}
+                          onChange={() => {}}
+                          readOnly
+                          autoHeight
+                          language={yamlLanguage()}
+                        />
                       </details>
                     )}
                     <details>
                       <summary className="cursor-pointer text-muted-foreground">raw</summary>
-                      <pre className="overflow-x-auto whitespace-pre-wrap">
-                        {payloadText(event.raw)}
-                      </pre>
+                      <CodeEditor
+                        value={payloadText(event.raw)}
+                        onChange={() => {}}
+                        readOnly
+                        autoHeight
+                        language={yamlLanguage()}
+                      />
                     </details>
                   </div>
                 )}

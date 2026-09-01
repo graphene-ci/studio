@@ -46,6 +46,7 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
   const { ns } = useParams()
   const record = view.data
   const [active, setActive] = useState('overview')
+  const [lower, setLower] = useState<'commands' | 'events'>('events')
 
   // The active record view owns the footer trail: namespace › the
   // ownership chain down to this record.
@@ -55,12 +56,12 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
     setBreadcrumbs([{ id: 'ns', label: ns }, ...chain.map((ref) => ({ id: ref, label: ref }))])
   }, [ns, tab.ref, tree.data])
 
-  // Base tabs bracket the kind's extras: Overview + Commands first,
-  // Observability last, contributed sub-tabs (if any) between.
+  // Upper bar = the content tabs: Overview, the kind's extras, then
+  // Observability. Commands and Events are NOT here — they live in the
+  // lower bar (below), always at hand regardless of the content tab.
   const subTabs = useMemo<SubTabDef[]>(
     () => [
       { id: 'overview', labelKey: 'graphene.inspector.tab.overview', Body: OverviewPane },
-      { id: 'commands', labelKey: 'graphene.resourceView.commands', Body: CommandsPane },
       ...(kindSubTabs[tab.kind] ?? []),
       {
         id: 'observability',
@@ -112,16 +113,49 @@ export function ResourceView({ tab }: { tab: ResourceTab }) {
           </button>
         ))}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      {/* Upper plane: the active content tab. */}
+      <div className="min-h-0 flex-[3] overflow-y-auto">
         <Body record={record} />
+      </div>
+      {/* Lower plane: commands and events, always reachable. */}
+      <div className="flex shrink-0 items-center gap-4 border-t border-border px-4">
+        {(
+          [
+            ['events', 'graphene.inspector.tab.events'],
+            ['commands', 'graphene.resourceView.commands'],
+          ] as const
+        ).map(([id, labelKey]) => (
+          <button
+            key={id}
+            type="button"
+            className={cn(
+              'py-1.5 text-xs',
+              lower === id
+                ? 'border-b-2 border-primary font-semibold text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+            onClick={() => setLower(id)}
+          >
+            {t(labelKey)}
+          </button>
+        ))}
+      </div>
+      <div className="min-h-0 flex-[2] overflow-y-auto">
+        {lower === 'events' ? (
+          <div className="flex min-h-0 flex-col px-4 pt-2 pb-3">
+            <EventsFeed resourceRef={record.ref} />
+          </div>
+        ) : (
+          <CommandsPane record={record} />
+        )}
       </div>
     </div>
   )
 }
 
-// Overview — the generic plane of truth: state/spec/owns on top, then
-// the live event feed full width below. A kind may prepend a small
-// header (pipeline: active revision / image).
+// Overview — the generic plane of truth: state / spec / owns. Events
+// live in the lower bar, not here. A kind may prepend a small header
+// (pipeline: active revision / image).
 function OverviewPane({ record }: { record: Resource }) {
   const Header = kindOverviewHeader[record.kind]
   return (
@@ -130,7 +164,6 @@ function OverviewPane({ record }: { record: Resource }) {
         record={record}
         header={Header === undefined ? null : <Header record={record} />}
       />
-      <EventsFeed resourceRef={record.ref} />
     </div>
   )
 }
