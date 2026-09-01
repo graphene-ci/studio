@@ -14,6 +14,7 @@ import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { client } from '@/client'
+import { EventsFeed } from '@/components/resources/view/EventsFeed'
 import { TONE_TEXT } from '@/components/status/tones'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
@@ -26,20 +27,23 @@ import {
 import { cn } from '@/lib/utils'
 import type { LogRecord } from '@/proto/management/v1/observe_pb'
 
-type ObsTab = 'logs' | 'metrics' | 'trace'
+type ObsTab = 'events' | 'logs' | 'metrics' | 'trace'
 
-// The telemetry half of the record view (dimensions 3–5): logs are a
-// LIVE push stream; metrics and traces render the backend snapshots
-// (PromQL matrix / Jaeger JSON) on a slow refresh. All of it is the
-// central surface — not a workspace panel.
+// The telemetry half of the record view — dimensions 2–5 behind one
+// tab strip: events (the record's own history), logs (a LIVE push
+// stream), metrics and traces (backend snapshots on a slow refresh).
+// All of it is the central surface — not a workspace panel.
 export function ObsPane({ resourceRef }: { resourceRef: string }) {
   const { t } = useTranslation()
-  const [tab, setTab] = useState<ObsTab>('logs')
+  const [tab, setTab] = useState<ObsTab>('events')
+  // A log line links to its span: opening a trace from logs both flips
+  // the tab and preselects the traceId in the waterfall.
+  const [traceFocus, setTraceFocus] = useState<string | null>(null)
 
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 items-center gap-4 border-b border-border px-3">
-        {(['logs', 'metrics', 'trace'] as const).map((id) => (
+        {(['events', 'logs', 'metrics', 'trace'] as const).map((id) => (
           <button
             key={id}
             type="button"
@@ -51,15 +55,26 @@ export function ObsPane({ resourceRef }: { resourceRef: string }) {
             )}
             onClick={() => setTab(id)}
           >
-            {t(
-              `graphene.inspector.tab.${id === 'logs' ? 'logs' : id === 'metrics' ? 'metrics' : 'trace'}`,
-            )}
+            {t(`graphene.inspector.tab.${id}`)}
           </button>
         ))}
       </div>
-      {tab === 'logs' && <LogsPane resourceRef={resourceRef} onOpenTrace={() => setTab('trace')} />}
+      {tab === 'events' && (
+        <div className="flex min-h-0 flex-1 flex-col px-3 pt-2 pb-2">
+          <EventsFeed resourceRef={resourceRef} />
+        </div>
+      )}
+      {tab === 'logs' && (
+        <LogsPane
+          resourceRef={resourceRef}
+          onOpenTrace={(traceId) => {
+            setTraceFocus(traceId)
+            setTab('trace')
+          }}
+        />
+      )}
       {tab === 'metrics' && <MetricsPane resourceRef={resourceRef} />}
-      {tab === 'trace' && <TracePane resourceRef={resourceRef} />}
+      {tab === 'trace' && <TracePane resourceRef={resourceRef} focusTraceId={traceFocus} />}
     </div>
   )
 }
@@ -850,11 +865,23 @@ function ChartBody({
   )
 }
 
-function TracePane({ resourceRef }: { resourceRef: string }) {
+function TracePane({
+  resourceRef,
+  focusTraceId,
+}: {
+  resourceRef: string
+  focusTraceId?: string | null
+}) {
   const { t, i18n } = useTranslation()
   const snapshot = useStore(client.stores.trace(resourceRef))
   const [selected, setSelected] = useState<string | null>(null)
   const [byDuration, setByDuration] = useState(false)
+
+  // A trace opened from a log line preselects its own traceId; a later
+  // focus (another log click) moves the selection again.
+  useEffect(() => {
+    if (focusTraceId) setSelected(focusTraceId)
+  }, [focusTraceId])
 
   const traces = useMemo(() => {
     const parsed = parseJaeger(snapshot.snapshot)
