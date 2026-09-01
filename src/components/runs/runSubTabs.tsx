@@ -4,14 +4,15 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { client } from '@/client'
-import { LivePlan } from '@/components/pipelines/LivePlan'
 import { OwnsSection } from '@/components/resources/view/OwnsSection'
 import type { SubTabDef } from '@/components/resources/view/subTabs'
 import { PhaseBadge } from '@/components/status/PhaseBadge'
+import { TONE_TEXT } from '@/components/status/tones'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { timestampMs } from '@/helpers/describe'
-import { stepsFromEvents } from '@/helpers/planStatus'
+import { foldStepStatus, stepsFromEvents, stepTimings } from '@/helpers/planStatus'
+import { cn } from '@/lib/utils'
 import type { Resource } from '@/proto/management/v1/resources_pb'
 import { openResourceTab } from '@/stores/editorTabsStore'
 import { notify } from '@/stores/notificationsStore'
@@ -151,11 +152,25 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
 
 // ── Plan ──────────────────────────────────────────────────────────
 
+// A run's plan is a SEQUENCE, not a branching graph — its events are a
+// linear timeline. So it renders top-to-bottom (a horizontal DAG turns
+// a long run into an unreadable scroll strip); the pipeline's manifest
+// Plan keeps the graph, where real branches exist.
+const STEP_TONE = {
+  running: 'warning',
+  completed: 'success',
+  failed: 'failed',
+  pending: 'canceled',
+} as const
+
 function RunPlanTab({ record }: { record: Resource }) {
   const { t } = useTranslation()
   const pipelineId = pipelineOf(record)
   const events = useStore(client.stores.events(record.ref))
   const steps = useMemo(() => stepsFromEvents(events.items), [events.items])
+  const status = useMemo(() => foldStepStatus(events.items), [events.items])
+  const timings = useMemo(() => stepTimings(events.items), [events.items])
+  const [open, setOpen] = useState<string | null>(null)
 
   return (
     <section className="flex flex-col gap-2 px-4 py-3">
@@ -172,7 +187,67 @@ function RunPlanTab({ record }: { record: Resource }) {
       {steps.length === 0 ? (
         <p className="text-xs text-muted-foreground">{t('graphene.run.noSteps')}</p>
       ) : (
-        <LivePlan steps={steps} runRef={record.ref} />
+        <ol className="flex flex-col">
+          {steps.map((step, i) => {
+            const st = status.get(step.subject) ?? 'pending'
+            const tone = STEP_TONE[st]
+            const span = timings.get(step.subject)
+            const dur =
+              span === undefined ? null : formatDuration(Math.max(span.end - span.start, 0))
+            const isOpen = open === step.subject
+            const stepEvents = isOpen ? events.items.filter((e) => e.subject === step.subject) : []
+            return (
+              <li key={step.subject} className="flex gap-2">
+                {/* Rail: a status dot with a connector line to the next step. */}
+                <div className="flex flex-col items-center">
+                  <span
+                    className={cn(
+                      'mt-1.5 size-2.5 shrink-0 rounded-full border-2 bg-background',
+                      st === 'running' ? 'animate-pulse' : '',
+                    )}
+                    style={{ borderColor: `var(--status-${tone})` }}
+                  />
+                  {i < steps.length - 1 && <span className="w-px grow bg-border" />}
+                </div>
+                <div className="min-w-0 flex-1 pb-2">
+                  <button
+                    type="button"
+                    className="flex w-full min-w-0 items-center gap-2 rounded-sm px-1 py-0.5 text-left hover:bg-surface-hover"
+                    onClick={() => setOpen(isOpen ? null : step.subject)}
+                  >
+                    <span className="rounded-sm bg-muted px-1 font-mono text-3xs text-muted-foreground">
+                      {step.op}
+                    </span>
+                    <span className="min-w-0 truncate font-mono text-xs">{step.subject}</span>
+                    <span className="grow" />
+                    {dur !== null && (
+                      <span className="shrink-0 font-mono text-3xs text-muted-foreground">
+                        {dur}
+                      </span>
+                    )}
+                    <span className={cn('shrink-0 font-mono text-3xs', TONE_TEXT[tone])}>{st}</span>
+                  </button>
+                  {isOpen && (
+                    <ul className="mt-0.5 ml-1 flex flex-col gap-0.5 border-l border-border pl-2">
+                      {stepEvents.map((e) => (
+                        <li
+                          key={String(e.eventId)}
+                          className="flex min-w-0 items-baseline gap-2 font-mono text-3xs text-muted-foreground"
+                        >
+                          <span className="truncate">{e.kind}</span>
+                          {e.attempt > 1 && <span className="shrink-0">#{e.attempt}</span>}
+                          {e.error !== '' && (
+                            <span className="min-w-0 truncate text-destructive">{e.error}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </li>
+            )
+          })}
+        </ol>
       )}
     </section>
   )
