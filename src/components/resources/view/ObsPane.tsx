@@ -1,13 +1,28 @@
 import { useStore } from '@nanostores/react'
-import { ArrowDownIcon, ArrowUpIcon, PauseIcon, PlayIcon } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CopyIcon,
+  PauseIcon,
+  PlayIcon,
+  WaypointsIcon,
+} from 'lucide-react'
+import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { client } from '@/client'
 import { TONE_TEXT } from '@/components/status/tones'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
-import { parseJaeger, parsePromMatrix, type TraceInfo } from '@/helpers/telemetry'
+import {
+  type MetricSeries,
+  parseJaeger,
+  parsePromMatrix,
+  type TraceInfo,
+} from '@/helpers/telemetry'
 import { cn } from '@/lib/utils'
 import type { LogRecord } from '@/proto/management/v1/observe_pb'
 
@@ -36,11 +51,13 @@ export function ObsPane({ resourceRef }: { resourceRef: string }) {
             )}
             onClick={() => setTab(id)}
           >
-            {t(`graphene.inspector.tab.${id === 'logs' ? 'logs' : id === 'metrics' ? 'metrics' : 'trace'}`)}
+            {t(
+              `graphene.inspector.tab.${id === 'logs' ? 'logs' : id === 'metrics' ? 'metrics' : 'trace'}`,
+            )}
           </button>
         ))}
       </div>
-      {tab === 'logs' && <LogsPane resourceRef={resourceRef} />}
+      {tab === 'logs' && <LogsPane resourceRef={resourceRef} onOpenTrace={() => setTab('trace')} />}
       {tab === 'metrics' && <MetricsPane resourceRef={resourceRef} />}
       {tab === 'trace' && <TracePane resourceRef={resourceRef} />}
     </div>
@@ -66,20 +83,78 @@ const SEVERITY_TONE = {
   other: TONE_TEXT.canceled,
 } as const
 
-function LogsPane({ resourceRef }: { resourceRef: string }) {
+// Facets surfaced as chip rows: only the attribute keys a mature run
+// actually stamps. A facet renders only when the loaded records carry
+// its key. OR within a facet, AND across facets.
+const FACET_KEYS = [
+  'contour',
+  'graphene.entity',
+  'graphene.role',
+  'outcome',
+  'attempt',
+  'agent',
+] as const
+
+// Attribute key → locale token (i18next reads '.' as a key separator, so
+// the label lookup uses a dot-free alias).
+const FACET_LABEL: Record<(typeof FACET_KEYS)[number], string> = {
+  contour: 'contour',
+  'graphene.entity': 'entity',
+  'graphene.role': 'role',
+  outcome: 'outcome',
+  attempt: 'attempt',
+  agent: 'agent',
+}
+
+// Attribute keys that are transport noise, not signal: hidden from the
+// per-record table. trace_id / span_id surface as the trace affordance.
+const NOISE_EXACT = new Set(['service.name', 'trace_id', 'span_id'])
+const NOISE_PREFIX = ['telemetry.sdk.', 'scope.']
+
+function isNoiseAttr(key: string): boolean {
+  return NOISE_EXACT.has(key) || NOISE_PREFIX.some((p) => key.startsWith(p))
+}
+
+function LogsPane({
+  resourceRef,
+  onOpenTrace,
+}: {
+  resourceRef: string
+  onOpenTrace: (traceId: string) => void
+}) {
   const { t, i18n } = useTranslation()
   const snapshot = useStore(client.stores.logs(resourceRef))
   const [filter, setFilter] = useState('')
   const [levels, setLevels] = useState<Set<string>>(new Set())
+  // Selected facet values, keyed by attribute key.
+  const [facetSel, setFacetSel] = useState<Record<string, Set<string>>>({})
   const [descending, setDescending] = useState(false)
   const [following, setFollowing] = useState(true)
-  const [expanded, setExpanded] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  // Facet value sets, scanned from the attributes actually present.
+  const facets = useMemo(() => {
+    const found = new Map<string, Set<string>>(FACET_KEYS.map((k) => [k, new Set<string>()]))
+    for (const record of snapshot.items) {
+      for (const key of FACET_KEYS) {
+        const value = record.attributes[key]
+        if (value !== undefined && value !== '') found.get(key)?.add(value)
+      }
+    }
+    return FACET_KEYS.map((key) => ({ key, values: [...(found.get(key) ?? [])].sort() })).filter(
+      (facet) => facet.values.length > 0,
+    )
+  }, [snapshot.items])
 
   const rows = useMemo(() => {
     const needle = filter.trim().toLowerCase()
     let out = snapshot.items
     if (levels.size > 0) out = out.filter((r) => levels.has(severityBucket(r.severity)))
+    for (const [key, sel] of Object.entries(facetSel)) {
+      if (sel.size === 0) continue
+      out = out.filter((r) => sel.has(r.attributes[key] ?? ''))
+    }
     if (needle !== '') {
       out = out.filter(
         (r) =>
@@ -90,14 +165,24 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
       )
     }
     return descending ? [...out].reverse() : out
-  }, [snapshot.items, filter, levels, descending])
+  }, [snapshot.items, filter, levels, facetSel, descending])
 
-  // Follow: keep the tail in view while new lines land.
+  // Follow: keep the tail in view while new lines land. Pausing does not
+  // unsubscribe (the store keeps streaming, capped at LOGS_CAP) — it just
+  // releases the scroll so history can be read while logs still arrive.
   useEffect(() => {
     if (!following || descending) return
     const el = scrollRef.current
     if (el !== null) el.scrollTop = el.scrollHeight
   }, [following, descending])
+
+  const toggleFacet = (key: string, value: string) =>
+    setFacetSel((prev) => {
+      const next = new Set(prev[key] ?? [])
+      if (next.has(value)) next.delete(value)
+      else next.add(value)
+      return { ...prev, [key]: next }
+    })
 
   const time = new Intl.DateTimeFormat(i18n.language, {
     hour: '2-digit',
@@ -121,7 +206,9 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
             aria-pressed={levels.has(level)}
             className={cn(
               'rounded-sm px-1.5 py-0.5 font-mono text-3xs',
-              levels.has(level) ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground',
+              levels.has(level)
+                ? 'bg-accent text-accent-foreground'
+                : 'bg-muted text-muted-foreground',
               SEVERITY_TONE[level],
             )}
             onClick={() =>
@@ -138,12 +225,16 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
         ))}
         <button
           type="button"
-          className="flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 font-mono text-3xs text-muted-foreground hover:text-foreground"
+          aria-pressed={descending}
+          className={cn(
+            'flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-3xs',
+            descending ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground',
+          )}
           onClick={() => setDescending((v) => !v)}
-          title={t('graphene.observe.sortToggle')}
+          title={t('graphene.observe.newestFirst')}
         >
           {descending ? <ArrowDownIcon className="size-3" /> : <ArrowUpIcon className="size-3" />}
-          {t('graphene.observe.time')}
+          {descending ? t('graphene.observe.newestFirst') : t('graphene.observe.oldestFirst')}
         </button>
         <button
           type="button"
@@ -153,9 +244,10 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
             following ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground',
           )}
           onClick={() => setFollowing((v) => !v)}
+          title={following ? t('graphene.observe.pause') : t('graphene.observe.resume')}
         >
           {following ? <PauseIcon className="size-3" /> : <PlayIcon className="size-3" />}
-          {t('graphene.observe.follow')}
+          {following ? t('graphene.observe.live') : t('graphene.observe.paused')}
         </button>
         <span className="grow" />
         {snapshot.dropped > 0 && (
@@ -167,6 +259,36 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
           {t('graphene.observe.shown', { shown: rows.length, total: snapshot.items.length })}
         </span>
       </div>
+      {facets.length > 0 && (
+        <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-t border-border px-3 py-1.5">
+          {facets.map((facet) => (
+            <div key={facet.key} className="flex flex-wrap items-center gap-1">
+              <span className="font-mono text-3xs text-muted-foreground">
+                {t(`graphene.observe.facet.${FACET_LABEL[facet.key]}`, { defaultValue: facet.key })}
+              </span>
+              {facet.values.map((value) => {
+                const on = facetSel[facet.key]?.has(value) ?? false
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={on}
+                    className={cn(
+                      'rounded-sm px-1.5 py-0.5 font-mono text-3xs',
+                      on
+                        ? 'bg-accent text-accent-foreground'
+                        : 'bg-muted text-muted-foreground hover:text-foreground',
+                    )}
+                    onClick={() => toggleFacet(facet.key, value)}
+                  >
+                    {value}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      )}
       {snapshot.error !== null && (
         <p className="px-3 text-2xs text-destructive">{snapshot.error}</p>
       )}
@@ -178,16 +300,19 @@ function LogsPane({ resourceRef }: { resourceRef: string }) {
           </div>
         )}
         <ul className="flex flex-col font-mono text-2xs leading-5">
-          {rows.map((record, index) => (
-            <LogLine
-              // biome-ignore lint/suspicious/noArrayIndexKey: a log line has no identity beyond position in the capped feed.
-              key={`${record.timeUnixNano}-${index}`}
-              record={record}
-              time={time}
-              isOpen={expanded === index}
-              onToggle={() => setExpanded(expanded === index ? null : index)}
-            />
-          ))}
+          {rows.map((record, index) => {
+            const rowKey = `${record.timeUnixNano}-${index}`
+            return (
+              <LogLine
+                key={rowKey}
+                record={record}
+                time={time}
+                isOpen={expanded === rowKey}
+                onToggle={() => setExpanded(expanded === rowKey ? null : rowKey)}
+                onOpenTrace={onOpenTrace}
+              />
+            )
+          })}
         </ul>
       </div>
     </div>
@@ -199,32 +324,54 @@ function LogLine({
   time,
   isOpen,
   onToggle,
+  onOpenTrace,
 }: {
   record: LogRecord
   time: Intl.DateTimeFormat
   isOpen: boolean
   onToggle: () => void
+  onOpenTrace: (traceId: string) => void
 }) {
   const bucket = severityBucket(record.severity)
-  const attrs = Object.entries(record.attributes)
+  const lines = record.body.split('\n')
+  const multiline = lines.length > 1
+  const traceId = record.attributes.trace_id
+  const attrs = Object.entries(record.attributes).filter(([key]) => !isNoiseAttr(key))
   return (
     <li className="flex flex-col">
-      <button
-        type="button"
+      <div
         className={cn(
-          'flex min-w-0 items-baseline gap-2 rounded-sm px-1 text-left hover:bg-surface-hover',
+          'flex min-w-0 items-baseline gap-2 rounded-sm px-1 hover:bg-surface-hover',
           isOpen && 'bg-muted',
         )}
-        onClick={onToggle}
       >
-        <span className="shrink-0 text-muted-foreground">
-          {time.format(Number(record.timeUnixNano / 1_000_000n))}
-        </span>
-        <span className={cn('w-9 shrink-0 uppercase', SEVERITY_TONE[bucket])}>
-          {record.severity.slice(0, 3) || '·'}
-        </span>
-        <span className="min-w-0 truncate">{record.body}</span>
-      </button>
+        <button
+          type="button"
+          className="flex min-w-0 grow items-baseline gap-2 text-left"
+          onClick={onToggle}
+        >
+          {multiline ? (
+            isOpen ? (
+              <ChevronDownIcon className="size-3 shrink-0 translate-y-0.5 text-muted-foreground" />
+            ) : (
+              <ChevronRightIcon className="size-3 shrink-0 translate-y-0.5 text-muted-foreground" />
+            )
+          ) : (
+            <span className="w-3 shrink-0" />
+          )}
+          <span className="shrink-0 text-muted-foreground">
+            {time.format(Number(record.timeUnixNano / 1_000_000n))}
+          </span>
+          <span className={cn('w-9 shrink-0 uppercase', SEVERITY_TONE[bucket])}>
+            {record.severity.slice(0, 3) || '·'}
+          </span>
+          <span className="min-w-0 truncate">{lines[0]}</span>
+          {multiline && <span className="shrink-0 text-muted-foreground">+{lines.length - 1}</span>}
+        </button>
+        {traceId !== undefined && traceId !== '' && (
+          <TraceChip traceId={traceId} onOpen={() => onOpenTrace(traceId)} />
+        )}
+      </div>
       {isOpen && (
         <div className="mb-1 ml-6 flex flex-col rounded-sm bg-muted p-1.5 text-3xs">
           <pre className="whitespace-pre-wrap">{record.body}</pre>
@@ -246,7 +393,154 @@ function LogLine({
   )
 }
 
+/** Trace affordance on a log row: opens the Trace sub-tab and offers a
+ * one-click copy of the full trace id (the row shows the short prefix). */
+function TraceChip({ traceId, onOpen }: { traceId: string; onOpen: () => void }) {
+  const { t } = useTranslation()
+  const [copied, setCopied] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(traceId)
+      setCopied(true)
+      if (timerRef.current !== null) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // Clipboard refused (permissions) — nothing to report loudly.
+    }
+  }
+
+  return (
+    <span className="flex shrink-0 items-center gap-0.5 self-center rounded-sm bg-muted px-1 py-0.5 font-mono text-3xs">
+      <button
+        type="button"
+        className="flex items-center gap-0.5 text-muted-foreground hover:text-foreground"
+        onClick={onOpen}
+        title={t('graphene.observe.trace.open', { id: traceId })}
+      >
+        <WaypointsIcon className="size-3" />
+        {traceId.slice(0, 8)}
+      </button>
+      <button
+        type="button"
+        className="text-muted-foreground hover:text-foreground"
+        onClick={() => void copy()}
+        title={t('graphene.observe.trace.copy')}
+      >
+        {copied ? (
+          <CheckIcon className={cn('size-3', TONE_TEXT.success)} />
+        ) : (
+          <CopyIcon className="size-3" />
+        )}
+      </button>
+    </span>
+  )
+}
+
 const CHART_VARS = ['--chart-1', '--chart-2', '--chart-3', '--chart-4', '--chart-5']
+
+type MetricKind = 'counter' | 'gauge' | 'histogram'
+
+// A series is identified only by its meaningful labels: transport noise
+// (service.name, telemetry.sdk.*, scope.*) is dropped, and `le` is the
+// histogram bucket boundary, not identity. Empty string ⇒ a lone series.
+function seriesIdentity(labels: Record<string, string>): string {
+  return Object.entries(labels)
+    .filter(([k]) => !isNoiseAttr(k) && k !== 'le')
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join(' · ')
+}
+
+function isCounterShaped(points: [number, number][]): boolean {
+  if (points.length < 2) return false
+  for (let i = 1; i < points.length; i++) {
+    if (points[i][1] < points[i - 1][1] - 1e-9) return false
+  }
+  return points[points.length - 1][1] > points[0][1] + 1e-9
+}
+
+// PromQL carries no type — infer it from the series name, falling back to
+// the sample shape. Histogram wins first (buckets / latency names), then
+// counter (cumulative), else gauge.
+function classifyMetric(name: string, series: MetricSeries[]): MetricKind {
+  const n = name.toLowerCase()
+  const hasLe = series.some((s) => s.labels.le !== undefined)
+  if (hasLe || n.includes('_bucket') || /(\.|_)seconds$|duration|latency/.test(n))
+    return 'histogram'
+  if (/(_total|\.count|_count|\.start)$/.test(n) || series.every((s) => isCounterShaped(s.points)))
+    return 'counter'
+  return 'gauge'
+}
+
+// Per-interval rate (delta / dt in seconds) from a cumulative series; the
+// leading point is dropped since a rate needs two samples.
+function rateSeries(points: [number, number][]): [number, number][] {
+  const out: [number, number][] = []
+  for (let i = 1; i < points.length; i++) {
+    const dt = (points[i][0] - points[i - 1][0]) / 1000
+    const dv = points[i][1] - points[i - 1][1]
+    out.push([points[i][0], dt > 0 ? Math.max(dv, 0) / dt : 0])
+  }
+  return out
+}
+
+const QUANTILES = [0.5, 0.95, 0.99] as const
+
+// p50/p95/p99 from cumulative `le` buckets (last sample of each), linearly
+// interpolated within the bracketing bucket. Null when no usable buckets.
+function bucketQuantiles(series: MetricSeries[]): number[] | null {
+  const buckets = series
+    .filter((s) => s.labels.le !== undefined)
+    .map((s) => ({
+      le: s.labels.le === '+Inf' ? Number.POSITIVE_INFINITY : Number(s.labels.le),
+      count: s.points[s.points.length - 1]?.[1] ?? 0,
+    }))
+    .filter((b) => !Number.isNaN(b.le))
+    .sort((a, b) => a.le - b.le)
+  if (buckets.length === 0) return null
+  const total = buckets[buckets.length - 1].count
+  if (total <= 0) return null
+  return QUANTILES.map((q) => {
+    const rank = q * total
+    let prevLe = 0
+    let prevCount = 0
+    for (const b of buckets) {
+      if (b.count >= rank) {
+        if (!Number.isFinite(b.le)) return prevLe
+        const frac = (rank - prevCount) / Math.max(b.count - prevCount, 1e-9)
+        return prevLe + frac * (b.le - prevLe)
+      }
+      if (Number.isFinite(b.le)) prevLe = b.le
+      prevCount = b.count
+    }
+    return prevLe
+  })
+}
+
+// Fallback percentiles straight from the observed values (no buckets).
+function valueQuantiles(series: MetricSeries[]): number[] {
+  const vals = series.flatMap((s) => s.points.map((p) => p[1])).sort((a, b) => a - b)
+  if (vals.length === 0) return QUANTILES.map(() => 0)
+  return QUANTILES.map((q) => vals[Math.min(vals.length - 1, Math.round(q * (vals.length - 1)))])
+}
+
+function fmtNum(v: number): string {
+  if (!Number.isFinite(v)) return '∞'
+  if (v === 0) return '0'
+  const a = Math.abs(v)
+  if (a >= 100000 || a < 0.001) return v.toExponential(2)
+  return String(Number(v.toPrecision(3)))
+}
+
+interface Plot {
+  key: string
+  label: string
+  color: string
+  points: [number, number][]
+  mode: 'line' | 'bar'
+}
 
 function MetricsPane({ resourceRef }: { resourceRef: string }) {
   const { t } = useTranslation()
@@ -280,7 +574,9 @@ function MetricsPane({ resourceRef }: { resourceRef: string }) {
           {t('graphene.observe.window1h')}
         </span>
       </div>
-      {snapshot.error !== null && <p className="px-3 text-2xs text-destructive">{snapshot.error}</p>}
+      {snapshot.error !== null && (
+        <p className="px-3 text-2xs text-destructive">{snapshot.error}</p>
+      )}
       <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-2">
         {snapshot.snapshot === '' && snapshot.error === null && (
           <div className="flex items-center gap-2 py-3 text-2xs text-muted-foreground">
@@ -289,7 +585,9 @@ function MetricsPane({ resourceRef }: { resourceRef: string }) {
           </div>
         )}
         {snapshot.snapshot !== '' && groups.length === 0 && (
-          <p className="py-3 text-2xs text-muted-foreground">{t('graphene.observe.metricsEmpty')}</p>
+          <p className="py-3 text-2xs text-muted-foreground">
+            {t('graphene.observe.metricsEmpty')}
+          </p>
         )}
         <div className="grid grid-cols-1 gap-3 @2xl:grid-cols-2">
           {groups.map(([name, all]) => (
@@ -301,68 +599,254 @@ function MetricsPane({ resourceRef }: { resourceRef: string }) {
   )
 }
 
-function MetricChart({
-  name,
-  series,
-}: {
-  name: string
-  series: ReturnType<typeof parsePromMatrix>
-}) {
-  const allPoints = series.flatMap((s) => s.points)
-  const minT = Math.min(...allPoints.map((p) => p[0]))
-  const maxT = Math.max(...allPoints.map((p) => p[0]))
-  const minV = Math.min(...allPoints.map((p) => p[1]), 0)
-  const maxV = Math.max(...allPoints.map((p) => p[1]))
-  const spanT = Math.max(maxT - minT, 1)
-  const spanV = Math.max(maxV - minV, 1e-9)
+// Type badge + optional latency summary, then the plotted body. Gauges
+// keep the raw line; counters plot the per-interval rate; histograms show
+// p50/p95/p99 over a rate-of-observations chart.
+function MetricChart({ name, series }: { name: string; series: MetricSeries[] }) {
+  const { t, i18n } = useTranslation()
+  const time = useMemo(
+    () => new Intl.DateTimeFormat(i18n.language, { hour: '2-digit', minute: '2-digit' }),
+    [i18n.language],
+  )
+  const kind = useMemo(() => classifyMetric(name, series), [name, series])
 
-  const path = (points: [number, number][]) =>
-    points
-      .map(
-        ([tp, v], i) =>
-          `${i === 0 ? 'M' : 'L'}${(((tp - minT) / spanT) * 100).toFixed(2)},${(
-            36 -
-            ((v - minV) / spanV) * 32
-          ).toFixed(2)}`,
-      )
-      .join(' ')
+  const { plots, quantiles, unit } = useMemo(() => {
+    const color = (i: number) => `var(${CHART_VARS[i % CHART_VARS.length]})`
+    if (kind === 'histogram') {
+      const q = bucketQuantiles(series) ?? valueQuantiles(series)
+      // Observation rate: prefer the +Inf bucket (total count) if present,
+      // else the first series' values as a proxy.
+      const total =
+        series.find((s) => s.labels.le === '+Inf') ??
+        series.find((s) => s.labels.le === undefined) ??
+        series[0]
+      const rate = total !== undefined ? rateSeries(total.points) : []
+      const p: Plot[] =
+        rate.length > 0
+          ? [
+              {
+                key: 'rate',
+                label: t('graphene.observe.metricRate'),
+                color: color(0),
+                points: rate,
+                mode: 'bar',
+              },
+            ]
+          : []
+      return { plots: p, quantiles: q, unit: /(\.|_)seconds$/.test(name) ? 's' : '' }
+    }
+    if (kind === 'counter') {
+      const multi = series.length > 1
+      const p: Plot[] = series.map((s, i) => ({
+        key: `${seriesIdentity(s.labels)}#${i}`,
+        label: seriesIdentity(s.labels),
+        color: color(i),
+        points: rateSeries(s.points),
+        mode: multi ? 'line' : 'bar',
+      }))
+      return { plots: p, quantiles: null, unit: '' }
+    }
+    const p: Plot[] = series.map((s, i) => ({
+      key: `${seriesIdentity(s.labels)}#${i}`,
+      label: seriesIdentity(s.labels),
+      color: color(i),
+      points: s.points,
+      mode: 'line' as const,
+    }))
+    return { plots: p, quantiles: null, unit: '' }
+  }, [kind, series, name, t])
+
+  const typeLabel = t(
+    kind === 'histogram'
+      ? 'graphene.observe.metricHistogram'
+      : kind === 'counter'
+        ? 'graphene.observe.metricCounter'
+        : 'graphene.observe.metricGauge',
+  )
 
   return (
     <figure className="rounded-md bg-muted p-2">
-      <figcaption className="mb-1 truncate font-mono text-2xs">{name}</figcaption>
-      <svg viewBox="0 0 100 38" preserveAspectRatio="none" className="h-20 w-full" role="img" aria-label={name}>
-        {series.map((s, i) => (
-          <path
-            // biome-ignore lint/suspicious/noArrayIndexKey: series identity is the ordered label set slot.
-            key={`${s.name}-${i}`}
-            d={path(s.points)}
-            fill="none"
-            stroke={`var(${CHART_VARS[i % CHART_VARS.length]})`}
-            strokeWidth="1"
-            vectorEffect="non-scaling-stroke"
-          />
-        ))}
-      </svg>
-      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-3xs text-muted-foreground">
-        <span>
-          {maxV.toPrecision(3)} … {minV.toPrecision(3)}
+      <figcaption className="mb-1 flex items-baseline gap-2">
+        <span className="min-w-0 truncate font-mono text-2xs">{name}</span>
+        <span className="shrink-0 rounded-sm bg-background px-1 py-0.5 font-mono text-3xs text-muted-foreground">
+          {typeLabel}
         </span>
-        {series.length > 1 &&
-          series.slice(0, 5).map((s, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: legend rows mirror the series slots above.
-            <span key={`${s.name}-l${i}`} className="flex items-center gap-1">
-              <span
-                aria-hidden
-                className="inline-block h-0.5 w-3"
-                style={{ backgroundColor: `var(${CHART_VARS[i % CHART_VARS.length]})` }}
-              />
-              {Object.entries(s.labels)
-                .map(([k, v]) => `${k}=${v}`)
-                .join(',') || '·'}
+      </figcaption>
+      {quantiles !== null && (
+        <div className="mb-1.5 flex flex-wrap gap-x-4 gap-y-0.5 font-mono text-3xs">
+          {(['p50', 'p95', 'p99'] as const).map((label, i) => (
+            <span key={label} className="flex items-baseline gap-1">
+              <span className="text-muted-foreground">{label}</span>
+              <span className="text-foreground">
+                {fmtNum(quantiles[i])}
+                {unit}
+              </span>
             </span>
           ))}
-      </div>
+        </div>
+      )}
+      <ChartBody plots={plots} time={time} unit={unit} />
     </figure>
+  )
+}
+
+const CHART_H = 40
+const CHART_TOP = 3
+const CHART_BOT = 4
+
+function ChartBody({
+  plots,
+  time,
+  unit,
+}: {
+  plots: Plot[]
+  time: Intl.DateTimeFormat
+  unit: string
+}) {
+  const { t } = useTranslation()
+  const [cursor, setCursor] = useState<number | null>(null)
+  const boxRef = useRef<HTMLDivElement | null>(null)
+
+  const dims = useMemo(() => {
+    const all = plots.flatMap((p) => p.points)
+    if (all.length === 0) return null
+    const minT = Math.min(...all.map((p) => p[0]))
+    const maxT = Math.max(...all.map((p) => p[0]))
+    const minV = Math.min(0, ...all.map((p) => p[1]))
+    const maxV = Math.max(...all.map((p) => p[1]))
+    return {
+      minT,
+      maxT,
+      minV,
+      maxV,
+      spanT: Math.max(maxT - minT, 1),
+      spanV: Math.max(maxV - minV, 1e-9),
+    }
+  }, [plots])
+
+  if (dims === null) {
+    return (
+      <p className="py-2 text-3xs text-muted-foreground">{t('graphene.observe.metricsEmpty')}</p>
+    )
+  }
+
+  const x = (tp: number) => ((tp - dims.minT) / dims.spanT) * 100
+  const y = (v: number) =>
+    CHART_TOP + (1 - (v - dims.minV) / dims.spanV) * (CHART_H - CHART_TOP - CHART_BOT)
+  const barW = Math.max(0.5, (100 / Math.max(...plots.map((p) => p.points.length), 1)) * 0.7)
+
+  const cursorT = cursor === null ? null : dims.minT + cursor * dims.spanT
+  const nearest = (points: [number, number][]) => {
+    if (cursorT === null || points.length === 0) return null
+    let best = points[0]
+    for (const p of points) {
+      if (Math.abs(p[0] - cursorT) < Math.abs(best[0] - cursorT)) best = p
+    }
+    return best
+  }
+
+  const onMove = (e: MouseEvent<HTMLDivElement>) => {
+    const rect = boxRef.current?.getBoundingClientRect()
+    if (rect === undefined || rect.width === 0) return
+    setCursor(Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width)))
+  }
+
+  return (
+    <div>
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: pointer hover readout over a decorative chart, keyboard path is the value labels below. */}
+      <div
+        ref={boxRef}
+        className="relative"
+        onMouseMove={onMove}
+        onMouseLeave={() => setCursor(null)}
+      >
+        <svg
+          viewBox={`0 0 100 ${CHART_H}`}
+          preserveAspectRatio="none"
+          className="h-20 w-full"
+          role="img"
+          aria-label={plots.map((p) => p.label).join(', ')}
+        >
+          <title>{plots.map((p) => p.label).join(', ')}</title>
+          {plots.map((p) =>
+            p.mode === 'bar' ? (
+              <g key={p.key}>
+                {p.points.map((pt, i) => (
+                  <rect
+                    // biome-ignore lint/suspicious/noArrayIndexKey: bars index the ordered time grid.
+                    key={i}
+                    x={(x(pt[0]) - barW / 2).toFixed(2)}
+                    y={y(pt[1]).toFixed(2)}
+                    width={barW.toFixed(2)}
+                    height={Math.max(0, y(dims.minV) - y(pt[1])).toFixed(2)}
+                    fill={p.color}
+                    opacity={0.85}
+                  />
+                ))}
+              </g>
+            ) : (
+              <path
+                key={p.key}
+                d={p.points
+                  .map(
+                    (pt, i) =>
+                      `${i === 0 ? 'M' : 'L'}${x(pt[0]).toFixed(2)},${y(pt[1]).toFixed(2)}`,
+                  )
+                  .join(' ')}
+                fill="none"
+                stroke={p.color}
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            ),
+          )}
+          {cursor !== null && (
+            <line
+              x1={(cursor * 100).toFixed(2)}
+              x2={(cursor * 100).toFixed(2)}
+              y1={CHART_TOP}
+              y2={CHART_H - CHART_BOT}
+              stroke="currentColor"
+              strokeWidth="0.5"
+              vectorEffect="non-scaling-stroke"
+              className="text-muted-foreground"
+            />
+          )}
+        </svg>
+        <span className="pointer-events-none absolute left-0 top-0 font-mono text-3xs text-muted-foreground">
+          {fmtNum(dims.maxV)}
+          {unit}
+        </span>
+      </div>
+      <div className="mt-0.5 flex justify-between font-mono text-3xs text-muted-foreground">
+        <span>{time.format(dims.minT)}</span>
+        {cursorT !== null && <span className="text-foreground">{time.format(cursorT)}</span>}
+        <span>{time.format(dims.maxT)}</span>
+      </div>
+      {(plots.length > 1 || cursor !== null) && (
+        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-3xs text-muted-foreground">
+          {plots.map((p) => {
+            const near = nearest(p.points)
+            return (
+              <span key={p.key} className="flex items-center gap-1">
+                <span
+                  aria-hidden
+                  className="inline-block h-0.5 w-3 shrink-0"
+                  style={{ backgroundColor: p.color }}
+                />
+                {p.label !== '' && <span>{p.label}</span>}
+                {near !== null && (
+                  <span className="text-foreground">
+                    {fmtNum(near[1])}
+                    {unit}
+                  </span>
+                )}
+              </span>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -396,7 +880,9 @@ function TracePane({ resourceRef }: { resourceRef: string }) {
             {byDuration ? t('graphene.observe.sortDuration') : t('graphene.observe.sortRecent')}
           </button>
         </div>
-        {snapshot.error !== null && <p className="px-2 text-2xs text-destructive">{snapshot.error}</p>}
+        {snapshot.error !== null && (
+          <p className="px-2 text-2xs text-destructive">{snapshot.error}</p>
+        )}
         {snapshot.snapshot === '' && snapshot.error === null && (
           <div className="flex items-center gap-2 px-2 py-3 text-2xs text-muted-foreground">
             <Spinner className="size-3" />
@@ -404,7 +890,9 @@ function TracePane({ resourceRef }: { resourceRef: string }) {
           </div>
         )}
         {snapshot.snapshot !== '' && traces.length === 0 && (
-          <p className="px-2 py-3 text-2xs text-muted-foreground">{t('graphene.observe.traceEmpty')}</p>
+          <p className="px-2 py-3 text-2xs text-muted-foreground">
+            {t('graphene.observe.traceEmpty')}
+          </p>
         )}
         <ul className="min-h-0 flex-1 overflow-y-auto px-1 pb-2">
           {traces.map((trace) => (
@@ -421,7 +909,9 @@ function TracePane({ resourceRef }: { resourceRef: string }) {
                   <span className={cn('min-w-0 truncate', trace.hasError && TONE_TEXT.failed)}>
                     {trace.operation || trace.traceId.slice(0, 12)}
                   </span>
-                  <span className="shrink-0 text-muted-foreground">{trace.duration.toFixed(0)}ms</span>
+                  <span className="shrink-0 text-muted-foreground">
+                    {trace.duration.toFixed(0)}ms
+                  </span>
                 </span>
                 <span className="text-3xs text-muted-foreground">
                   {time.format(trace.start)} · {trace.spanCount}{' '}
