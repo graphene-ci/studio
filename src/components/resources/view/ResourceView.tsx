@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { LockIcon } from 'lucide-react'
+import { DownloadIcon, LockIcon } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { parse as parseYamlText } from 'yaml'
@@ -22,6 +22,7 @@ import { StatusBanner } from '@/components/status/StatusBanner'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { bytesAsYaml, timestampMs } from '@/helpers/describe'
+import { saveBytes } from '@/helpers/download'
 import { yamlLanguage } from '@/helpers/editorLanguage'
 import { findAncestry } from '@/helpers/resourceTree'
 import { cn } from '@/lib/utils'
@@ -125,11 +126,46 @@ function OverviewPane({ record }: { record: Resource }) {
   const Header = kindOverviewHeader[record.kind]
   return (
     <div className="flex flex-col gap-4 px-4 pt-2 pb-3">
+      {record.kind === 'artifact' && <ArtifactDownload record={record} />}
       <StatePane
         record={record}
         header={Header === undefined ? null : <Header record={record} />}
       />
       <ActionsPane record={record} />
+    </div>
+  )
+}
+
+// Overview-level Download for an artifact: streams the blob's bytes and
+// hands the browser a .tgz named after the record's short ref.
+function ArtifactDownload({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const [downloading, setDownloading] = useState(false)
+
+  const download = async () => {
+    setDownloading(true)
+    try {
+      const bytes = await client.resource(record.ref).download()
+      const name = `${record.ref.slice(record.ref.lastIndexOf('/') + 1)}.tgz`
+      saveBytes(name, bytes)
+      notify({ severity: 'success', title: t('graphene.download.downloaded', { name }) })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.download.downloadFailed'),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  return (
+    <div className="flex">
+      <Button variant="outline" size="sm" disabled={downloading} onClick={() => void download()}>
+        {downloading ? <Spinner /> : <DownloadIcon />}
+        {t('graphene.download.download')}
+      </Button>
     </div>
   )
 }

@@ -544,6 +544,11 @@
       "standRelease": "Снять",
       "standReleased": "{{ref}} снят со стенда",
       "standReleaseFailed": "Не удалось снять {{ref}}"
+    },
+    "download": {
+      "download": "Скачать",
+      "downloaded": "Скачано {{name}}",
+      "downloadFailed": "Не удалось скачать"
     }
   },
   "common": {}
