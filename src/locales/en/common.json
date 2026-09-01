@@ -533,7 +533,11 @@
       "selectRun": "Run",
       "stepNoEvents": "No events for this step yet",
       "children": "Children",
-      "noChildren": "This run owns no records"
+      "noChildren": "This run owns no records",
+      "standEmpty": "Nothing parked on the stand",
+      "standRelease": "Release",
+      "standReleased": "Released {{ref}} from the stand",
+      "standReleaseFailed": "Could not release {{ref}}"
     }
   },
   "common": {}

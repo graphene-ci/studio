@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { ExternalLinkIcon, PlayIcon, RefreshCwIcon } from 'lucide-react'
+import { ExternalLinkIcon, PlayIcon, RefreshCwIcon, Trash2Icon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -11,6 +11,7 @@ import { RunsFeed } from '@/components/pipelines/RunsFeed'
 import { StartRunForm } from '@/components/pipelines/StartRunForm'
 import { KindIcon } from '@/components/resources/tree/KindIcon'
 import type { SubTabDef } from '@/components/resources/view/subTabs'
+import { PhaseBadge } from '@/components/status/PhaseBadge'
 import { PhaseText } from '@/components/status/PhaseText'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -284,9 +285,114 @@ function DeliveryTab({ record }: { record: Resource }) {
   )
 }
 
+// ── Stand ─────────────────────────────────────────────────────────
+
+// One resource parked on the stand, as a card: kind icon, ref, phase,
+// the run/keep markers, and the actions at hand — open it, or release
+// it (delete) from the stand.
+function StandCard({ resource }: { resource: Resource }) {
+  const { t } = useTranslation()
+  const [releasing, setReleasing] = useState(false)
+  const marks = Object.entries(resource.labels).filter(([k]) => k.startsWith('graphene.io/'))
+
+  const release = async () => {
+    setReleasing(true)
+    try {
+      await client.resource(resource.ref).delete()
+      notify({
+        severity: 'success',
+        title: t('graphene.pipeline.standReleased', { ref: resource.ref }),
+      })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.pipeline.standReleaseFailed', { ref: resource.ref }),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setReleasing(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2 rounded-md border border-border bg-surface p-3">
+      <button
+        type="button"
+        className="flex min-w-0 items-center gap-2 text-left"
+        onClick={() => openResourceTab(resource.ref)}
+      >
+        <KindIcon kind={resource.kind} className="size-4 shrink-0" />
+        <span className="min-w-0 truncate font-mono text-xs font-medium">{resource.ref}</span>
+        <span className="grow" />
+        <PhaseBadge phase={resource.phase} className="shrink-0" />
+      </button>
+      {marks.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {marks.map(([k, v]) => (
+            <span
+              key={k}
+              className="rounded-sm bg-muted px-1 py-0.5 font-mono text-3xs text-muted-foreground"
+            >
+              {k.slice('graphene.io/'.length)}={v}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={() => openResourceTab(resource.ref)}>
+          <ExternalLinkIcon />
+          {t('graphene.pipeline.openRecord')}
+        </Button>
+        <span className="grow" />
+        <Button variant="ghost" size="sm" disabled={releasing} onClick={() => void release()}>
+          {releasing ? <Spinner /> : <Trash2Icon />}
+          {t('graphene.pipeline.standRelease')}
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function StandTab({ record }: { record: Resource }) {
+  const { t } = useTranslation()
+  const pipelineId = record.ref.slice(record.ref.indexOf('/') + 1)
+  const standRef = `stand/${pipelineId}`
+  const subtree = useStore(client.stores.tree(standRef))
+  const held = subtree.data
+    .map((node) => node.resource)
+    .filter((r): r is Resource => r !== undefined)
+
+  return (
+    <div className="flex flex-col gap-3 px-4 py-3">
+      <div className="flex items-center gap-2">
+        <h3 className="text-2xs font-semibold tracking-wide text-muted-foreground uppercase">
+          {t('graphene.pipeline.standSection')}
+        </h3>
+        <span className="grow truncate font-mono text-2xs text-muted-foreground">{standRef}</span>
+      </div>
+      {!subtree.loaded && subtree.error === null && (
+        <div className="flex justify-center py-6">
+          <Spinner className="size-4" />
+        </div>
+      )}
+      {subtree.loaded && held.length === 0 && (
+        <p className="text-xs text-muted-foreground">{t('graphene.pipeline.standEmpty')}</p>
+      )}
+      {held.length > 0 && (
+        <div className="grid grid-cols-1 gap-3 @xl:grid-cols-2 @3xl:grid-cols-3">
+          {held.map((r) => (
+            <StandCard key={r.ref} resource={r} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export const pipelineSubTabs: SubTabDef[] = [
   { id: 'plan', labelKey: 'graphene.pipeline.plan', Body: PlanTab },
   { id: 'runs', labelKey: 'graphene.nav.runs', Body: RunsTab },
   { id: 'revisions', labelKey: 'graphene.pipeline.revisions', Body: RevisionsTab },
+  { id: 'stand', labelKey: 'graphene.pipeline.standSection', Body: StandTab },
   { id: 'delivery', labelKey: 'graphene.pipeline.delivery', Body: DeliveryTab },
 ]

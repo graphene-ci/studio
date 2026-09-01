@@ -539,7 +539,11 @@
       "selectRun": "Прогон",
       "stepNoEvents": "По этому шагу пока нет событий",
       "children": "Дочерние",
-      "noChildren": "У этого запуска нет дочерних ресурсов"
+      "noChildren": "У этого запуска нет дочерних ресурсов",
+      "standEmpty": "На стенде ничего нет",
+      "standRelease": "Снять",
+      "standReleased": "{{ref}} снят со стенда",
+      "standReleaseFailed": "Не удалось снять {{ref}}"
     }
   },
   "common": {}
