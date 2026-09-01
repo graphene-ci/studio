@@ -12,7 +12,7 @@ import { TONE_TEXT } from '@/components/status/tones'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { timestampMs } from '@/helpers/describe'
-import { foldStepStatus, stepsFromEvents, stepTimings } from '@/helpers/planStatus'
+import { traceRows } from '@/helpers/runTrace'
 import { cn } from '@/lib/utils'
 import type { Resource, TreeNode } from '@/proto/management/v1/resources_pb'
 import { openResourceTab } from '@/stores/editorTabsStore'
@@ -153,10 +153,12 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
 
 // ── Plan ──────────────────────────────────────────────────────────
 
-// A run's plan is a SEQUENCE, not a branching graph — its events are a
-// linear timeline. So it renders top-to-bottom (a horizontal DAG turns
-// a long run into an unreadable scroll strip); the pipeline's manifest
-// Plan keeps the graph, where real branches exist.
+// A run's plan is its EXECUTION TRACE — one line per activity instance
+// (grouped by activityId, not by type name), so every net/sub/vm
+// declare, every install, every transfer is its own row: a near-per-
+// line account of what the pipeline actually did, top to bottom. The
+// pipeline's manifest Plan keeps the DAG (declared shape); a run shows
+// what happened.
 const STEP_TONE = {
   running: 'warning',
   completed: 'success',
@@ -165,13 +167,16 @@ const STEP_TONE = {
 } as const
 
 function RunPlanTab({ record }: { record: Resource }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const pipelineId = pipelineOf(record)
   const events = useStore(client.stores.events(record.ref))
-  const steps = useMemo(() => stepsFromEvents(events.items), [events.items])
-  const status = useMemo(() => foldStepStatus(events.items), [events.items])
-  const timings = useMemo(() => stepTimings(events.items), [events.items])
+  const rows = useMemo(() => traceRows(events.items), [events.items])
   const [open, setOpen] = useState<string | null>(null)
+  const clock = new Intl.DateTimeFormat(i18n.language, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
 
   return (
     <section className="flex flex-col gap-2 px-4 py-3">
@@ -184,59 +189,81 @@ function RunPlanTab({ record }: { record: Resource }) {
             pipeline/{pipelineId}
           </span>
         )}
+        {rows.length > 0 && (
+          <span className="shrink-0 font-mono text-3xs text-muted-foreground">
+            {rows.length} {t('graphene.run.steps')}
+          </span>
+        )}
       </div>
-      {steps.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="text-xs text-muted-foreground">{t('graphene.run.noSteps')}</p>
       ) : (
         <ol className="flex flex-col">
-          {steps.map((step, i) => {
-            const st = status.get(step.subject) ?? 'pending'
-            const tone = STEP_TONE[st]
-            const span = timings.get(step.subject)
-            const dur =
-              span === undefined ? null : formatDuration(Math.max(span.end - span.start, 0))
-            const isOpen = open === step.subject
-            const stepEvents = isOpen ? events.items.filter((e) => e.subject === step.subject) : []
+          {rows.map((row, i) => {
+            const tone = STEP_TONE[row.status]
+            const dur = formatDuration(Math.max(row.endMs - row.startMs, 0))
+            const isOpen = open === row.activityId
+            const rowEvents = isOpen
+              ? events.items.filter((e) => e.activityId === row.activityId)
+              : []
             return (
-              <li key={step.subject} className="flex gap-2">
-                {/* Rail: a status dot with a connector line to the next step. */}
+              <li key={row.activityId} className="flex gap-2">
+                {/* Rail: a status dot with a connector line to the next row. */}
                 <div className="flex flex-col items-center">
                   <span
                     className={cn(
                       'mt-1.5 size-2.5 shrink-0 rounded-full border-2 bg-background',
-                      st === 'running' ? 'animate-pulse' : '',
+                      row.status === 'running' ? 'animate-pulse' : '',
                     )}
                     style={{ borderColor: `var(--status-${tone})` }}
                   />
-                  {i < steps.length - 1 && <span className="w-px grow bg-border" />}
+                  {i < rows.length - 1 && <span className="w-px grow bg-border" />}
                 </div>
-                <div className="min-w-0 flex-1 pb-2">
+                <div className="min-w-0 flex-1 pb-1.5">
                   <button
                     type="button"
                     className="flex w-full min-w-0 items-center gap-2 rounded-sm px-1 py-0.5 text-left hover:bg-surface-hover"
-                    onClick={() => setOpen(isOpen ? null : step.subject)}
+                    onClick={() => setOpen(isOpen ? null : row.activityId)}
                   >
-                    <span className="rounded-sm bg-muted px-1 font-mono text-3xs text-muted-foreground">
-                      {step.op}
+                    <span className="shrink-0 font-mono text-3xs text-muted-foreground tabular-nums">
+                      {clock.format(row.startMs)}
                     </span>
-                    <span className="min-w-0 truncate font-mono text-xs">{step.subject}</span>
-                    <span className="grow" />
-                    {dur !== null && (
-                      <span className="shrink-0 font-mono text-3xs text-muted-foreground">
-                        {dur}
+                    <span className="min-w-0 truncate font-mono text-xs">{row.type}</span>
+                    {row.target !== '' && (
+                      <span className="min-w-0 shrink truncate font-mono text-2xs text-muted-foreground">
+                        {row.target}
                       </span>
                     )}
-                    <span className={cn('shrink-0 font-mono text-3xs', TONE_TEXT[tone])}>{st}</span>
+                    {row.agent !== '' && (
+                      <span className="shrink-0 rounded-sm bg-muted px-1 font-mono text-3xs text-muted-foreground">
+                        {row.agent}
+                      </span>
+                    )}
+                    {row.attempt > 1 && (
+                      <span className="shrink-0 font-mono text-3xs text-status-warning">
+                        #{row.attempt}
+                      </span>
+                    )}
+                    <span className="grow" />
+                    <span className="shrink-0 font-mono text-3xs text-muted-foreground">{dur}</span>
+                    <span className={cn('shrink-0 font-mono text-3xs', TONE_TEXT[tone])}>
+                      {row.status}
+                    </span>
                   </button>
+                  {row.error !== '' && (
+                    <p className="ml-1 truncate font-mono text-3xs text-destructive">{row.error}</p>
+                  )}
                   {isOpen && (
                     <ul className="mt-0.5 ml-1 flex flex-col gap-0.5 border-l border-border pl-2">
-                      {stepEvents.map((e) => (
+                      {rowEvents.map((e) => (
                         <li
                           key={String(e.eventId)}
                           className="flex min-w-0 items-baseline gap-2 font-mono text-3xs text-muted-foreground"
                         >
+                          <span className="shrink-0 tabular-nums">
+                            {clock.format(Number(e.timeUnixNano / 1_000_000n))}
+                          </span>
                           <span className="truncate">{e.kind}</span>
-                          {e.attempt > 1 && <span className="shrink-0">#{e.attempt}</span>}
                           {e.error !== '' && (
                             <span className="min-w-0 truncate text-destructive">{e.error}</span>
                           )}
