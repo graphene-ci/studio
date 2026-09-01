@@ -27,6 +27,23 @@ export function foldStepStatus(events: readonly Event[]): Map<string, StepStatus
   return map
 }
 
+/** subject → {start, end} in ms, from the first and last event of
+ * that subject — the step's wall-clock span for a run timeline. */
+export function stepTimings(events: readonly Event[]): Map<string, { start: number; end: number }> {
+  const map = new Map<string, { start: number; end: number }>()
+  for (const event of events) {
+    if (event.subject === '') continue
+    const ms = Number(event.timeUnixNano / 1_000_000n)
+    const span = map.get(event.subject)
+    if (span === undefined) map.set(event.subject, { start: ms, end: ms })
+    else {
+      if (ms < span.start) span.start = ms
+      if (ms > span.end) span.end = ms
+    }
+  }
+  return map
+}
+
 /** The op of a subject, from its ref prefix first (real names —
  * agent/… declare, artifact/… transfer), else the event kind. */
 function opFromEvent(subject: string, kind: string): string {
