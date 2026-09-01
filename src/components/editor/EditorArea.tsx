@@ -1,5 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { LockIcon, XIcon } from 'lucide-react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FileEditorView } from '@/components/editor/FileEditorView'
@@ -92,6 +93,18 @@ export function EditorArea() {
   const { tabs, activeId } = useStore($editorTabs)
   const { t } = useTranslation()
   const active = activeTabOf(tabs, activeId)
+
+  // Ctrl+F4 closes the active center tab (IDE convention).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'F4' && activeId !== null) {
+        e.preventDefault()
+        closeTab(activeId)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activeId])
 
   if (active === null) {
     return (
