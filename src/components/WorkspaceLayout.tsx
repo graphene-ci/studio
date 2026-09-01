@@ -2,8 +2,6 @@ import { useStore } from '@nanostores/react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import pipelinesIcon from '@/assets/icons/kind/pipeline.svg'
-import runsIcon from '@/assets/icons/kind/run.svg'
-import runsIconDark from '@/assets/icons/kind/run_dark.svg'
 import agentsIcon from '@/assets/icons/toolwindow/agents.svg'
 import agentsIconDark from '@/assets/icons/toolwindow/agents_dark.svg'
 import buildIcon from '@/assets/icons/toolwindow/build.svg'
@@ -24,7 +22,6 @@ import {
 } from '@/components/notifications/NotificationsPanel'
 import { PipelinesPanel } from '@/components/pipelines/PipelinesPanel'
 import { ResourceTreePanel } from '@/components/resources/tree/ResourceTreePanel'
-import { RunsPanel } from '@/components/runs/RunsPanel'
 import { ThemedIcon } from '@/components/ThemedIcon'
 import { TerminalPanel } from '@/components/terminal/TerminalPanel'
 import { TerminalTabs } from '@/components/terminal/TerminalTabs'
@@ -92,9 +89,7 @@ export function WorkspaceLayout() {
     ? 'resources'
     : layout.pipelines.isOpen
       ? 'pipelines'
-      : layout.runs.isOpen
-        ? 'runs'
-        : null
+      : null
   const rightPanel = layout.inspector.isOpen ? 'inspector' : layout.build.isOpen ? 'build' : null
   const layoutStyle = {
     '--workspace-resources-width': `${leftPanel === null ? layout.resources.size : layout[leftPanel].size}px`,
@@ -131,12 +126,6 @@ export function WorkspaceLayout() {
               icon={<ThemedIcon light={resourcesIcon} />}
               onToggle={() => toggleWorkspacePanel('resources')}
             />
-            <ToolBarAction
-              buttonLabel={t('graphene.workspace.panels.runs')}
-              isActive={layout.runs.isOpen}
-              icon={<ThemedIcon light={runsIcon} dark={runsIconDark} />}
-              onToggle={() => toggleWorkspacePanel('runs')}
-            />
           </>
         }
         bottom={
@@ -168,13 +157,7 @@ export function WorkspaceLayout() {
             }
             aria-label={t(`graphene.workspace.panels.${leftPanel}`)}
           >
-            {leftPanel === 'resources' ? (
-              <ResourceTreePanel />
-            ) : leftPanel === 'pipelines' ? (
-              <PipelinesPanel />
-            ) : (
-              <RunsPanel />
-            )}
+            {leftPanel === 'resources' ? <ResourceTreePanel /> : <PipelinesPanel />}
           </WorkspacePanel>
         </aside>
       )}
