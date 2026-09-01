@@ -525,6 +525,8 @@
         "failed": "упал"
       },
       "panelFilter": "фильтр пайплайнов…",
+      "noRuns": "Запусков пока нет",
+      "toggleRuns": "Показать запуски {{id}}",
       "delivery": "Поставка",
       "sourceSection": "Исходники",
       "triggersSection": "Триггеры",

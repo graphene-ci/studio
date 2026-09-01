@@ -519,6 +519,8 @@
         "failed": "failed"
       },
       "panelFilter": "filter pipelines…",
+      "noRuns": "No runs yet",
+      "toggleRuns": "Toggle runs of {{id}}",
       "delivery": "Delivery",
       "sourceSection": "Source",
       "triggersSection": "Triggers",
