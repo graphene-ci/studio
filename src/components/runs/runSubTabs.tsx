@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { RotateCcwIcon } from 'lucide-react'
+import { RotateCcwIcon, XCircleIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -77,8 +77,12 @@ function formatDuration(ms: number): string {
 export function RunOverviewHeader({ record }: { record: Resource }) {
   const { t, i18n } = useTranslation()
   const [rerunning, setRerunning] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
   const spec = runSpecOf(record)
   const outcome = runStateOf(record)
+  const runId = record.ref.slice(record.ref.indexOf('/') + 1)
+  const isRunning =
+    record.phase === 'WORKFLOW_EXECUTION_STATUS_RUNNING' || record.phase === 'Running'
 
   const started = timestampMs(record.startedAt)
   const finished = timestampMs(record.finishedAt)
@@ -88,6 +92,22 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
     minute: '2-digit',
     second: '2-digit',
   })
+
+  const cancel = async () => {
+    setCancelling(true)
+    try {
+      await client.runs.cancel(runId)
+      notify({ severity: 'success', title: t('graphene.run.cancelSent', { runId }) })
+    } catch (err) {
+      notify({
+        severity: 'error',
+        title: t('graphene.run.cancelFailed'),
+        body: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setCancelling(false)
+    }
+  }
 
   const rerun = async () => {
     if (spec === null || spec.pipeline === '') return
@@ -128,6 +148,12 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
           </span>
         )}
         <span className="grow" />
+        {isRunning && (
+          <Button size="sm" variant="outline" disabled={cancelling} onClick={() => void cancel()}>
+            {cancelling ? <Spinner /> : <XCircleIcon />}
+            {t('graphene.run.cancel')}
+          </Button>
+        )}
         <Button
           size="sm"
           variant="outline"
