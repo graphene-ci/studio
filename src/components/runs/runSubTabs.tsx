@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { RotateCcwIcon, XCircleIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { client } from '@/client'
@@ -70,6 +70,23 @@ function formatDuration(ms: number): string {
   return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`
 }
 
+// STUCK_MS: an activity RUNNING longer than this is flagged — a "0s
+// running" step that in truth has hung for hours was invisible before.
+const STUCK_MS = 5 * 60 * 1000
+
+/** A ticking clock, alive only while `active` — so a running step's
+ * duration grows on screen instead of freezing at its start time. */
+function useNow(active: boolean, everyMs = 1000): number {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    if (!active) return
+    setNow(Date.now())
+    const id = setInterval(() => setNow(Date.now()), everyMs)
+    return () => clearInterval(id)
+  }, [active, everyMs])
+  return now
+}
+
 // ── Overview header ───────────────────────────────────────────────
 
 /** The run's status line atop the Overview: phase, timing, outcome,
@@ -86,7 +103,10 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
 
   const started = timestampMs(record.startedAt)
   const finished = timestampMs(record.finishedAt)
-  const durationMs = started === null ? null : (finished ?? Date.now()) - started
+  // A live clock while the run has not finished — the elapsed time
+  // ticks instead of freezing at the last render.
+  const now = useNow(isRunning && finished === null)
+  const durationMs = started === null ? null : (finished ?? now) - started
   const time = new Intl.DateTimeFormat(i18n.language, {
     hour: '2-digit',
     minute: '2-digit',
@@ -198,6 +218,11 @@ function RunPlanTab({ record }: { record: Resource }) {
   const events = useStore(client.stores.events(record.ref))
   const rows = useMemo(() => traceRows(events.items), [events.items])
   const [open, setOpen] = useState<string | null>(null)
+  // A running step has no terminal event, so endMs sits at its start —
+  // its duration would read 0s forever. Tick a live clock while any
+  // step runs so an open step's elapsed time grows and a hang shows.
+  const anyRunning = rows.some((r) => r.status === 'running')
+  const now = useNow(anyRunning)
   const clock = new Intl.DateTimeFormat(i18n.language, {
     hour: '2-digit',
     minute: '2-digit',
@@ -227,7 +252,15 @@ function RunPlanTab({ record }: { record: Resource }) {
         <ol className="flex flex-col">
           {rows.map((row, i) => {
             const tone = STEP_TONE[row.status]
-            const dur = formatDuration(Math.max(row.endMs - row.startMs, 0))
+            // Live elapsed for a running step (now − start); frozen span
+            // for a finished one. A running step past STUCK_MS is flagged
+            // so a silent hang is visible without opening the events.
+            const elapsedMs =
+              row.status === 'running'
+                ? Math.max(now - row.startMs, 0)
+                : Math.max(row.endMs - row.startMs, 0)
+            const dur = formatDuration(elapsedMs)
+            const stuck = row.status === 'running' && elapsedMs > STUCK_MS
             const isOpen = open === row.activityId
             const rowEvents = isOpen
               ? events.items.filter((e) => e.activityId === row.activityId)
@@ -241,7 +274,7 @@ function RunPlanTab({ record }: { record: Resource }) {
                       'mt-1.5 size-2.5 shrink-0 rounded-full border-2 bg-background',
                       row.status === 'running' ? 'animate-pulse' : '',
                     )}
-                    style={{ borderColor: `var(--status-${tone})` }}
+                    style={{ borderColor: `var(--status-${stuck ? 'failed' : tone})` }}
                   />
                   {i < rows.length - 1 && <span className="w-px grow bg-border" />}
                 </div>
@@ -271,8 +304,25 @@ function RunPlanTab({ record }: { record: Resource }) {
                       </span>
                     )}
                     <span className="grow" />
-                    <span className="shrink-0 font-mono text-3xs text-muted-foreground">{dur}</span>
-                    <span className={cn('shrink-0 font-mono text-3xs', TONE_TEXT[tone])}>
+                    {stuck && (
+                      <span className="shrink-0 rounded-sm bg-status-failed/15 px-1 font-mono text-3xs text-status-failed">
+                        {t('graphene.run.stuck')}
+                      </span>
+                    )}
+                    <span
+                      className={cn(
+                        'shrink-0 font-mono text-3xs tabular-nums',
+                        stuck ? 'text-status-failed' : 'text-muted-foreground',
+                      )}
+                    >
+                      {dur}
+                    </span>
+                    <span
+                      className={cn(
+                        'shrink-0 font-mono text-3xs',
+                        stuck ? 'text-status-failed' : TONE_TEXT[tone],
+                      )}
+                    >
                       {row.status}
                     </span>
                   </button>

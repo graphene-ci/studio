@@ -108,6 +108,7 @@
       "duration": "Duration",
       "result": "Result",
       "noSteps": "No steps yet — nothing has run",
+      "stuck": "stuck",
       "notFound": "No run {{id}} in this namespace",
       "tab": {
         "overview": "Overview",
