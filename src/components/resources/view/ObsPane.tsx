@@ -98,17 +98,17 @@ const SEVERITY_TONE = {
   other: TONE_TEXT.canceled,
 } as const
 
-// Facets surfaced as chip rows: only the attribute keys a mature run
-// actually stamps. A facet renders only when the loaded records carry
-// its key. OR within a facet, AND across facets.
-const FACET_KEYS = [
-  'contour',
-  'graphene.entity',
-  'graphene.role',
-  'outcome',
-  'attempt',
-  'agent',
-] as const
+// Facets surfaced as chip rows: only LOW-cardinality attribute keys a
+// mature run stamps — the ones a person actually filters by. A facet
+// renders only when the loaded records carry its key. OR within a facet,
+// AND across facets. `attempt` is deliberately NOT here: it is the retry
+// counter, unique per attempt, so it rendered hundreds of useless chips.
+const FACET_KEYS = ['contour', 'graphene.entity', 'graphene.role', 'outcome', 'agent'] as const
+
+// A facet with more distinct values than this is not chip material —
+// it is a high-cardinality attribute that would flood the row. Such a
+// facet is dropped rather than truncated: half a list filters nothing.
+const MAX_FACET_VALUES = 24
 
 // Attribute key → locale token (i18next reads '.' as a key separator, so
 // the label lookup uses a dot-free alias).
@@ -117,7 +117,6 @@ const FACET_LABEL: Record<(typeof FACET_KEYS)[number], string> = {
   'graphene.entity': 'entity',
   'graphene.role': 'role',
   outcome: 'outcome',
-  attempt: 'attempt',
   agent: 'agent',
 }
 
@@ -158,7 +157,7 @@ function LogsPane({
       }
     }
     return FACET_KEYS.map((key) => ({ key, values: [...(found.get(key) ?? [])].sort() })).filter(
-      (facet) => facet.values.length > 0,
+      (facet) => facet.values.length > 0 && facet.values.length <= MAX_FACET_VALUES,
     )
   }, [snapshot.items])
 
