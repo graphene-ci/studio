@@ -3,12 +3,19 @@ import { persistentAtom } from '@nanostores/persistent'
 export type WorkspacePanelId =
   | 'resources'
   | 'pipelines'
+  | 'topology'
   | 'inspector'
   | 'build'
   | 'terminal'
   | 'agents'
   | 'notifications'
-export type WorkspaceResizablePanelId = 'resources' | 'pipelines' | 'inspector' | 'build' | 'bottom'
+export type WorkspaceResizablePanelId =
+  | 'resources'
+  | 'pipelines'
+  | 'topology'
+  | 'inspector'
+  | 'build'
+  | 'bottom'
 
 export interface WorkspacePanelVisibility {
   isOpen: boolean
@@ -21,6 +28,7 @@ export interface WorkspacePanelLayout extends WorkspacePanelVisibility {
 export interface WorkspaceLayoutState {
   resources: WorkspacePanelLayout
   pipelines: WorkspacePanelLayout
+  topology: WorkspacePanelLayout
   inspector: WorkspacePanelLayout
   build: WorkspacePanelLayout
   terminal: WorkspacePanelVisibility
@@ -37,6 +45,7 @@ export const WORKSPACE_PANEL_LIMITS: Record<
 > = {
   resources: { min: 200, max: 640 },
   pipelines: { min: 200, max: 640 },
+  topology: { min: 200, max: 640 },
   inspector: { min: 240, max: 720 },
   build: { min: 260, max: 720 },
   bottom: { min: 160, max: 640 },
@@ -45,6 +54,7 @@ export const WORKSPACE_PANEL_LIMITS: Record<
 const DEFAULT_WORKSPACE_LAYOUT: WorkspaceLayoutState = {
   resources: { isOpen: true, size: 288 },
   pipelines: { isOpen: false, size: 288 },
+  topology: { isOpen: false, size: 288 },
   inspector: { isOpen: false, size: 320 },
   build: { isOpen: false, size: 340 },
   terminal: { isOpen: false },
@@ -71,7 +81,7 @@ function decodeVisibility(
 function decodePanel(
   value: unknown,
   fallback: WorkspacePanelLayout,
-  panel: 'resources' | 'pipelines' | 'inspector' | 'build',
+  panel: 'resources' | 'pipelines' | 'topology' | 'inspector' | 'build',
 ): WorkspacePanelLayout {
   const visibility = decodeVisibility(value, fallback)
   if (typeof value !== 'object' || value === null) return fallback
@@ -110,6 +120,11 @@ function decodeWorkspaceLayout(raw: string): WorkspaceLayoutState {
         DEFAULT_WORKSPACE_LAYOUT.pipelines,
         'pipelines',
       ),
+      topology: decodePanel(
+        'topology' in parsed ? parsed.topology : undefined,
+        DEFAULT_WORKSPACE_LAYOUT.topology,
+        'topology',
+      ),
       inspector: decodePanel(
         'inspector' in parsed ? parsed.inspector : undefined,
         DEFAULT_WORKSPACE_LAYOUT.inspector,
@@ -146,7 +161,7 @@ export const $workspaceLayout = persistentAtom<WorkspaceLayoutState>(
 )
 
 // A side slot holds ONE panel at a time (IDE toolwindow behavior).
-const LEFT_SLOT = ['resources', 'pipelines'] as const
+const LEFT_SLOT = ['resources', 'pipelines', 'topology'] as const
 const RIGHT_SLOT = ['inspector', 'build'] as const
 
 export function toggleWorkspacePanel(panel: WorkspacePanelId): void {
@@ -155,7 +170,10 @@ export function toggleWorkspacePanel(panel: WorkspacePanelId): void {
     ...current,
     [panel]: { ...current[panel], isOpen: !current[panel].isOpen },
   }
-  if ((panel === 'resources' || panel === 'pipelines') && next[panel].isOpen) {
+  if (
+    (panel === 'resources' || panel === 'pipelines' || panel === 'topology') &&
+    next[panel].isOpen
+  ) {
     for (const other of LEFT_SLOT) {
       if (other !== panel) next[other] = { ...next[other], isOpen: false }
     }

@@ -1,5 +1,6 @@
 import { useStore } from '@nanostores/react'
-import { LockIcon, XIcon } from 'lucide-react'
+import type { TFunction } from 'i18next'
+import { LockIcon, NetworkIcon, XIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +8,7 @@ import { FileEditorView } from '@/components/editor/FileEditorView'
 import { FileIcon } from '@/components/files/FileIcon'
 import { KindIcon } from '@/components/resources/tree/KindIcon'
 import { ResourceView } from '@/components/resources/view/ResourceView'
+import { TopologyView } from '@/components/topology/TopologyView'
 import { cn } from '@/lib/utils'
 import {
   $editorTabs,
@@ -15,6 +17,17 @@ import {
   pinTab,
   setActiveTab,
 } from '@/stores/editorTabsStore'
+
+function tabLabel(tab: EditorTab, t: TFunction): string {
+  switch (tab.type) {
+    case 'file':
+      return tab.name
+    case 'resource':
+      return tab.ref
+    default:
+      return t('graphene.topology.title')
+  }
+}
 
 // The central canvas: tab bar (the panel's header) + the active view.
 export function EditorTabBar() {
@@ -53,12 +66,12 @@ export function EditorTabBar() {
         >
           {tab.type === 'file' ? (
             <FileIcon name={tab.name} className="size-3" />
-          ) : (
+          ) : tab.type === 'resource' ? (
             <KindIcon kind={tab.kind} className="size-3" />
+          ) : (
+            <NetworkIcon className="size-3 shrink-0" />
           )}
-          <span className={cn('truncate', tab.id === previewId && 'italic')}>
-            {tab.type === 'file' ? tab.name : tab.ref}
-          </span>
+          <span className={cn('truncate', tab.id === previewId && 'italic')}>{tabLabel(tab, t)}</span>
           {tab.type === 'file' && tab.readOnly && (
             <LockIcon
               className="size-2.5 shrink-0 text-muted-foreground"
@@ -68,9 +81,7 @@ export function EditorTabBar() {
           <button
             type="button"
             tabIndex={-1}
-            aria-label={t('graphene.editor.close', {
-              name: tab.type === 'file' ? tab.name : tab.ref,
-            })}
+            aria-label={t('graphene.editor.close', { name: tabLabel(tab, t) })}
             className="flex size-3.5 shrink-0 items-center justify-center rounded-xs text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-foreground"
             onClick={(e) => {
               e.stopPropagation()
@@ -116,5 +127,6 @@ export function EditorArea() {
     )
   }
   if (active.type === 'file') return <FileEditorView key={active.id} tab={active} />
+  if (active.type === 'topology') return <TopologyView key={active.id} />
   return <ResourceView key={active.id} tab={active} />
 }

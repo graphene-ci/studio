@@ -8,6 +8,7 @@ import {
   fileTabId,
   openFileTab,
   openResourceTab,
+  openTopologyTab,
   pinTab,
   resourceTabId,
 } from '@/stores/editorTabsStore'
@@ -19,6 +20,7 @@ import {
 // the URL in place (replace — tab hopping is not history).
 function tabPath(tab: EditorTab): string {
   if (tab.type === 'resource') return `/resource/${tab.ref}`
+  if (tab.type === 'topology') return '/topology'
   return `/file/${tab.sourceRef}/${tab.path}`
 }
 
@@ -52,6 +54,8 @@ export function EditorUrlSync() {
         openResourceTab(ref)
         pinTab(id)
       }
+    } else if (rest === '/topology') {
+      if (activeId !== 'topology') openTopologyTab()
     } else if (rest.startsWith('/file/')) {
       const tail = rest.slice('/file/'.length)
       const parts = tail.split('/').map(decodeURIComponent)

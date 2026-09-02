@@ -26,7 +26,15 @@ export interface ResourceTab {
   kind: string
 }
 
-export type EditorTab = FileTab | ResourceTab
+export interface TopologyTab {
+  type: 'topology'
+  /** Singleton — one topology view per namespace. */
+  id: 'topology'
+}
+
+export type EditorTab = FileTab | ResourceTab | TopologyTab
+
+export const TOPOLOGY_TAB_ID = 'topology'
 
 export interface EditorTabsState {
   tabs: EditorTab[]
@@ -63,6 +71,7 @@ function migrateTab(raw: unknown): EditorTab | null {
     return { type: 'resource', id: resourceTabId(ref), ref, kind: 'pipeline' }
   }
   if (tab.type === 'file' || tab.type === 'resource') return raw as EditorTab
+  if (tab.type === 'topology') return { type: 'topology', id: 'topology' }
   return null
 }
 
@@ -133,6 +142,10 @@ export function openFileTab(input: Omit<FileTab, 'type' | 'id'>, preview = false
 export function openResourceTab(ref: string, preview = false): void {
   const kind = ref.slice(0, Math.max(ref.indexOf('/'), 0))
   openTab({ type: 'resource', id: resourceTabId(ref), ref, kind }, preview)
+}
+
+export function openTopologyTab(): void {
+  openTab({ type: 'topology', id: 'topology' }, false)
 }
 
 /** Editing (or an explicit gesture) keeps the tab for good. */
