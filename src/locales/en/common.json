@@ -37,6 +37,7 @@
         "build": "Build",
         "agents": "Agents",
         "pipelines": "Pipelines",
+        "topology": "Topology",
         "runs": "Runs"
       }
     },
@@ -539,6 +540,14 @@
       "standRelease": "Release",
       "standReleased": "Released {{ref}} from the stand",
       "standReleaseFailed": "Could not release {{ref}}"
+    },
+    "topology": {
+      "title": "Topology",
+      "graph": "Namespace topology",
+      "declared": "Edges are declared, not verified — drawn from each record’s stated flows.",
+      "empty": "No resources in this namespace yet.",
+      "ungrouped": "Ungrouped",
+      "external": "External"
     },
     "download": {
       "download": "Download",

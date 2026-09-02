@@ -1,4 +1,5 @@
 import { useStore } from '@nanostores/react'
+import { NetworkIcon } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import pipelinesIcon from '@/assets/icons/kind/pipeline.svg'
@@ -23,6 +24,7 @@ import {
 import { PipelinesPanel } from '@/components/pipelines/PipelinesPanel'
 import { ResourceTreePanel } from '@/components/resources/tree/ResourceTreePanel'
 import { ThemedIcon } from '@/components/ThemedIcon'
+import { TopologyPanel } from '@/components/topology/TopologyPanel'
 import { TerminalPanel } from '@/components/terminal/TerminalPanel'
 import { TerminalTabs } from '@/components/terminal/TerminalTabs'
 import { WorkspacePanel, WorkspacePanelTitle } from '@/components/WorkspacePanel'
@@ -89,7 +91,9 @@ export function WorkspaceLayout() {
     ? 'resources'
     : layout.pipelines.isOpen
       ? 'pipelines'
-      : null
+      : layout.topology.isOpen
+        ? 'topology'
+        : null
   const rightPanel = layout.inspector.isOpen ? 'inspector' : layout.build.isOpen ? 'build' : null
   const layoutStyle = {
     '--workspace-resources-width': `${leftPanel === null ? layout.resources.size : layout[leftPanel].size}px`,
@@ -126,6 +130,12 @@ export function WorkspaceLayout() {
               icon={<ThemedIcon light={resourcesIcon} />}
               onToggle={() => toggleWorkspacePanel('resources')}
             />
+            <ToolBarAction
+              buttonLabel={t('graphene.workspace.panels.topology')}
+              isActive={layout.topology.isOpen}
+              icon={<NetworkIcon />}
+              onToggle={() => toggleWorkspacePanel('topology')}
+            />
           </>
         }
         bottom={
@@ -157,7 +167,13 @@ export function WorkspaceLayout() {
             }
             aria-label={t(`graphene.workspace.panels.${leftPanel}`)}
           >
-            {leftPanel === 'resources' ? <ResourceTreePanel /> : <PipelinesPanel />}
+            {leftPanel === 'resources' ? (
+              <ResourceTreePanel />
+            ) : leftPanel === 'pipelines' ? (
+              <PipelinesPanel />
+            ) : (
+              <TopologyPanel />
+            )}
           </WorkspacePanel>
         </aside>
       )}
