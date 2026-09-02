@@ -5,6 +5,7 @@
 // children. Flat output keeps virtualization and keyboard navigation
 // trivial — the UI never walks the tree itself.
 
+import { timestampMs } from '@/helpers/describe'
 import type { TreeNode } from '@/proto/management/v1/resources_pb'
 import type { ListFilesResponse } from '@/proto/management/v1/source_pb'
 
@@ -36,6 +37,9 @@ export interface RecordRowVM {
   isExpanded: boolean
   pendingCommands: number
   markedForDeletion: boolean
+  /** Wall-clock of a run (ms); null on records that carry no timing. */
+  startedMs: number | null
+  finishedMs: number | null
 }
 
 /** A folder inside an expanded gitsource (derived from flat paths). */
@@ -204,6 +208,8 @@ function recordRow(node: TreeNode, depth: number, isExpanded: boolean): RecordRo
     isExpanded,
     pendingCommands: resource.pendingCommands,
     markedForDeletion: resource.markedForDeletion,
+    startedMs: timestampMs(resource.startedAt),
+    finishedMs: timestampMs(resource.finishedAt),
   }
 }
 
