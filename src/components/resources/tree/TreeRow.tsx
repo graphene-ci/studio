@@ -21,6 +21,15 @@ interface TreeRowProps {
   onOpen: (ref: string) => void
 }
 
+/** Compact wall-clock for a run row: a live run shows elapsed-so-far,
+ * so a Running row sitting at hours reads as suspicious at a glance. */
+function formatDur(ms: number): string {
+  const s = Math.max(Math.floor(ms / 1000), 0)
+  if (s < 60) return `${s}s`
+  if (s < 3600) return `${Math.floor(s / 60)}m`
+  return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`
+}
+
 function Chevron({ isExpanded }: { isExpanded: boolean }) {
   return isExpanded ? (
     <ChevronDownIcon className="size-3.5" />
@@ -107,6 +116,11 @@ export function TreeRow({
             <span className="truncate">{row.id}</span>
           </span>
           <PendingCommandsDot count={row.pendingCommands} />
+          {row.kind === 'run' && row.startedMs !== null && (
+            <span className="shrink-0 text-3xs text-muted-foreground tabular-nums">
+              {formatDur((row.finishedMs ?? Date.now()) - row.startedMs)}
+            </span>
+          )}
           <PhaseText phase={row.phase} className="shrink-0 text-2xs" />
         </>
       ) : row.type === 'note' ? (
