@@ -342,20 +342,6 @@
       "noFormatter": "No formatter for {{name}}",
       "formatFailed": "Formatting {{name}} failed — check the syntax"
     },
-    "fork": {
-      "action": "Fork into managedsource…",
-      "title": "Fork {{from}}",
-      "subtitle": "A copy of the tree with provenance — a deliberate branch, nothing syncs back",
-      "nameLabel": "New source name",
-      "submit": "Fork",
-      "done": "Created managedsource/{{id}} from {{from}}",
-      "errors": {
-        "nameRequired": "Name the source — for example main-edit",
-        "nameFormat": "Lowercase letters, digits, dot, dash, underscore",
-        "noPipeline": "Could not find this source's pipeline in the tree",
-        "failed": "The server refused the fork — check the name and permissions"
-      }
-    },
     "settings": {
       "title": "Settings",
       "subtitle": "Appearance and editor behavior — stored in this browser",
