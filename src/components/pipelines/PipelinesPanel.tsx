@@ -121,12 +121,11 @@ export function PipelinesPanel() {
             return (
               <li key={pipeline.ref}>
                 {/* Single click toggles the runs (like a folder); double click opens the pipeline — matching the resource tree's group gesture. */}
-                <div
-                  role="button"
-                  tabIndex={0}
+                <button
+                  type="button"
                   aria-expanded={isExpanded}
                   className={cn(
-                    'flex h-7 min-w-0 cursor-pointer items-center gap-1.5 rounded-sm pr-1.5 font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    'flex h-7 w-full min-w-0 cursor-pointer items-center gap-1.5 rounded-sm border-0 bg-transparent pr-1.5 text-left font-mono text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     isOpen ? 'bg-accent text-accent-foreground' : 'hover:bg-surface-hover',
                   )}
                   onClick={() => toggle(id)}
@@ -159,7 +158,7 @@ export function PipelinesPanel() {
                   <span className="min-w-0 truncate">{id}</span>
                   <span className="grow" />
                   <PhaseText phase={pipeline.phase} className="text-2xs" />
-                </div>
+                </button>
                 {isExpanded && (
                   <ul className="flex flex-col">
                     {runsView !== undefined && !runsView.loaded && (
