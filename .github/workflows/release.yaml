@@ -25,10 +25,8 @@ jobs:
         include:
           - os: ubuntu-latest
             script: package:linux
-            glob: "dist_packaged/*.AppImage\ndist_packaged/*.deb\ndist_packaged/*.rpm"
           - os: windows-latest
             script: package:win
-            glob: "dist_packaged/*.exe"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Validate tag is semver
@@ -50,12 +48,10 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --allow-same-version
-      - name: Build installers
-        # No GH_TOKEN here on purpose: electron-builder must NOT implicit-publish
-        # on the git tag — the softprops step below owns attaching artifacts.
+      - name: Build and publish installers
+        # electron-builder publishes the built installers (and the auto-update
+        # metadata) to the GitHub Release for this tag itself — GH_TOKEN is what
+        # turns its implicit tag-publish on.
         run: yarn ${{ matrix.script }}
-      - name: Attach installers to the release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ matrix.glob }}
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
