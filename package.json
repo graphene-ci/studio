@@ -21,11 +21,11 @@
     "lint": "./bin/biome lint . --error-on-warnings",
     "format": "./bin/biome format --write .",
     "preview": "vite preview",
-    "package": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --config electron-builder.yml",
-    "package:dir": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --dir --config electron-builder.yml",
-    "package:linux": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --linux --config electron-builder.yml",
-    "package:win": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --win --config electron-builder.yml",
-    "package:mac": "node bin/yarn.cjs build:desktop && node bin/yarn.cjs build:electron && electron-builder build --mac --config electron-builder.yml"
+    "package": "yarn build:desktop && yarn build:electron && electron-builder build --config electron-builder.yml",
+    "package:dir": "yarn build:desktop && yarn build:electron && electron-builder build --dir --config electron-builder.yml",
+    "package:linux": "yarn build:desktop && yarn build:electron && electron-builder build --linux --config electron-builder.yml",
+    "package:win": "yarn build:desktop && yarn build:electron && electron-builder build --win --config electron-builder.yml",
+    "package:mac": "yarn build:desktop && yarn build:electron && electron-builder build --mac --config electron-builder.yml"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.14.0",
