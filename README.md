@@ -1,76 +1,96 @@
 # Graphene Studio
 
-Самостоятельное операторское веб-приложение Graphene. Studio поставляется
-отдельно от сервера, подключается к одной или нескольким инсталляциям через
-публичный Management API и имеет web- и Electron-сборки.
+The standalone Graphene operator web app. Studio ships separately from the
+server, connects to one or more installations over the public Management API,
+and has both web and Electron (desktop) builds.
 
-Возможности пользователя, модель рабочей области и текущие ограничения описаны
-в [документации Graphene](https://graphene-ci.github.io/docs/studio). Этот
-README относится только к разработке репозитория.
+The user-facing features, the workspace model and the current limits are in the
+[Graphene docs](https://graphene-ci.github.io/docs/studio). This README is about
+developing the repository.
 
-## Устройство
+## Install (desktop app)
 
-- `src/pages/` — route-композиции;
-- `src/components/` — UI и продуктовые компоненты;
-- `src/hooks/` — React-слой над состоянием и API;
-- `src/stores/` — состояние приложения на nanostores;
-- `src/lib/` — ConnectRPC-клиенты и инфраструктура;
-- `src/proto/` — зафиксированные TypeScript bindings Management API;
-- `electron/` — main/preload desktop-оболочки;
-- `public/` — статические ресурсы;
-- `bin/` — локальные инструменты репозитория.
+Releases: [github.com/graphene-ci/studio/releases](https://github.com/graphene-ci/studio/releases).
 
-Архитектурные правила и границы компонентов находятся в `AGENTS.md`.
+Download the installer for your platform from the latest release:
 
-## Web-разработка
+- **Linux** — `Graphene-Studio-<ver>-x86_64.AppImage` (chmod +x and run),
+  `-amd64.deb`, or `-x86_64.rpm`.
+- **Windows** — `Graphene-Studio-Setup-<ver>-x64.exe`.
 
-Нужны `make`, `curl` и Node.js `22.23.x`. Остальные инструменты и
-зависимости устанавливаются внутри репозитория:
+Then launch Studio and point it at your installation's Management API endpoint.
+
+## Layout
+
+- `src/pages/` — route compositions;
+- `src/components/` — UI and product components;
+- `src/hooks/` — the React layer over state and the API;
+- `src/stores/` — app state on nanostores;
+- `src/lib/` — ConnectRPC clients and infrastructure;
+- `src/proto/` — the committed TypeScript bindings of the Management API;
+- `electron/` — the desktop main/preload shell;
+- `public/` — static assets;
+- `bin/` — repo-local tools.
+
+Architecture rules and component boundaries are in `AGENTS.md`.
+
+## Web development
+
+Requires `make`, `curl` and Node.js `22.23.x`. The rest of the tools and
+dependencies are installed inside the repo:
 
 ```bash
 make configure
 make dev
 ```
 
-Dev-сервер доступен на `http://localhost:5173`; запросы по умолчанию
-проксируются в `http://localhost:7233`. Другой сервер задаётся так:
+The dev server is at `http://localhost:5173` and proxies to
+`http://localhost:7233` by default. Point it elsewhere with:
 
 ```bash
 VITE_PROXY_TARGET=http://graphene.example.com:7233 make dev
 ```
 
-## Desktop-разработка
+## Desktop development
 
 ```bash
 make dev-desktop
 make build-desktop
-make package-desktop
+make package-desktop        # installers for the current platform → dist_packaged/
 ```
 
-Платформенные yarn-команды: `package:linux`, `package:win`,
-`package:mac`. Desktop использует тот же renderer и не добавляет отдельный
-протокол к серверу.
+Per-platform yarn scripts: `package:linux`, `package:win`, `package:mac`. The
+desktop build reuses the same renderer and adds no separate server protocol.
 
-## Проверка
+## Check
 
 ```bash
-make test
-make lint
+make test        # TypeScript type-check
+make lint        # validates easyp.yaml, runs Biome
 make build
 ```
 
-`make test` проверяет TypeScript, `make lint` валидирует `easyp.yaml` и
-запускает Biome. Форматирование выполняет `make format`.
+`make format` reformats sources.
 
-## Контракты сервера
+## Server contracts
 
-Источником Management API служат `.proto` из репозитория
-`graphene-ci/graphene`. Сгенерированные bindings коммитятся в `src/proto/`,
-поэтому обычная сборка не зависит от соседнего checkout.
+The Management API source is the `.proto` files in the `graphene-ci/graphene`
+repo. The generated bindings are committed to `src/proto/`, so a normal build
+does not depend on a sibling checkout.
 
 ```bash
 make generate
 ```
 
-Команда обновляет `easyp.lock` до указанной Git-ревизии и полностью
-пересоздаёт bindings. Сгенерированные файлы вручную не редактируются.
+This updates `easyp.lock` to a pinned Git revision and regenerates the bindings
+from scratch. Generated files are not edited by hand.
+
+## Release
+
+A pushed semver tag (`vX.Y.Z`) builds the installers and publishes them to a
+GitHub Release (Linux AppImage/deb/rpm + Windows nsis, with auto-update
+metadata):
+
+```bash
+make ver v=0.1.0        # or: make bump TYPE=minor
+```
