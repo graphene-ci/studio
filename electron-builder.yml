@@ -2,6 +2,11 @@ appId: ci.graphene.studio
 productName: Graphene Studio
 electronVersion: 41.1.0
 
+# Publish straight to a real (non-draft) GitHub Release on a tag.
+publish:
+  provider: github
+  releaseType: release
+
 directories:
   output: dist_packaged
 
