@@ -16,6 +16,7 @@ linux:
     - deb
     - rpm
   category: Development
+  maintainer: Graphene CI <ci@graphene-ci.dev>
   artifactName: ${productName}-${version}-${arch}.${ext}
 
 win:
