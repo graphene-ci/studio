@@ -27,7 +27,7 @@ function toneOf(phase: string): Tone {
     case 'failed':
     case 'deleted':
     case 'terminated':
-    case 'timedout':
+    case 'timed-out':
       return 'failed'
     default:
       // canceled and any unknown status.

@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/runs.proto.
  */
 export const file_proto_management_v1_runs: GenFile = /*@__PURE__*/
-  fileDesc("Ch5wcm90by9tYW5hZ2VtZW50L3YxL3J1bnMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEixgEKD1N0YXJ0UnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkSEAoIcGlwZWxpbmUYAiABKAkSDgoGcGFyYW1zGAMgASgMEg0KBWltYWdlGAQgASgJEkMKBmxhYmVscxgFIAMoCzIzLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU3RhcnRSdW5SZXF1ZXN0LkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiQAoQU3RhcnRSdW5SZXNwb25zZRITCgt3b3JrZmxvd19pZBgBIAEoCRIXCg90ZW1wb3JhbF9ydW5faWQYAiABKAkiHwoNR2V0UnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkiIAoOR2V0UnVuUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJIiEKD1dhdGNoUnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkiHwoNV2F0Y2hSdW5FdmVudBIOCgZzdGF0dXMYASABKAkiIgoQUnVuUmVzdWx0UmVxdWVzdBIOCgZydW5faWQYASABKAkiIwoRUnVuUmVzdWx0UmVzcG9uc2USDgoGcmVzdWx0GAEgASgMIiIKEENhbmNlbFJ1blJlcXVlc3QSDgoGcnVuX2lkGAEgASgJIhMKEUNhbmNlbFJ1blJlc3BvbnNlMuMDCgdSdW5zQVBJEl0KCFN0YXJ0UnVuEicuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5TdGFydFJ1blJlcXVlc3QaKC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlN0YXJ0UnVuUmVzcG9uc2USVwoGR2V0UnVuEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5HZXRSdW5SZXF1ZXN0GiYuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5HZXRSdW5SZXNwb25zZRJcCghXYXRjaFJ1bhInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuV2F0Y2hSdW5SZXF1ZXN0GiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5XYXRjaFJ1bkV2ZW50MAESYAoJUnVuUmVzdWx0EiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SdW5SZXN1bHRSZXF1ZXN0GikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SdW5SZXN1bHRSZXNwb25zZRJgCglDYW5jZWxSdW4SKC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNhbmNlbFJ1blJlcXVlc3QaKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkNhbmNlbFJ1blJlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
+  fileDesc("Ch5wcm90by9tYW5hZ2VtZW50L3YxL3J1bnMucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEixgEKD1N0YXJ0UnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkSEAoIcGlwZWxpbmUYAiABKAkSDgoGcGFyYW1zGAMgASgMEg0KBWltYWdlGAQgASgJEkMKBmxhYmVscxgFIAMoCzIzLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU3RhcnRSdW5SZXF1ZXN0LkxhYmVsc0VudHJ5Gi0KC0xhYmVsc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiQAoQU3RhcnRSdW5SZXNwb25zZRITCgt3b3JrZmxvd19pZBgBIAEoCRIXCg90ZW1wb3JhbF9ydW5faWQYAiABKAkiHwoNR2V0UnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkiIAoOR2V0UnVuUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJIiEKD1dhdGNoUnVuUmVxdWVzdBIOCgZydW5faWQYASABKAkiHwoNV2F0Y2hSdW5FdmVudBIOCgZzdGF0dXMYASABKAkiIgoQUnVuUmVzdWx0UmVxdWVzdBIOCgZydW5faWQYASABKAkiMgoRUnVuUmVzdWx0UmVzcG9uc2USDgoGcmVzdWx0GAEgASgMEg0KBWVycm9yGAIgASgJIiIKEENhbmNlbFJ1blJlcXVlc3QSDgoGcnVuX2lkGAEgASgJIhMKEUNhbmNlbFJ1blJlc3BvbnNlIiIKEFJ1blN0YXR1c1JlcXVlc3QSDgoGcnVuX2lkGAEgASgJIl0KEVJ1blN0YXR1c1Jlc3BvbnNlEg4KBnN0YXR1cxgBIAEoCRI4CgdwZW5kaW5nGAIgAygLMicuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5QZW5kaW5nQWN0aXZpdHkimAEKD1BlbmRpbmdBY3Rpdml0eRIVCg1hY3Rpdml0eV90eXBlGAEgASgJEg8KB2F0dGVtcHQYAiABKAUSDQoFc3RhdGUYAyABKAkSFAoMbGFzdF9mYWlsdXJlGAQgASgJEhgKEGhlYXJ0YmVhdF9kZXRhaWwYBSABKAkSHgoWbGFzdF9oZWFydGJlYXRfdW5peF9tcxgGIAEoAzLFBAoHUnVuc0FQSRJdCghTdGFydFJ1bhInLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuU3RhcnRSdW5SZXF1ZXN0GiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5TdGFydFJ1blJlc3BvbnNlElcKBkdldFJ1bhIlLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuR2V0UnVuUmVxdWVzdBomLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuR2V0UnVuUmVzcG9uc2USXAoIV2F0Y2hSdW4SJy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLldhdGNoUnVuUmVxdWVzdBolLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuV2F0Y2hSdW5FdmVudDABEmAKCVJ1blJlc3VsdBIoLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUnVuUmVzdWx0UmVxdWVzdBopLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuUnVuUmVzdWx0UmVzcG9uc2USYAoJQ2FuY2VsUnVuEiguZ3JhcGhlbmUubWFuYWdlbWVudC52MS5DYW5jZWxSdW5SZXF1ZXN0GikuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5DYW5jZWxSdW5SZXNwb25zZRJgCglSdW5TdGF0dXMSKC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlJ1blN0YXR1c1JlcXVlc3QaKS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlJ1blN0YXR1c1Jlc3BvbnNlQkZaRGdpdGh1Yi5jb20vZ3JhcGhlbmUtY2kvZ3JhcGhlbmUvcGtnL3Byb3RvL21hbmFnZW1lbnQvdjE7bWFuYWdlbWVudHYxYgZwcm90bzM");
 
 /**
  * @generated from message graphene.management.v1.StartRunRequest
@@ -171,11 +171,22 @@ export const RunResultRequestSchema: GenMessage<RunResultRequest> = /*@__PURE__*
  */
 export type RunResultResponse = Message<"graphene.management.v1.RunResultResponse"> & {
   /**
-   * Result is the run's typed Result as JSON.
+   * Result is the run's typed Result as JSON. For a run that did not
+   * complete it is the PARTIAL result the pipeline collected before it
+   * failed — empty when it collected nothing.
    *
    * @generated from field: bytes result = 1;
    */
   result: Uint8Array;
+
+  /**
+   * Error is the failure message of a run that did not complete; empty
+   * for a completed run. Both fields are the run's state, read here as
+   * a shortcut.
+   *
+   * @generated from field: string error = 2;
+   */
+  error: string;
 };
 
 /**
@@ -214,6 +225,106 @@ export type CancelRunResponse = Message<"graphene.management.v1.CancelRunRespons
  */
 export const CancelRunResponseSchema: GenMessage<CancelRunResponse> = /*@__PURE__*/
   messageDesc(file_proto_management_v1_runs, 9);
+
+/**
+ * @generated from message graphene.management.v1.RunStatusRequest
+ */
+export type RunStatusRequest = Message<"graphene.management.v1.RunStatusRequest"> & {
+  /**
+   * @generated from field: string run_id = 1;
+   */
+  runId: string;
+};
+
+/**
+ * Describes the message graphene.management.v1.RunStatusRequest.
+ * Use `create(RunStatusRequestSchema)` to create a new message.
+ */
+export const RunStatusRequestSchema: GenMessage<RunStatusRequest> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_runs, 10);
+
+/**
+ * @generated from message graphene.management.v1.RunStatusResponse
+ */
+export type RunStatusResponse = Message<"graphene.management.v1.RunStatusResponse"> & {
+  /**
+   * Status is the run's phase, lowercase like every record's: running,
+   * completed, failed, canceled, terminated, timed-out.
+   *
+   * @generated from field: string status = 1;
+   */
+  status: string;
+
+  /**
+   * Pending are the activities the run is currently waiting on — empty
+   * when nothing is in flight (between steps, or terminal).
+   *
+   * @generated from field: repeated graphene.management.v1.PendingActivity pending = 2;
+   */
+  pending: PendingActivity[];
+};
+
+/**
+ * Describes the message graphene.management.v1.RunStatusResponse.
+ * Use `create(RunStatusResponseSchema)` to create a new message.
+ */
+export const RunStatusResponseSchema: GenMessage<RunStatusResponse> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_runs, 11);
+
+/**
+ * PendingActivity is one in-flight activity of the run: what it is, how
+ * far into its retries, and why the last attempt failed.
+ *
+ * @generated from message graphene.management.v1.PendingActivity
+ */
+export type PendingActivity = Message<"graphene.management.v1.PendingActivity"> & {
+  /**
+   * @generated from field: string activity_type = 1;
+   */
+  activityType: string;
+
+  /**
+   * @generated from field: int32 attempt = 2;
+   */
+  attempt: number;
+
+  /**
+   * State is the temporal pending state (Scheduled, Started, ...).
+   *
+   * @generated from field: string state = 3;
+   */
+  state: string;
+
+  /**
+   * LastFailure is the message of the most recent failed attempt, empty
+   * if none failed yet.
+   *
+   * @generated from field: string last_failure = 4;
+   */
+  lastFailure: string;
+
+  /**
+   * HeartbeatDetail is the latest heartbeat note the activity recorded —
+   * the "what it is doing right now" string.
+   *
+   * @generated from field: string heartbeat_detail = 5;
+   */
+  heartbeatDetail: string;
+
+  /**
+   * LastHeartbeatUnixMs is when that heartbeat landed (0 if never).
+   *
+   * @generated from field: int64 last_heartbeat_unix_ms = 6;
+   */
+  lastHeartbeatUnixMs: bigint;
+};
+
+/**
+ * Describes the message graphene.management.v1.PendingActivity.
+ * Use `create(PendingActivitySchema)` to create a new message.
+ */
+export const PendingActivitySchema: GenMessage<PendingActivity> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_runs, 12);
 
 /**
  * RunsAPI starts and observes pipeline runs. The worker — a managed
@@ -273,6 +384,20 @@ export const RunsAPI: GenService<{
     methodKind: "unary";
     input: typeof CancelRunRequestSchema;
     output: typeof CancelRunResponseSchema;
+  },
+  /**
+   * RunStatus reports the run's IN-FLIGHT state: its status and the
+   * activities currently pending — what the run is doing right now, how
+   * many attempts in, the last failure, and the latest heartbeat detail.
+   * This is the "why is it stuck" view, sourced from the workflow's own
+   * pending-activity state (no Temporal CLI needed).
+   *
+   * @generated from rpc graphene.management.v1.RunsAPI.RunStatus
+   */
+  runStatus: {
+    methodKind: "unary";
+    input: typeof RunStatusRequestSchema;
+    output: typeof RunStatusResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_proto_management_v1_runs, 0);

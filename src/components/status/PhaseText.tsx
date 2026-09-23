@@ -8,16 +8,21 @@ import { TONE_TEXT, type StatusTone } from './tones'
 function toneOf(phase: string): StatusTone {
   switch (phase.toLowerCase()) {
     case 'ready':
+    case 'completed':
       return 'success'
     case 'creating':
     case 'pending':
+    case 'running':
       return 'pending'
     case 'deleting':
       return 'warning'
     case 'failed':
     case 'deleted':
+    case 'terminated':
+    case 'timed-out':
       return 'failed'
     default:
+      // canceled and any unknown phase.
       return 'canceled'
   }
 }

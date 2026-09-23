@@ -98,8 +98,8 @@ export function RunOverviewHeader({ record }: { record: Resource }) {
   const spec = runSpecOf(record)
   const outcome = runStateOf(record)
   const runId = record.ref.slice(record.ref.indexOf('/') + 1)
-  const isRunning =
-    record.phase === 'WORKFLOW_EXECUTION_STATUS_RUNNING' || record.phase === 'Running'
+  // One phase vocabulary: a run is 'running' like a record is 'ready'.
+  const isRunning = record.phase === 'running'
 
   const started = timestampMs(record.startedAt)
   const finished = timestampMs(record.finishedAt)
