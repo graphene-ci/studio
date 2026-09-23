@@ -1,13 +1,14 @@
 // Pure builder for the namespace data-flow topology: the ownership
 // tree (TreeNode[]) + each record's declared outgoing flows →
 // machine-grouped nodes and directed edges. DECLARED, not verified:
-// edges come straight from `state.flows`, no probe confirms them.
+// edges come straight from the record's `flows`, no probe confirms them.
+// The door mirrors them from the record's state into visibility, so a
+// tree row carries them — for a live record and for a deleted one of a
+// finished run alike.
 
 import type { Resource, TreeNode } from '@/proto/management/v1/resources_pb'
 
-const decoder = new TextDecoder()
-
-/** One outgoing data-flow edge a record declares (state.flows[]). */
+/** One outgoing data-flow edge a record declares. */
 export interface Flow {
   /** Target: another record's ref ("agent/edge-1") or an external
    * endpoint string ("stroppy-server", "10.0.0.5:5432"). */
@@ -15,30 +16,21 @@ export interface Flow {
   protocol: string
   label?: string
   port?: number
+  /** A system edge that always exists (agent↔server), not one declared. */
+  virtual?: boolean
 }
 
-/** state.flows — the outgoing edges a record declares (empty when the
- * kind carries none). */
+/** The outgoing edges a record declares (empty when the kind carries none). */
 export function recordFlows(record: Resource): Flow[] {
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(decoder.decode(record.state))
-  } catch {
-    return []
-  }
-  if (typeof parsed !== 'object' || parsed === null) return []
-  const flows = (parsed as { flows?: unknown }).flows
-  if (!Array.isArray(flows)) return []
   const out: Flow[] = []
-  for (const raw of flows) {
-    if (typeof raw !== 'object' || raw === null) continue
-    const f = raw as Record<string, unknown>
-    if (typeof f.to !== 'string' || f.to === '') continue
+  for (const f of record.flows) {
+    if (f.to === '') continue
     out.push({
       to: f.to,
-      protocol: typeof f.protocol === 'string' ? f.protocol : '',
-      label: typeof f.label === 'string' && f.label !== '' ? f.label : undefined,
-      port: typeof f.port === 'number' ? f.port : undefined,
+      protocol: f.protocol,
+      label: f.label !== '' ? f.label : undefined,
+      port: f.port > 0 ? f.port : undefined,
+      virtual: f.virtual || undefined,
     })
   }
   return out
