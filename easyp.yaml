@@ -3,7 +3,7 @@ version: v1
 generate:
   inputs:
     - git_repo:
-        url: github.com/graphene-ci/graphene@905280563639e5bf8a01c6b477b4facaab003982
+        url: github.com/graphene-ci/graphene@c4127c8008e33b65c6b2fb9a069e0538994bbca4
         sub_directory: proto
   plugins:
     - path: ./node_modules/.bin/protoc-gen-es

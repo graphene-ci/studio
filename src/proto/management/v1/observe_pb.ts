@@ -20,7 +20,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file proto/management/v1/observe.proto.
  */
 export const file_proto_management_v1_observe: GenFile = /*@__PURE__*/
-  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL29ic2VydmUucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiIgoTT2JzZXJ2ZVN0YXRlUmVxdWVzdBILCgNyZWYYASABKAkiWgoUT2JzZXJ2ZVN0YXRlUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJEjIKCHJlc291cmNlGAIgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSJoCg1FdmVudHNSZXF1ZXN0EgsKA3JlZhgBIAEoCRIWCg5hZnRlcl9ldmVudF9pZBgCIAEoAxIOCgZmb2xsb3cYAyABKAgSEwoLYWN0aXZpdHlfaWQYBCABKAkSDQoFa2luZHMYBSADKAki0AEKBUV2ZW50EhAKCGV2ZW50X2lkGAEgASgDEhYKDnRpbWVfdW5peF9uYW5vGAIgASgDEgwKBGtpbmQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRINCgVhZ2VudBgFIAEoCRIOCgZzdGF0dXMYBiABKAkSDQoFZXJyb3IYByABKAkSDwoHYXR0ZW1wdBgIIAEoBRINCgVpbnB1dBgJIAEoDBIOCgZyZXN1bHQYCiABKAwSCwoDcmF3GAsgASgMEhMKC2FjdGl2aXR5X2lkGAwgASgJIlIKC0xvZ3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIOCgZmb2xsb3cYAiABKAgSFwoPc2luY2VfdW5peF9uYW5vGAMgASgDEg0KBXF1ZXJ5GAQgASgJIr0BCglMb2dSZWNvcmQSFgoOdGltZV91bml4X25hbm8YASABKAMSEAoIc2V2ZXJpdHkYAiABKAkSDAoEYm9keRgDIAEoCRJFCgphdHRyaWJ1dGVzGAQgAygLMjEuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dSZWNvcmQuQXR0cmlidXRlc0VudHJ5GjEKD0F0dHJpYnV0ZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIlsKCExvZ0NodW5rEjMKBnJlY29yZBgBIAEoCzIhLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nUmVjb3JkSAASEQoHZHJvcHBlZBgCIAEoA0gAQgcKBWNodW5rImwKDk1ldHJpY3NSZXF1ZXN0EgsKA3JlZhgBIAEoCRIXCg9zdGFydF91bml4X25hbm8YAiABKAMSFQoNZW5kX3VuaXhfbmFubxgDIAEoAxIOCgZmb2xsb3cYBCABKAgSDQoFcXVlcnkYBSABKAkiTgoMTWV0cmljc0NodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuayI6CgxUcmFjZVJlcXVlc3QSCwoDcmVmGAEgASgJEg4KBmZvbGxvdxgCIAEoCBINCgVxdWVyeRgDIAEoCSJMCgpUcmFjZUNodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuazLDAwoKT2JzZXJ2ZUFQSRJiCgVTdGF0ZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVzcG9uc2USUAoGRXZlbnRzEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudHNSZXF1ZXN0Gh0uZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudDABEk8KBExvZ3MSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ3NSZXF1ZXN0GiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dDaHVuazABElkKB01ldHJpY3MSJi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLk1ldHJpY3NSZXF1ZXN0GiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5NZXRyaWNzQ2h1bmswARJTCgVUcmFjZRIkLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuVHJhY2VSZXF1ZXN0GiIuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFjZUNodW5rMAFCRlpEZ2l0aHViLmNvbS9ncmFwaGVuZS1jaS9ncmFwaGVuZS9wa2cvcHJvdG8vbWFuYWdlbWVudC92MTttYW5hZ2VtZW50djFiBnByb3RvMw", [file_proto_management_v1_resources]);
+  fileDesc("CiFwcm90by9tYW5hZ2VtZW50L3YxL29ic2VydmUucHJvdG8SFmdyYXBoZW5lLm1hbmFnZW1lbnQudjEiIgoTT2JzZXJ2ZVN0YXRlUmVxdWVzdBILCgNyZWYYASABKAkiWgoUT2JzZXJ2ZVN0YXRlUmVzcG9uc2USDgoGc3RhdHVzGAEgASgJEjIKCHJlc291cmNlGAIgASgLMiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5SZXNvdXJjZSJoCg1FdmVudHNSZXF1ZXN0EgsKA3JlZhgBIAEoCRIWCg5hZnRlcl9ldmVudF9pZBgCIAEoAxIOCgZmb2xsb3cYAyABKAgSEwoLYWN0aXZpdHlfaWQYBCABKAkSDQoFa2luZHMYBSADKAki0AEKBUV2ZW50EhAKCGV2ZW50X2lkGAEgASgDEhYKDnRpbWVfdW5peF9uYW5vGAIgASgDEgwKBGtpbmQYAyABKAkSDwoHc3ViamVjdBgEIAEoCRINCgVhZ2VudBgFIAEoCRIOCgZzdGF0dXMYBiABKAkSDQoFZXJyb3IYByABKAkSDwoHYXR0ZW1wdBgIIAEoBRINCgVpbnB1dBgJIAEoDBIOCgZyZXN1bHQYCiABKAwSCwoDcmF3GAsgASgMEhMKC2FjdGl2aXR5X2lkGAwgASgJIu4BCgtMb2dzUmVxdWVzdBILCgNyZWYYASABKAkSDgoGZm9sbG93GAIgASgIEhcKD3NpbmNlX3VuaXhfbmFubxgDIAEoAxIXCg91bnRpbF91bml4X25hbm8YBSABKAMSDQoFcXVlcnkYBCABKAkSDQoFbGltaXQYBiABKAUSDQoFb3JkZXIYByABKAkSEgoKcGFnZV90b2tlbhgIIAEoCRISCgpzZXZlcml0aWVzGAkgAygJEg4KBnN0cmVhbRgKIAEoCRINCgVhZ2VudBgLIAEoCRIOCgZlbnRpdHkYDCABKAkSDAoEdGV4dBgNIAEoCSJHCgdMb2dQYWdlEhAKCHJldHVybmVkGAEgASgFEhEKCXRydW5jYXRlZBgCIAEoCBIXCg9uZXh0X3BhZ2VfdG9rZW4YAyABKAkiaQoQTG9nRmFjZXRzUmVxdWVzdBI2CglzZWxlY3Rpb24YASABKAsyIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ3NSZXF1ZXN0Eg4KBmZpZWxkcxgCIAMoCRINCgVsaW1pdBgDIAEoBSLTAQoRTG9nRmFjZXRzUmVzcG9uc2USPwoGZmFjZXRzGAEgAygLMi8uZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dGYWNldHNSZXNwb25zZS5GYWNldBokCgVWYWx1ZRINCgV2YWx1ZRgBIAEoCRIMCgRoaXRzGAIgASgDGlcKBUZhY2V0Eg0KBWZpZWxkGAEgASgJEj8KBnZhbHVlcxgCIAMoCzIvLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nRmFjZXRzUmVzcG9uc2UuVmFsdWUivQEKCUxvZ1JlY29yZBIWCg50aW1lX3VuaXhfbmFubxgBIAEoAxIQCghzZXZlcml0eRgCIAEoCRIMCgRib2R5GAMgASgJEkUKCmF0dHJpYnV0ZXMYBCADKAsyMS5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ1JlY29yZC5BdHRyaWJ1dGVzRW50cnkaMQoPQXR0cmlidXRlc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEijAEKCExvZ0NodW5rEjMKBnJlY29yZBgBIAEoCzIhLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nUmVjb3JkSAASEQoHZHJvcHBlZBgCIAEoA0gAEi8KBHBhZ2UYAyABKAsyHy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ1BhZ2VIAEIHCgVjaHVuayKCAQoOTWV0cmljc1JlcXVlc3QSCwoDcmVmGAEgASgJEhcKD3N0YXJ0X3VuaXhfbmFubxgCIAEoAxIVCg1lbmRfdW5peF9uYW5vGAMgASgDEg4KBmZvbGxvdxgEIAEoCBINCgVxdWVyeRgFIAEoCRIUCgxzdGVwX3NlY29uZHMYBiABKAUiTgoMTWV0cmljc0NodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuayJJCgxUcmFjZVJlcXVlc3QSCwoDcmVmGAEgASgJEg4KBmZvbGxvdxgCIAEoCBINCgVxdWVyeRgDIAEoCRINCgVsaW1pdBgEIAEoBSJMCgpUcmFjZUNodW5rEhIKCHNuYXBzaG90GAEgASgMSAASDgoEb3RscBgCIAEoDEgAEhEKB2Ryb3BwZWQYAyABKANIAEIHCgVjaHVuazKlBAoKT2JzZXJ2ZUFQSRJiCgVTdGF0ZRIrLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVxdWVzdBosLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuT2JzZXJ2ZVN0YXRlUmVzcG9uc2USUAoGRXZlbnRzEiUuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudHNSZXF1ZXN0Gh0uZ3JhcGhlbmUubWFuYWdlbWVudC52MS5FdmVudDABEk8KBExvZ3MSIy5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLkxvZ3NSZXF1ZXN0GiAuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5Mb2dDaHVuazABEmAKCUxvZ0ZhY2V0cxIoLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nRmFjZXRzUmVxdWVzdBopLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTG9nRmFjZXRzUmVzcG9uc2USWQoHTWV0cmljcxImLmdyYXBoZW5lLm1hbmFnZW1lbnQudjEuTWV0cmljc1JlcXVlc3QaJC5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLk1ldHJpY3NDaHVuazABElMKBVRyYWNlEiQuZ3JhcGhlbmUubWFuYWdlbWVudC52MS5UcmFjZVJlcXVlc3QaIi5ncmFwaGVuZS5tYW5hZ2VtZW50LnYxLlRyYWNlQ2h1bmswAUJGWkRnaXRodWIuY29tL2dyYXBoZW5lLWNpL2dyYXBoZW5lL3BrZy9wcm90by9tYW5hZ2VtZW50L3YxO21hbmFnZW1lbnR2MWIGcHJvdG8z", [file_proto_management_v1_resources]);
 
 /**
  * @generated from message graphene.management.v1.ObserveStateRequest
@@ -209,6 +209,13 @@ export const EventSchema: GenMessage<Event> = /*@__PURE__*/
   messageDesc(file_proto_management_v1_observe, 3);
 
 /**
+ * Every read of a record's dimensions 3-5 has two query forms. RAW —
+ * `query` without `ref`: the backend's own language over the whole store,
+ * an administrator's. SCOPED — `ref` with `query`: the same language, but
+ * the door lays the record's scope (namespace, correlation, birth) over
+ * it in a way the expression cannot escape; authorized like any read of
+ * the record.
+ *
  * @generated from message graphene.management.v1.LogsRequest
  */
 export type LogsRequest = Message<"graphene.management.v1.LogsRequest"> & {
@@ -223,18 +230,75 @@ export type LogsRequest = Message<"graphene.management.v1.LogsRequest"> & {
   follow: boolean;
 
   /**
+   * Since/Until bound the selection; zero means open.
+   *
    * @generated from field: int64 since_unix_nano = 3;
    */
   sinceUnixNano: bigint;
 
   /**
-   * Query is the RAW view: a LogsQL query in the backend's own
-   * language, over the whole store (admin only; ref and follow are
-   * ignored). A resource's logs are the same store filtered.
+   * @generated from field: int64 until_unix_nano = 5;
+   */
+  untilUnixNano: bigint;
+
+  /**
+   * Query: raw LogsQL without ref; a LogsQL filter ANDed into the
+   * record's scope with ref.
    *
    * @generated from field: string query = 4;
    */
   query: string;
+
+  /**
+   * Limit caps the records of one page (default 1000, at most 10000).
+   *
+   * @generated from field: int32 limit = 6;
+   */
+  limit: number;
+
+  /**
+   * Order is "asc" (default: oldest first) or "desc".
+   *
+   * @generated from field: string order = 7;
+   */
+  order: string;
+
+  /**
+   * PageToken continues a previous page (opaque, from the page chunk).
+   * A follow cannot be paged.
+   *
+   * @generated from field: string page_token = 8;
+   */
+  pageToken: string;
+
+  /**
+   * Filters, ANDed: severity names (INFO, WARN, ...), the record's
+   * stream attribute (stdout/stderr), the agent and entity that emitted
+   * it, a text the body must contain.
+   *
+   * @generated from field: repeated string severities = 9;
+   */
+  severities: string[];
+
+  /**
+   * @generated from field: string stream = 10;
+   */
+  stream: string;
+
+  /**
+   * @generated from field: string agent = 11;
+   */
+  agent: string;
+
+  /**
+   * @generated from field: string entity = 12;
+   */
+  entity: string;
+
+  /**
+   * @generated from field: string text = 13;
+   */
+  text: string;
 };
 
 /**
@@ -243,6 +307,134 @@ export type LogsRequest = Message<"graphene.management.v1.LogsRequest"> & {
  */
 export const LogsRequestSchema: GenMessage<LogsRequest> = /*@__PURE__*/
   messageDesc(file_proto_management_v1_observe, 4);
+
+/**
+ * LogPage closes a history read: what the page did not carry.
+ *
+ * @generated from message graphene.management.v1.LogPage
+ */
+export type LogPage = Message<"graphene.management.v1.LogPage"> & {
+  /**
+   * Returned is how many records this page sent — zero is an answer.
+   *
+   * @generated from field: int32 returned = 1;
+   */
+  returned: number;
+
+  /**
+   * Truncated: the selection has more than limit; NextPageToken
+   * continues it. Empty token — the selection is exhausted.
+   *
+   * @generated from field: bool truncated = 2;
+   */
+  truncated: boolean;
+
+  /**
+   * @generated from field: string next_page_token = 3;
+   */
+  nextPageToken: string;
+};
+
+/**
+ * Describes the message graphene.management.v1.LogPage.
+ * Use `create(LogPageSchema)` to create a new message.
+ */
+export const LogPageSchema: GenMessage<LogPage> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 5);
+
+/**
+ * @generated from message graphene.management.v1.LogFacetsRequest
+ */
+export type LogFacetsRequest = Message<"graphene.management.v1.LogFacetsRequest"> & {
+  /**
+   * The same selection as LogsRequest (ref, query, bounds, filters).
+   *
+   * @generated from field: graphene.management.v1.LogsRequest selection = 1;
+   */
+  selection?: LogsRequest | undefined;
+
+  /**
+   * Fields to count values of: severity, stream, agent, entity, job, ...
+   *
+   * @generated from field: repeated string fields = 2;
+   */
+  fields: string[];
+
+  /**
+   * Limit caps the values per field (default 50).
+   *
+   * @generated from field: int32 limit = 3;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message graphene.management.v1.LogFacetsRequest.
+ * Use `create(LogFacetsRequestSchema)` to create a new message.
+ */
+export const LogFacetsRequestSchema: GenMessage<LogFacetsRequest> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 6);
+
+/**
+ * @generated from message graphene.management.v1.LogFacetsResponse
+ */
+export type LogFacetsResponse = Message<"graphene.management.v1.LogFacetsResponse"> & {
+  /**
+   * @generated from field: repeated graphene.management.v1.LogFacetsResponse.Facet facets = 1;
+   */
+  facets: LogFacetsResponse_Facet[];
+};
+
+/**
+ * Describes the message graphene.management.v1.LogFacetsResponse.
+ * Use `create(LogFacetsResponseSchema)` to create a new message.
+ */
+export const LogFacetsResponseSchema: GenMessage<LogFacetsResponse> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 7);
+
+/**
+ * @generated from message graphene.management.v1.LogFacetsResponse.Value
+ */
+export type LogFacetsResponse_Value = Message<"graphene.management.v1.LogFacetsResponse.Value"> & {
+  /**
+   * @generated from field: string value = 1;
+   */
+  value: string;
+
+  /**
+   * @generated from field: int64 hits = 2;
+   */
+  hits: bigint;
+};
+
+/**
+ * Describes the message graphene.management.v1.LogFacetsResponse.Value.
+ * Use `create(LogFacetsResponse_ValueSchema)` to create a new message.
+ */
+export const LogFacetsResponse_ValueSchema: GenMessage<LogFacetsResponse_Value> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 7, 0);
+
+/**
+ * @generated from message graphene.management.v1.LogFacetsResponse.Facet
+ */
+export type LogFacetsResponse_Facet = Message<"graphene.management.v1.LogFacetsResponse.Facet"> & {
+  /**
+   * @generated from field: string field = 1;
+   */
+  field: string;
+
+  /**
+   * @generated from field: repeated graphene.management.v1.LogFacetsResponse.Value values = 2;
+   */
+  values: LogFacetsResponse_Value[];
+};
+
+/**
+ * Describes the message graphene.management.v1.LogFacetsResponse.Facet.
+ * Use `create(LogFacetsResponse_FacetSchema)` to create a new message.
+ */
+export const LogFacetsResponse_FacetSchema: GenMessage<LogFacetsResponse_Facet> = /*@__PURE__*/
+  messageDesc(file_proto_management_v1_observe, 7, 1);
 
 /**
  * @generated from message graphene.management.v1.LogRecord
@@ -274,7 +466,7 @@ export type LogRecord = Message<"graphene.management.v1.LogRecord"> & {
  * Use `create(LogRecordSchema)` to create a new message.
  */
 export const LogRecordSchema: GenMessage<LogRecord> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 5);
+  messageDesc(file_proto_management_v1_observe, 8);
 
 /**
  * @generated from message graphene.management.v1.LogChunk
@@ -301,6 +493,14 @@ export type LogChunk = Message<"graphene.management.v1.LogChunk"> & {
      */
     value: bigint;
     case: "dropped";
+  } | {
+    /**
+     * Page closes the history part: count, truncation, the next token.
+     *
+     * @generated from field: graphene.management.v1.LogPage page = 3;
+     */
+    value: LogPage;
+    case: "page";
   } | { case: undefined; value?: undefined };
 };
 
@@ -309,7 +509,7 @@ export type LogChunk = Message<"graphene.management.v1.LogChunk"> & {
  * Use `create(LogChunkSchema)` to create a new message.
  */
 export const LogChunkSchema: GenMessage<LogChunk> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 6);
+  messageDesc(file_proto_management_v1_observe, 9);
 
 /**
  * @generated from message graphene.management.v1.MetricsRequest
@@ -338,12 +538,21 @@ export type MetricsRequest = Message<"graphene.management.v1.MetricsRequest"> & 
   follow: boolean;
 
   /**
-   * Query is the RAW view: a PromQL range query over the whole store
-   * (admin only; ref and follow are ignored).
+   * Query: raw PromQL without ref; with ref, the same PromQL evaluated
+   * inside the record's scope — the backend applies the scope to every
+   * selector and subquery of the expression.
    *
    * @generated from field: string query = 5;
    */
   query: string;
+
+  /**
+   * StepSeconds is the range query's resolution; 0 lets the door pick
+   * (range/200, at least 15 s). At most 11000 points per series.
+   *
+   * @generated from field: int32 step_seconds = 6;
+   */
+  stepSeconds: number;
 };
 
 /**
@@ -351,7 +560,7 @@ export type MetricsRequest = Message<"graphene.management.v1.MetricsRequest"> & 
  * Use `create(MetricsRequestSchema)` to create a new message.
  */
 export const MetricsRequestSchema: GenMessage<MetricsRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 7);
+  messageDesc(file_proto_management_v1_observe, 10);
 
 /**
  * @generated from message graphene.management.v1.MetricsChunk
@@ -392,7 +601,7 @@ export type MetricsChunk = Message<"graphene.management.v1.MetricsChunk"> & {
  * Use `create(MetricsChunkSchema)` to create a new message.
  */
 export const MetricsChunkSchema: GenMessage<MetricsChunk> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 8);
+  messageDesc(file_proto_management_v1_observe, 11);
 
 /**
  * @generated from message graphene.management.v1.TraceRequest
@@ -411,12 +620,20 @@ export type TraceRequest = Message<"graphene.management.v1.TraceRequest"> & {
   follow: boolean;
 
   /**
-   * Query is the RAW view: Jaeger search parameters as a query string
-   * ("service=x&tags=..."), over the whole store (admin only).
+   * Query: raw Jaeger search parameters ("service=x&tags=...") without
+   * ref; with ref, the same parameters inside the record's scope — the
+   * scope's tags win over the query's, the namespace is enforced.
    *
    * @generated from field: string query = 3;
    */
   query: string;
+
+  /**
+   * Limit caps the traces of the snapshot (default 20).
+   *
+   * @generated from field: int32 limit = 4;
+   */
+  limit: number;
 };
 
 /**
@@ -424,7 +641,7 @@ export type TraceRequest = Message<"graphene.management.v1.TraceRequest"> & {
  * Use `create(TraceRequestSchema)` to create a new message.
  */
 export const TraceRequestSchema: GenMessage<TraceRequest> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 9);
+  messageDesc(file_proto_management_v1_observe, 12);
 
 /**
  * @generated from message graphene.management.v1.TraceChunk
@@ -464,7 +681,7 @@ export type TraceChunk = Message<"graphene.management.v1.TraceChunk"> & {
  * Use `create(TraceChunkSchema)` to create a new message.
  */
 export const TraceChunkSchema: GenMessage<TraceChunk> = /*@__PURE__*/
-  messageDesc(file_proto_management_v1_observe, 10);
+  messageDesc(file_proto_management_v1_observe, 13);
 
 /**
  * @generated from service graphene.management.v1.ObserveAPI
@@ -501,6 +718,17 @@ export const ObserveAPI: GenService<{
     methodKind: "server_streaming";
     input: typeof LogsRequestSchema;
     output: typeof LogChunkSchema;
+  },
+  /**
+   * LogFacets answers the values a log field takes within the same
+   * selection Logs would return, each with its record count.
+   *
+   * @generated from rpc graphene.management.v1.ObserveAPI.LogFacets
+   */
+  logFacets: {
+    methodKind: "unary";
+    input: typeof LogFacetsRequestSchema;
+    output: typeof LogFacetsResponseSchema;
   },
   /**
    * Metrics is dimension 4: one snapshot chunk (the backend's PromQL
